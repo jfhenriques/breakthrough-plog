@@ -7,7 +7,8 @@
 \usepackage{indentfirst}
 \usepackage{graphicx}
 \usepackage{verbatim}
-
+\usepackage{subfig}
+\usepackage{float}
 
 \begin{document}
 
@@ -24,14 +25,13 @@
 \author{\textbf{Grupo xx:}\\ João Guedes - 070509043 \\ João Henriques - 110509026 \\\linebreak\linebreak \\
  \\ Faculdade de Engenharia da Universidade do Porto \\ Rua Roberto Frias, s\/n, 4200-465 Porto, Portugal \linebreak\linebreak\linebreak
 \linebreak\linebreak\vspace{1cm}}
-%\date{Setembro de 2011}
+\date{Setembro de 2011}
 \maketitle
 \thispagestyle{empty}
 
 %************************************************************************************************
 %************************************************************************************************
 
-\newpage
 
 \section*{Resumo}
 %Descrever muito sumariamente o trabalho. Deve ser suficiente para o leitor decidir se lê ou não o resto do relatório.
@@ -45,6 +45,9 @@ de dificuldade.
 
 Recorreremos à linguagem de programação \textit{ProLog} para o fazer, e a \textit{C++}  para o módulo de visualização gráfico do jogo.
 
+\tableofcontents
+
+\newpage
 
 %************************************************************************************************
 %************************************************************************************************
@@ -112,14 +115,44 @@ De notar que apesar da nossa implementação consistir num tabuleiro convenciona
 
 %\begin{quote}``Isto é uma citação''\end{quote}
 
+\newpage
+
 \section{Descrição do Problema}
 %Descrever sucintamente o jogo, a sua história e, principalmente, as suas regras. Devem ser criadas/utilizadas imagens apropriadas para explicar o funcionamento do jogo.
+
+O \textit{Breakthrough} foi criado no ano 2000 por \textit{Dan Troyka}  e disponibilizado para a plataforma comercial \textit{Zillion of Games}.
 
 O jogo desenrrola-se da seguinte forma:
 
 \begin{itemize}
 \item Cada jogador começa com 16 peças, distribuidas pelas duas linhas mais próximas de si, à semelhança dum tabuleiro de xadrez.
-\item 
+\item O jogador inicial é sorteado, e cada jogada é feita à vez.
+\item Um jogador pode mover uma peça se a casa de destino estiver vazia, diagonalmente ou em frente, conforme ilustrado.
+
+%Código para inserção de figuras
+\begin{figure}[h!]
+\begin{center}
+\includegraphics[scale=0.5]{fig1.png}
+\caption{Movimento possível da peça e2}
+\label{fig:1}
+\end{center}
+\end{figure}
+
+\item Uma peça pode ser capturada (substituída) se se encontrar em frente ao adversário e na sua diagonal. A captura não é obrigatória nem encadeada como nas damas.
+
+\begin{figure}[H]
+\begin{center}
+\subfloat[Possibilidades]{\includegraphics[scale=0.5]{fig2a.png}\label{fig:2a}}\hspace{10px}
+\subfloat[Captura de e2]{\includegraphics[scale=0.5]{fig2b.png}\label{fig:2b}}
+\caption{Processo de captura.}
+\label{fig:2}
+\end{center}
+\end{figure}
+
+\item O primeiro jogador a atingir a base do adversário, vence. No caso anterior, se o jogador preto atingisse a linha 1, venceria.
+\item Se todas as peças de um jogador forem capturadas, este perde o jogo.
+\item Um empate é matemáticamente impossível, e todas as peças têm sempre pelo menos uma jogada na diagonal possível.
+
 \end{itemize}
 
 \section{Representação do Estado do Jogo}
