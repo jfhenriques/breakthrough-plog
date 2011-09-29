@@ -38,12 +38,12 @@
 
 %Não deve incluir nenhuma referência ao facto de ser feito no âmbito de uma cadeira.
 
-O Breakthrough é um jogo de tabuleiro tradicional semelhante às damas, premiado e com um conjunto de regras muito simples e acessível.
+O \textit{Breakthrough} é um jogo de tabuleiro tradicional semelhante às damas, premiado e com um conjunto de regras muito simples e acessível.
 
-A implementação pretendida irá oferecer três modos de jogo - Humano/Humano, Humano/Computador e Computador/Computador - sendo que o Computador terá vários níveis
+A implementação pretendida irá oferecer três modos de jogo - ``Humano/Humano", ``Humano/Computador" e ``Computador/Computador" - sendo que o Computador terá vários níveis
 de dificuldade.
 
-Recorreremos à linguagem de programação ProLog para o fazer, e a C++ para o módulo de visualização gráfico do jogo.
+Recorreremos à linguagem de programação \textit{ProLog} para o fazer, e a \textit{C++}  para o módulo de visualização gráfico do jogo.
 
 
 %************************************************************************************************
@@ -53,14 +53,25 @@ Recorreremos à linguagem de programação ProLog para o fazer, e a C++ para o m
 %************************************************************************************************
 
 \section{Introdução}
-Descrever os objectivos e motivação do trabalho. Não deve incluir nenhuma referência ao facto de ser feito no âmbito de uma cadeira.
+%Descrever os objectivos e motivação do trabalho. Não deve incluir nenhuma referência ao facto de ser feito no âmbito de uma cadeira.
 
-Último parágrafo deve indicar a estrutura do relatório.
+%Último parágrafo deve indicar a estrutura do relatório.
 
-Devem ser incluídas referências bibliográficas correctas e completas (consultar os docentes em caso de dúvida). Páginas da wikipedia não são consideradas referências válidas \cite{CodigoSite, CodigoLivro}.
+%Devem ser incluídas referências bibliográficas correctas e completas (consultar os docentes em caso de dúvida). Páginas da wikipedia não são consideradas referências válidas \cite{CodigoSite, %CodigoLivro}.
 
-Todas as figuras devem ser referidas no texto. %\ref{fig:codigoFigura}
+%Todas as figuras devem ser referidas no texto. %\ref{fig:codigoFigura}
 
+Este trabalho tem como principal motivação a consolidação do nosso conhecimento em ProLog, visto que o paradigma de programação é totalmente diferente daquele a que temos vindo a estar habituados ao longo do curso.
+
+Por ser menos exigente e mais exequível dados os nossos conhecimentos, começaremos por implementar o modo ``Humano/Humano" através de regras lógicas.
+
+Seguidamente recorreremos a algoritmos de inteligência artificial e à teoria dos jogos para implementar os modos que envolvam o Computador.
+
+
+Escolhemos este trabalho porque gostamos da sua simplicidade e fluidez, e apesar de não ter um conjunto de regras muito vasto, é um jogo com potencial estratégico. 
+Se o oponente não estiver atento, é capaz de ser vencido muito rapidamente.
+
+De notar que apesar da nossa implementação consistir num tabuleiro convencional de ``8x8", o \textit{Breakthrough} pode ser jogado com outras configurações, como tabuleiros ``7x7" ou tabuleiros não-quadrados
 
 %Código para inserção de figuras
 %\begin{figure}[h!]
@@ -74,35 +85,42 @@ Todas as figuras devem ser referidas no texto. %\ref{fig:codigoFigura}
 %\end{center}
 %\end{figure}
 
-Ajuda:
+%Ajuda:
 
-\textit{Para escrever em itálico}
+%\textit{Para escrever em itálico}
 
-\textbf{Para escrever em negrito}
+%\textbf{Para escrever em negrito}
 
-Para escrever em letra normal
+%Para escrever em letra normal
 
-``Para escrever texto entre aspas''
+%``Para escrever texto entre aspas''
 
-Para fazer parágrafo, deixar uma linha em branco.
+%Para fazer parágrafo, deixar uma linha em branco.
 
-Como fazer bullet points:
+%Como fazer bullet points:
 
-\begin{itemize}
-\item Item1
-\item Item2
-\end{itemize}
+%\begin{itemize}
+%\item Item1
+%\item Item2
+%\end{itemize}
 
-Como enumerar itens:
+%Como enumerar itens:
 
-\begin{enumerate}
-\item Item 1
-\end{enumerate}
+%\begin{enumerate}
+%\item Item 1
+%\end{enumerate}
 
-\begin{quote}``Isto é uma citação''\end{quote}
+%\begin{quote}``Isto é uma citação''\end{quote}
 
 \section{Descrição do Problema}
-Descrever sucintamente o jogo, a sua história e, principalmente, as suas regras. Devem ser criadas/utilizadas imagens apropriadas para explicar o funcionamento do jogo.
+%Descrever sucintamente o jogo, a sua história e, principalmente, as suas regras. Devem ser criadas/utilizadas imagens apropriadas para explicar o funcionamento do jogo.
+
+O jogo desenrrola-se da seguinte forma:
+
+\begin{itemize}
+\item Cada jogador começa com 16 peças, distribuidas pelas duas linhas mais próximas de si, à semelhança dum tabuleiro de xadrez.
+\item 
+\end{itemize}
 
 \section{Representação do Estado do Jogo}
 Descrever a forma de representação do estado do tabuleiro (tipicamente uma lista de listas), com exemplificação em Prolog de posições iniciais do jogo, posições intermédias e finais.
