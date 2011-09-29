@@ -124,8 +124,8 @@ O \textit{Breakthrough} foi criado no ano 2000 por \textit{Dan Troyka}  e dispon
 
 O jogo desenrrola-se da seguinte forma:
 
-\begin{itemize}
-\item Cada jogador começa com 16 peças, distribuidas pelas duas linhas mais próximas de si, à semelhança dum tabuleiro de xadrez.
+\begin{enumerate}
+\item Cada jogador começa com 16 peças uniformes, distribuidas pelas duas linhas mais próximas de si, à semelhança dum tabuleiro de xadrez.
 \item O jogador inicial é sorteado, e cada jogada é feita à vez.
 \item Um jogador pode mover uma peça se a casa de destino estiver vazia, diagonalmente ou em frente, conforme ilustrado.
 
@@ -138,11 +138,12 @@ O jogo desenrrola-se da seguinte forma:
 \end{center}
 \end{figure}
 
-\item Uma peça pode ser capturada (substituída) se se encontrar em frente ao adversário e na sua diagonal. A captura não é obrigatória nem encadeada como nas damas.
+\item Os jogadores movimentam-se sempre em direção à base do adversário, e nunca podem retroceder.
+\item Uma peça pode ser capturada (substituída) se se encontrar diagonalmente ao adversário, quando este avança em direção à base oposta. A captura não é obrigatória nem encadeada como nas damas.
 
 \begin{figure}[H]
 \begin{center}
-\subfloat[Possibilidades]{\includegraphics[scale=0.5]{fig2a.png}\label{fig:2a}}\hspace{10px}
+\subfloat[Possibilidades para a peça f3]{\includegraphics[scale=0.5]{fig2a.png}\label{fig:2a}}\hspace{10px}
 \subfloat[Captura de e2]{\includegraphics[scale=0.5]{fig2b.png}\label{fig:2b}}
 \caption{Processo de captura.}
 \label{fig:2}
@@ -153,8 +154,9 @@ O jogo desenrrola-se da seguinte forma:
 \item Se todas as peças de um jogador forem capturadas, este perde o jogo.
 \item Um empate é matemáticamente impossível, e todas as peças têm sempre pelo menos uma jogada na diagonal possível.
 
-\end{itemize}
+\end{enumerate}
 
+\newpage
 \section{Representação do Estado do Jogo}
 Descrever a forma de representação do estado do tabuleiro (tipicamente uma lista de listas), com exemplificação em Prolog de posições iniciais do jogo, posições intermédias e finais.
 
