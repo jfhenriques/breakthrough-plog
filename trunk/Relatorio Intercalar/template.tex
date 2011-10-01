@@ -15,28 +15,47 @@
 \setlength{\textwidth}{16cm}
 \setlength{\textheight}{22cm}
 
-\title{\Huge\textbf{Breakthrough}\linebreak\linebreak\linebreak
-\Large\textbf{Relatório Intercalar}\linebreak\linebreak
-\includegraphics[height=6cm, width=7cm]{feup.pdf}\linebreak \linebreak
-\Large{Mestrado Integrado em Engenharia Informática e Computação} \linebreak \linebreak
-\Large{Programação em Lógica}\linebreak
+
+%************************************************************************************************
+%************************************************************************************************
+
+\title{
+	\Huge\textbf{Breakthrough}
+	\linebreak\linebreak\linebreak
+	\Large\textbf{Relatório Intercalar}
+	\linebreak\linebreak
+	\includegraphics[height=6cm, width=7cm]{feup.pdf}
+	\linebreak \linebreak
+	\Large{Mestrado Integrado em Engenharia Informática e Computação}
+	\linebreak\linebreak
+	\Large{Programação em Lógica}\linebreak
 }
 
-\author{\textbf{Grupo xx:}\\ João Guedes - 070509043 \\ João Henriques - 110509026 \\\linebreak\linebreak \\
- \\ Faculdade de Engenharia da Universidade do Porto \\ Rua Roberto Frias, s\/n, 4200-465 Porto, Portugal \linebreak\linebreak\linebreak
+
+\author{\textbf{Grupo xx:}
+\\ João Guedes - 070509043
+\\ João Henriques - 110509026
+\\\linebreak\linebreak \\
+ \\ Faculdade de Engenharia da Universidade do Porto
+\\ Rua Roberto Frias, s\/n, 4200-465 Porto, Portugal
+\linebreak\linebreak\linebreak
 \linebreak\linebreak\vspace{1cm}}
 \date{Setembro de 2011}
 \maketitle
 \thispagestyle{empty}
+
+
 
 %************************************************************************************************
 %************************************************************************************************
 
 
 \section*{Resumo}
-%Descrever muito sumariamente o trabalho. Deve ser suficiente para o leitor decidir se lê ou não o resto do relatório.
 
-%Não deve incluir nenhuma referência ao facto de ser feito no âmbito de uma cadeira.
+% Descrever muito sumariamente o trabalho. Deve ser suficiente para o leitor decidir se lê ou não o resto do relatório.
+% Não deve incluir nenhuma referência ao facto de ser feito no âmbito de uma cadeira.
+
+
 
 O \textit{Breakthrough} é um jogo de tabuleiro tradicional semelhante às damas, premiado e com um conjunto de regras muito simples e acessível.
 
@@ -45,24 +64,31 @@ de dificuldade.
 
 Recorreremos à linguagem de programação \textit{ProLog} para o fazer, e a \textit{C++}  para o módulo de visualização gráfico do jogo.
 
-\tableofcontents
 
+
+%************************************************************************************************
+%************************************************************************************************
 \newpage
 
+
+\tableofcontents
+
 %************************************************************************************************
 %************************************************************************************************
 
-%*************************************************************************************************
 %************************************************************************************************
+%************************************************************************************************
+\newpage
+
 
 \section{Introdução}
-%Descrever os objectivos e motivação do trabalho. Não deve incluir nenhuma referência ao facto de ser feito no âmbito de uma cadeira.
 
-%Último parágrafo deve indicar a estrutura do relatório.
+% Descrever os objectivos e motivação do trabalho. Não deve incluir nenhuma referência ao facto de ser feito no âmbito de uma cadeira.
+% Último parágrafo deve indicar a estrutura do relatório.
+% Devem ser incluídas referências bibliográficas correctas e completas (consultar os docentes em caso de dúvida). Páginas da wikipedia não são consideradas referências válidas \cite{CodigoSite, %CodigoLivro}.
+% Todas as figuras devem ser referidas no texto. %\ref{fig:codigoFigura}
 
-%Devem ser incluídas referências bibliográficas correctas e completas (consultar os docentes em caso de dúvida). Páginas da wikipedia não são consideradas referências válidas \cite{CodigoSite, %CodigoLivro}.
 
-%Todas as figuras devem ser referidas no texto. %\ref{fig:codigoFigura}
 
 Este trabalho tem como principal motivação a consolidação do nosso conhecimento em ProLog, visto que o paradigma de programação é totalmente diferente daquele a que temos vindo a estar habituados ao longo do curso.
 
@@ -115,6 +141,9 @@ De notar que apesar da nossa implementação consistir num tabuleiro convenciona
 
 %\begin{quote}``Isto é uma citação''\end{quote}
 
+%************************************************************************************************
+%************************************************************************************************
+
 \newpage
 
 \section{Descrição do Problema}
@@ -156,6 +185,10 @@ O jogo desenrrola-se da seguinte forma:
 
 \end{enumerate}
 
+
+%************************************************************************************************
+%************************************************************************************************
+
 \newpage
 \section{Representação do Estado do Jogo}
 Descrever a forma de representação do estado do tabuleiro (tipicamente uma lista de listas), com exemplificação em Prolog de posições iniciais do jogo, posições intermédias e finais.
@@ -175,7 +208,12 @@ Que conclui da análise do jogo e da pesquisa bibliográfica realizada? Como vai
 \bibliographystyle{plain}
 \bibliography{myrefs}
 
+
+%************************************************************************************************
+%************************************************************************************************
+
 \newpage
+
 \appendix
 \section{Nome do Anexo A}
 Código Prolog implementado (representação do estado, cabeçalhos dos predicados de jogada e predicado que permite a visualização simples, em modo de texto, do tabuleiro).
