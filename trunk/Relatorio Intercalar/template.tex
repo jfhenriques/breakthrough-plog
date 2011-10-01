@@ -10,6 +10,9 @@
 \usepackage{subfig}
 \usepackage{float}
 
+\floatstyle{ruled}
+\newfloat{code}{!ht}{lop}
+\floatname{code}{Código fonte}
 \begin{document}
 
 \setlength{\textwidth}{16cm}
@@ -63,12 +66,6 @@ A implementação pretendida irá oferecer três modos de jogo - ``Humano/Humano
 de dificuldade.
 
 Recorreremos à linguagem de programação \textit{ProLog} para o fazer, e a \textit{C++}  para o módulo de visualização gráfico do jogo.
-
-
-
-%************************************************************************************************
-%************************************************************************************************
-\newpage
 
 
 \tableofcontents
@@ -144,21 +141,25 @@ De notar que apesar da nossa implementação consistir num tabuleiro convenciona
 %************************************************************************************************
 %************************************************************************************************
 
-\newpage
-
 \section{Descrição do Problema}
 %Descrever sucintamente o jogo, a sua história e, principalmente, as suas regras. Devem ser criadas/utilizadas imagens apropriadas para explicar o funcionamento do jogo.
 
 O \textit{Breakthrough} foi criado no ano 2000 por \textit{Dan Troyka}  e disponibilizado para a plataforma comercial \textit{Zillion of Games}.
 
-O jogo desenrrola-se da seguinte forma:
-
+\subsection{Preparação de jogo}
 \begin{enumerate}
 \item Cada jogador começa com 16 peças uniformes, distribuidas pelas duas linhas mais próximas de si, à semelhança dum tabuleiro de xadrez.
-\item O jogador inicial é sorteado, e cada jogada é feita à vez.
-\item Um jogador pode mover uma peça se a casa de destino estiver vazia, diagonalmente ou em frente, conforme ilustrado.
+\item Os dois jogadores escolhem o seu lado e é sorteado o primeiro a começar.
+\end{enumerate}
 
-%Código para inserção de figuras
+\subsection{Movimentos permitidos}
+\begin{enumerate}
+\item Um jogador pode mover uma peça se a casa de destino estiver vazia, diagonalmente ou em frente, conforme ilustrado.
+\item Os jogadores movimentam-se sempre em direção à base do adversário, e nunca podem retroceder.
+\item Uma peça pode ser capturada (substituída) se se encontrar diagonalmente ao adversário, quando este avança em direção à base oposta. A captura não é obrigatória nem encadeada como nas damas.
+\end{enumerate}
+
+%Figura 1
 \begin{figure}[h!]
 \begin{center}
 \includegraphics[scale=0.5]{fig1.png}
@@ -167,9 +168,7 @@ O jogo desenrrola-se da seguinte forma:
 \end{center}
 \end{figure}
 
-\item Os jogadores movimentam-se sempre em direção à base do adversário, e nunca podem retroceder.
-\item Uma peça pode ser capturada (substituída) se se encontrar diagonalmente ao adversário, quando este avança em direção à base oposta. A captura não é obrigatória nem encadeada como nas damas.
-
+%Figura 2 (a e b)
 \begin{figure}[H]
 \begin{center}
 \subfloat[Possibilidades para a peça f3]{\includegraphics[scale=0.5]{fig2a.png}\label{fig:2a}}\hspace{10px}
@@ -179,19 +178,76 @@ O jogo desenrrola-se da seguinte forma:
 \end{center}
 \end{figure}
 
+\subsection{Vitória}
+\begin{enumerate}
 \item O primeiro jogador a atingir a base do adversário, vence. No caso anterior, se o jogador preto atingisse a linha 1, venceria.
 \item Se todas as peças de um jogador forem capturadas, este perde o jogo.
 \item Um empate é matemáticamente impossível, e todas as peças têm sempre pelo menos uma jogada na diagonal possível.
-
 \end{enumerate}
 
 
 %************************************************************************************************
 %************************************************************************************************
 
-\newpage
 \section{Representação do Estado do Jogo}
-Descrever a forma de representação do estado do tabuleiro (tipicamente uma lista de listas), com exemplificação em Prolog de posições iniciais do jogo, posições intermédias e finais.
+A representação do tabuleiro 8x8 é feita em Prolog por uma lista de listas.
+Cada item do tabuleiro é representado no formato ``<Jogador>", em que este pode ser:
+\begin{itemize}
+\item 1 - jogador branco
+\item 2 - jogador preto
+\item 0 - casa vazia
+\end{itemize}
+
+\begin{code}[H]
+	\begin{verbatim}
+initBoard(
+		  [
+		  [1,1,1,1,1,1,1,1],
+		  [1,1,1,1,1,1,1,1],
+		  [0,0,0,0,0,0,0,0],
+		  [0,0,0,0,0,0,0,0],
+		  [0,0,0,0,0,0,0,0],
+		  [0,0,0,0,0,0,0,0],
+		  [2,2,2,2,2,2,2,2],
+		  [2,2,2,2,2,2,2,2]
+		  ]).
+\end{verbatim}
+\caption{Representação de tabuleiro inicial.}      
+\end{code}
+
+\begin{code}[H]
+	\begin{verbatim}
+intermediumBoard(
+		  [
+		  [1,1,1,1,1,1,1,1],
+		  [1,1,0,1,1,1,0,1],
+		  [0,0,1,0,0,0,0,0],
+		  [0,0,0,0,0,1,0,0],
+		  [0,0,0,0,0,2,0,0],
+		  [0,0,0,2,0,0,0,2],
+		  [2,2,2,0,2,0,0,2]
+		  [2,2,2,2,2,2,2,2]
+		  ]).
+\end{verbatim}
+\caption{Representação de tabuleiro intermédio.}
+\end{code}
+
+\begin{code}[H]
+	\begin{verbatim}
+finalBoard(
+		  [
+		  [1,1,1,1,1,1,1,1],
+		  [1,1,0,1,1,0,0,1],
+		  [0,0,1,0,0,0,0,0],
+		  [0,0,0,0,0,0,0,0],
+		  [0,2,0,0,0,1,0,0],
+		  [0,0,0,2,0,0,0,2],
+		  [2,2,0,0,2,0,0,2]
+		  [2,2,2,1,2,2,2,2]
+		  ]).
+\end{verbatim}
+\caption{Representação de tabuleiro final, em que o jogador 1 venceu.}
+\end{code}
 
 \section{Representação de um Movimento}
 Descrever a forma de representação dos diversos tipos de jogadas (movimentos) permitidos no jogo. Só é necessário apresentar os cabeçalhos dos predicados que serão utilizados para as diferentes jogadas (que ainda não precisam de estar implementados).
