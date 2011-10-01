@@ -188,7 +188,7 @@ O \textit{Breakthrough} foi criado no ano 2000 por \textit{Dan Troyka}  e dispon
 
 %************************************************************************************************
 %************************************************************************************************
-
+ 
 \section{Representação do Estado do Jogo}
 A representação do tabuleiro 8x8 é feita em Prolog por uma lista de listas.
 Cada item do tabuleiro é representado no formato ``<Jogador>", em que este pode ser:
@@ -269,9 +269,62 @@ Que conclui da análise do jogo e da pesquisa bibliográfica realizada? Como vai
 %************************************************************************************************
 
 \newpage
-
 \appendix
 \section{Nome do Anexo A}
-Código Prolog implementado (representação do estado, cabeçalhos dos predicados de jogada e predicado que permite a visualização simples, em modo de texto, do tabuleiro).
+
+\begin{code}[H]
+	\begin{verbatim}
+writePlayer(1):-
+	write('1').
+
+writePlayer(2):-
+	write('2').
+
+writePlayer(0):-
+	write(' ').
+
+% Imprime elementos da sublista
+printRow([]).		
+printRow([H|T]):-
+	write('| '),
+	writePlayer(H),
+	write(' '),
+	printRow(T).
+
+%Acrescenta número da linha no início e no fim da sublista
+printFullRow([], _).
+printFullRow([H|T], N):-
+	N1 is N+1,
+	write('  |   |   |   |   |   |   |   |   |'),
+	nl,
+	write(N),
+	write(' '),
+	printRow(H),
+	write('|'),
+	write(' '),
+	write(N),
+	nl,
+	printFullRow(T, N1).
+
+%Imprime tabuleiro, com colunas numeradas
+printBoard([]).
+printBoard([H|T]):-
+	write('    a   b   c   d   e   f   g   h'),
+	nl,
+	write('   --------------------------------'),
+	nl,
+	printFullRow([H|T], 1),
+	write('   --------------------------------'),
+	nl,
+	write('    a   b   c   d   e   f   g   h').
+
+%Imprime tabuleiro inicial
+init:-
+	initBoard(A),
+	printBoard(A),
+
+%TODO: predicados dos movimentos
+\end{verbatim}
+\end{code}
 
 \end{document}
