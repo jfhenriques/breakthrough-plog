@@ -265,8 +265,8 @@ finalBoard(
 
 \section{Representação de um Movimento}
 
-%Descrever a forma de representação dos diversos tipos de jogadas (movimentos) permitidos no jogo.
-%Só é necessário apresentar os cabeçalhos dos predicados que serão utilizados para as diferentes jogadas (que ainda não precisam de estar implementados).
+% Descrever a forma de representação dos diversos tipos de jogadas (movimentos) permitidos no jogo.
+% Só é necessário apresentar os cabeçalhos dos predicados que serão utilizados para as diferentes jogadas (que ainda não precisam de estar implementados).
 
 Da perspetiva do jogador que começa a Sul - o jogador das peças pretas - este só pode mover a sua peça para a casa adjacente nas seguintes condições:
 \begin{enumerate}
@@ -291,6 +291,17 @@ Esta função aceita o X e Y da casa de origem e da casa de destino, e terá de 
 \caption{Exemplificação de um movimento.}
 \end{code}
 A peça que se encontra em (7, 5), é movida para a casa (6, 4).
+\linebreak \linebreak
+  Para capturar uma peça do adversário na casa de destino, será usado o seguinte predicado:
+
+\begin{code}[H]
+	\begin{verbatimtab}
+
+	capturePawn([Dx, Dy]).
+\end{verbatimtab}
+\caption{Captura de peça na casa de destino.}
+\end{code}
+
 
 
 %************************************************************************************************
@@ -298,15 +309,15 @@ A peça que se encontra em (7, 5), é movida para a casa (6, 4).
 
 \section{Visualização do Tabuleiro}
 
-%Descrever a forma de visualização do tabuleiro em modo de texto e os predicados Prolog construídos para o efeito.
-%O código (predicado) desenvolvido, deve receber como parâmetro a representação do tabuleiro (estado do jogo) e permitir visualizar, no ecrã, em modo de texto, o estado do jogo.
-%Deve ser incluída no relatório, pelo menos, uma imagem demonstrando a visualização em modo de texto do tabuleiro.
+% Descrever a forma de visualização do tabuleiro em modo de texto e os predicados Prolog construídos para o efeito.
+% O código (predicado) desenvolvido, deve receber como parâmetro a representação do tabuleiro (estado do jogo) e permitir visualizar, no ecrã, em modo de texto, o estado do jogo.
+% Deve ser incluída no relatório, pelo menos, uma imagem demonstrando a visualização em modo de texto do tabuleiro.
 
 O tabuleiro do jogo, é apresentado no ecrã através do predicado ``printBoard''.
 Esta função apresenta as células do tabuleiro representadas pelo número do jogador correspondente, ou em branco, caso a mesma se encontre vazia.
 Apresenta também as linhas e colunas à volta do tabuleiro, numeradas do número 1 até ao número da ordem de colunas ou linhas.
 
-%Figura do tabuleiro
+% Figura do tabuleiro
 \begin{figure}[h!]
 \begin{center}
 \includegraphics[scale=1]{fig_tab.png}
@@ -465,16 +476,14 @@ Estimamos que apenas 10\% do total do projeto esteja concluído, uma vez que os 
 
 \begin{code}[H]
 	\begin{verbatimtab} % verbatimtab para codigo com tabs
-initBoard([
-	   [ 1, 1, 1, 1, 1, 1, 1, 1 ],
+initBoard([[ 1, 1, 1, 1, 1, 1, 1, 1 ],
 	   [ 1, 1, 1, 1, 1, 1, 1, 1 ],
 	   [ 0, 0, 0, 0, 0, 0, 0, 0 ],
 	   [ 0, 0, 0, 0, 0, 0, 0, 0 ],
 	   [ 0, 0, 0, 0, 0, 0, 0, 0 ],
 	   [ 0, 0, 0, 0, 0, 0, 0, 0 ],
 	   [ 2, 2, 2, 2, 2, 2, 2, 2 ],
-	   [ 2, 2, 2, 2, 2, 2, 2, 2 ]
-	  ]).
+	   [ 2, 2, 2, 2, 2, 2, 2, 2 ]]).
 writePlayer(1) :-
 	write('1').
 writePlayer(2) :-
@@ -514,8 +523,9 @@ printBoard([H|T]) :-
 init :-
 	initBoard(A),
 	printBoard(A).
-% Protótipo da função de movimento de uma peça.
-% movePawn([Ox,Oy], [Dx,D2]).
+% Protótipos do predicados da função de movimento e captura de uma peça.
+% movePawn([Ox, Oy], [Dx, D2]).
+% capturePawn([Dx, Dy]).
 \end{verbatimtab}
 \caption{Código dos predicados utilizados.}
 \end{code}

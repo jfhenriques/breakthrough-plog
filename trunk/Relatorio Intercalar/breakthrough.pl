@@ -116,3 +116,6 @@ init :-
 	
 % Move C1R1 para C2R2
 %movePawn([Ox,Oy], [Dx,D2]).
+
+% Captura a peça na casa de destino 
+%capturePawn( [ Dx, Dy ] ).
