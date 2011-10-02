@@ -66,9 +66,10 @@ printFullRow([], _).
 
 % Imprime o número da linha no ínicio e no fim de cada iteração,
 % bem como o separador horizontal. Chama também o predicado que irá
-% imprimir todas as celulas de cada linha, com a respectiva peça.
+% imprimir todas as células de cada linha, com a respectiva peça.
 % Por fim chama recursivamente a mesma função com a cauda da
-% lista, e o número actual da linha, até atingir o critério de paragem,
+% lista (contendo as restantes células da linha correspondente),
+% e o número actual da linha, até atingir o critério de paragem,
 % ou seja, quando a a cauda for uma lista vazia.
 printFullRow([H|T], N) :-
 	N1 is N+1,
