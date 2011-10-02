@@ -6,10 +6,10 @@
 \usepackage[utf8]{inputenc}
 \usepackage{indentfirst}
 \usepackage{graphicx}
-%\usepackage{verbatim}
 \usepackage{moreverb}
 \usepackage{subfig}
 \usepackage{float}
+\usepackage{url}
 
 \floatstyle{ruled}
 \newfloat{code}{!ht}{lop}
@@ -36,7 +36,7 @@
 }
 
 
-\author{\textbf{Grupo xx:}
+\author{\textbf{Grupo 17:}
 \\ João Guedes - 070509043
 \\ João Henriques - 110509026
 \\\linebreak\linebreak \\
@@ -61,7 +61,7 @@
 
 
 
-O \textit{Breakthrough} é um jogo de tabuleiro tradicional semelhante às damas, premiado e com um conjunto de regras muito simples e acessível.
+O \textit{Breakthrough}\cite{breakSite} é um jogo de tabuleiro tradicional semelhante às damas, premiado e com um conjunto de regras muito simples e acessível.
 
 A implementação pretendida irá oferecer três modos de jogo - ``Humano/Humano", ``Humano/Computador" e ``Computador/Computador" - sendo que o Computador terá vários níveis
 de dificuldade.
@@ -418,7 +418,25 @@ printBoard([H|T]) :-
 %************************************************************************************************
 
 \section{Conclusões e Perspectivas de Desenvolvimento}
-Que conclui da análise do jogo e da pesquisa bibliográfica realizada? Como vai ser desenvolvido o trabalho? Que parte (\%) do trabalho estima que falta fazer?
+
+% Que conclui da análise do jogo e da pesquisa bibliográfica realizada?
+% Como vai ser desenvolvido o trabalho?
+% Que parte (\%) do trabalho estima que falta fazer?
+
+Da análise do jogo e da pesquisa bibliográfica efectuada, concluímos que o jogo é muito semelhante ao jogo das damas, em que a peça pode andar para as três casas adjecentes da linha à sua frente (do ponto de vista do jogador), caso estas estejam vazias,
+ou estando ocupada por uma peça adversária, esta pode ser capturada, e tomada a sua posição. Ao contrário do jogo das damas, não é possivel capturar mais do que uma peça adversária em cada jogada.
+
+Dados os conhecimentos adquiridos, podemos concluir que o código do predicado para efectuar a jogada, deverá ser simples de implementar, bastando avaliar se a casa de destino é adjecente à casa de origem, se o movimento é posterior à posição de partida do jogador,
+e verificar se na casa de destino encontra-se alguma outra peça. Caso se encontre, poderão ser tomadas apenas duas acções: se for uma peça do próprio jogador, não permitir a jogadada; se for uma peça do adversário, capturar a mesma.
+
+O trabalho já começou a ser desenvolvido em Prolog, e será posteriormente, criada uma interface em ambiente gráfico em complementaridade com a cadeira de LAIG. Por enquanto, iremos nos focar simplesmente com a implementação em ambiente de texto.
+
+Estimamos que devemos ter concluído apenas 10\% do total do projecto, porque as jogadas ``Humano/Computador'' e ``Computador/Computador'', sendo baseadas em inteligência artificial, necessitarão de algum trabalho.
+
+
+
+%************************************************************************************************
+%************************************************************************************************
 
 \clearpage
 
@@ -430,8 +448,8 @@ Que conclui da análise do jogo e da pesquisa bibliográfica realizada? Como vai
 
 %************************************************************************************************
 %************************************************************************************************
-
 \newpage
+
 \appendix
 \section{Código Prolog}
 
@@ -486,6 +504,8 @@ printBoard([H|T]) :-
 init :-
 	initBoard(A),
 	printBoard(A).
+% Protótipo da função de movimento de uma peça.
+% movePawn([Ox,Oy], [Dx,D2]).
 \end{verbatimtab}
 \caption{Código dos predicados utilizados.}
 \end{code}
