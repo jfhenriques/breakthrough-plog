@@ -63,7 +63,7 @@
 
 
 
-O \textit{Breakthrough}\cite{breakSite} é um jogo de tabuleiro tradicional semelhante às damas, premiado e com um conjunto de regras muito simples e acessível.
+O \textit{Breakthrough} é um jogo de tabuleiro tradicional semelhante às damas, premiado e com um conjunto de regras muito simples e acessível.
 
 A implementação pretendida irá oferecer três modos de jogo - ``Humano/Humano", ``Humano/Computador" e ``Computador/Computador" - sendo que o Computador terá vários níveis
 de dificuldade.
@@ -198,8 +198,8 @@ O \textit{Breakthrough} foi criado no ano 2000 por \textit{Dan Troyka}  e dispon
 A representação do tabuleiro 8x8 é feita em Prolog por uma lista de listas.
 Cada item do tabuleiro é representado no formato ``<Jogador>", em que este pode ser:
 \begin{itemize}
-\item 1 - jogador branco
-\item 2 - jogador preto
+\item 1 - jogador de peças brancas
+\item 2 - jogador de peças pretas
 \item 0 - casa vazia
 \end{itemize}
 
@@ -261,13 +261,19 @@ finalBoard(
 
 %************************************************************************************************
 %************************************************************************************************
+\newpage
 
 \section{Representação de um Movimento}
 
 %Descrever a forma de representação dos diversos tipos de jogadas (movimentos) permitidos no jogo.
 %Só é necessário apresentar os cabeçalhos dos predicados que serão utilizados para as diferentes jogadas (que ainda não precisam de estar implementados).
 
-Conforme explicado inicialmente, o jogador só pode mover a sua peça para a casa a Noroeste, Norte ou Nordeste de onde se encontra, e se esta se encontrar vazia. Para isso, basta utilizar uma única função de movimento:
+Da perspetiva do jogador que começa a Sul - o jogador das peças pretas - este só pode mover a sua peça para a casa adjacente nas seguintes condições:
+\begin{enumerate}
+\item casa Norte, se esta estiver vazia
+\item casa Noroeste ou Nordeste, se esta estiver vazia ou contiver uma peça do oponente, sendo que neste último caso acontece uma captura.
+\end{enumerate}
+Para efetuar um movimento, chamamos a seguinte função:
 \begin{code}[H]
 	\begin{verbatimtab}
 
@@ -418,6 +424,7 @@ printBoard([H|T]) :-
 
 %************************************************************************************************
 %************************************************************************************************
+\newpage
 
 \section{Conclusões e Perspectivas de Desenvolvimento}
 
@@ -425,15 +432,13 @@ printBoard([H|T]) :-
 % Como vai ser desenvolvido o trabalho?
 % Que parte (\%) do trabalho estima que falta fazer?
 
-Da análise do jogo e da pesquisa bibliográfica efectuada, concluímos que o jogo é muito semelhante ao jogo das damas, em que a peça pode andar para as três casas adjecentes da linha à sua frente (do ponto de vista do jogador), caso estas estejam vazias,
-ou estando ocupada por uma peça adversária, esta pode ser capturada, e tomada a sua posição. Ao contrário do jogo das damas, não é possivel capturar mais do que uma peça adversária em cada jogada.
+Da análise do jogo e da pesquisa bibliográfica efectuada, concluímos que o jogo apresenta muitas semelhanças ao jogo das damas.
 
-Dados os conhecimentos adquiridos, podemos concluir que o código do predicado para efectuar a jogada, deverá ser simples de implementar, bastando avaliar se a casa de destino é adjecente à casa de origem, se o movimento é posterior à posição de partida do jogador,
-e verificar se na casa de destino encontra-se alguma outra peça. Caso se encontre, poderão ser tomadas apenas duas acções: se for uma peça do próprio jogador, não permitir a jogadada; se for uma peça do adversário, capturar a mesma.
+Dados os conhecimentos adquiridos, podemos concluir que o código do predicado para efectuar a jogada deverá ser simples de implementar, bastando avaliar se a casa de destino é adjacente à casa de origem, se o movimento é posterior à posição de partida do jogador e verificar se na casa de destino encontra-se alguma outra peça. 
+O trabalho já começou a ser desenvolvido em Prolog, e será posteriormente criada uma interface em ambiente gráfico no contexto de LAIG.
 
-O trabalho já começou a ser desenvolvido em Prolog, e será posteriormente, criada uma interface em ambiente gráfico em complementaridade com a cadeira de LAIG. Por enquanto, iremos nos focar simplesmente com a implementação em ambiente de texto.
-
-Estimamos que devemos ter concluído apenas 10\% do total do projecto, porque as jogadas ``Humano/Computador'' e ``Computador/Computador'', sendo baseadas em inteligência artificial, necessitarão de algum trabalho.
+ Por enquanto, a implementação incidirá apenas no ambiente em modo de texto.
+Estimamos que apenas 10\% do total do projeto esteja concluído, uma vez que os modos de jogo ``Humano/Computador'' e ``Computador/Computador'', sendo baseadas na implementação de algoritmos de inteligência artificial, irão necessitar de mais investigação, e por conseguinte mais tempo dispendido.
 
 
 
