@@ -265,7 +265,7 @@ finalBoard(
 %Descrever a forma de representação dos diversos tipos de jogadas (movimentos) permitidos no jogo.
 %Só é necessário apresentar os cabeçalhos dos predicados que serão utilizados para as diferentes jogadas (que ainda não precisam de estar implementados).
 
-Conforme explicado inicialmente, o jogador só pode mover a sua peça para para a casa a Noroeste, Norte ou Nordeste de onde se encontra, e se esta se encontrar vazia. Para isso, basta utilizar uma única função de movimento:
+Conforme explicado inicialmente, o jogador só pode mover a sua peça para a casa a Noroeste, Norte ou Nordeste de onde se encontra, e se esta se encontrar vazia. Para isso, basta utilizar uma única função de movimento:
 \begin{code}[H]
 	\begin{verbatimtab}
 
@@ -273,7 +273,7 @@ Conforme explicado inicialmente, o jogador só pode mover a sua peça para para 
 \end{verbatimtab}
 \caption{Predicado para mover a peça.}
 \end{code}
-Esta função aceita o X e Y da casa de origem e da casa de destino, e terá de verificar se ambas as casas são adjecentes, bem como validar a jogada, consoante o jogador que estiver na casa de origem.
+Esta função aceita o X e Y da casa de origem e da casa de destino, e terá de verificar se ambas as casas são adjacentes, bem como validar a jogada, consoante o jogador que estiver na casa de origem.
 
 \begin{code}[H]
 	\begin{verbatimtab}
@@ -282,7 +282,7 @@ Esta função aceita o X e Y da casa de origem e da casa de destino, e terá de 
 \end{verbatimtab}
 \caption{Exemplificação de um movimento.}
 \end{code}
-A peça que se encontra em (X, Y), (7, 5), é movido para a casa (6, 4).
+A peça que se encontra em (7, 5), é movida para a casa (6, 4).
 
 
 %************************************************************************************************
@@ -302,7 +302,7 @@ Apresenta também as linhas e colunas à volta do tabuleiro, numeradas do númer
 \begin{figure}[h!]
 \begin{center}
 \includegraphics[scale=1]{fig_tab.png}
-\caption{Tabuleiro imprimido com ``printBoard', mostrando o estado inicial de um jogo'.}
+\caption{Tabuleiro impresso com ``printBoard', mostrando o estado inicial de um jogo'.}
 \label{fig:3}
 \end{center}
 \end{figure}
