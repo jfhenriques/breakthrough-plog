@@ -32,8 +32,7 @@ writePlayer(0) :-
 
 % Critério de paragem.
 % Imprime também a borda direita da última célula de cada linha.
-printRow([])    :- 
-	write('| ').
+printRow([]).
 
 % Imprime a borda esquerda da célula, e a respectivo
 % peça do jogador (cabeça da lista).
@@ -78,6 +77,7 @@ printFullRow([H|T], N) :-
 	write(N),
 	write(' '),
 	printRow(H),
+	write('| '),
 	write(N),
 	nl,
 	printFullRow(T, N1).
