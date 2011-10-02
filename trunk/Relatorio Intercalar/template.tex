@@ -273,7 +273,7 @@ Conforme explicado inicialmente, o jogador só pode mover a sua peça para para 
 \end{verbatimtab}
 \caption{Predicado para mover a peça.}
 \end{code}
-Esta função aceita o X e Y da casa de origem e o X e Y da casa de destino, e terá de verificar se ambas as casas são adjecentes, e validar a jogada, consoante o jogador que estiver na casa de origem.
+Esta função aceita o X e Y da casa de origem e da casa de destino, e terá de verificar se ambas as casas são adjecentes, bem como validar a jogada, consoante o jogador que estiver na casa de origem.
 
 \begin{code}[H]
 	\begin{verbatimtab}
@@ -296,13 +296,13 @@ A peça que se encontra em (X, Y), (7, 5), é movido para a casa (6, 4).
 
 O tabuleiro do jogo, é apresentado no ecrã através do predicado ``printBoard''.
 Esta função apresenta as células do tabuleiro representadas pelo número do jogador correspondente, ou em branco, caso a mesma se encontre vazia.
-Apresenta também as linhas e colunas numeradas, do número 1 até ao número da ordem de colunas ou linhas, à volta do tabuleiro.
+Apresenta também as linhas e colunas à volta do tabuleiro, numeradas do número 1 até ao número da ordem de colunas ou linhas.
 
 %Figura do tabuleiro
 \begin{figure}[h!]
 \begin{center}
 \includegraphics[scale=1]{fig_tab.png}
-\caption{Tabuleiro imprimido com ``printBoard''.}
+\caption{Tabuleiro imprimido com ``printBoard', mostrando o estado inicial de um jogo'.}
 \label{fig:3}
 \end{center}
 \end{figure}
@@ -312,34 +312,110 @@ Na construção do código para esta função, ``printBoard'', foram criados os 
 \begin{code}[H]
 	\begin{verbatimtab}
 
-% A função "printBoard", que imprime o tabuleiro,
-% com as linhas e colunas numeradas
-printBoard([H|T]).
-
-% Imprime a peça do jogador correspondente
-writePlayer(1).
-writePlayer(2).
-writePlayer(0).
-
-% Imprime elementos da sublista
-printRow([H|T]).
-	
-% Imprimie a linha de separação horizontal
-printHorizSep.
-% Imprimie os números das colunas
-printColNumbers.
-
-% Acrescenta número da linha no início e no fim da sublista
-printFullRow([H|T], N).
+% Imprime a peça do jogador correspondente.
+writePlayer(1) :-
+	write('1').
+writePlayer(2) :-
+	write('2').
+writePlayer(0) :-
+	write(' ').
 \end{verbatimtab}
-\caption{Cabeçalho dos predicados utilizados para imprimir no ecrã.}
+\caption{Predicado ``writePlayer' .}
 \end{code}
 
-Mais detalhe sobre estes predicados pode ser consultado no ``anexo A''.
+
+
+\begin{code}[H]
+	\begin{verbatimtab}
+
+% Critério de paragem.
+% Imprime também a borda direita da última célula de cada linha.
+printRow([])    :- 
+	write('| ').
+
+% Imprime a borda esquerda da célula, e a respectivo
+% peça do jogador (cabeça da lista).
+% Por fim chama recursivamente a mesma função com
+% a cauda da lista, até encontrar o critério de paragem.
+printRow([H|T]) :-
+	write('| '),
+	writePlayer(H),
+	write(' '),
+	printRow(T).
+\end{verbatimtab}
+\caption{Predicado ``printRow'' .}
+\end{code}
 
 
 
+\begin{code}[H]
+	\begin{verbatimtab}
 
+% Imprimie a linha de separação horizontal.
+printHorizSep   :-
+	write('   --- --- --- --- --- --- --- ---').
+
+% Imprimie os números das colunas.
+printColNumbers :-
+	write('    1   2   3   4   5   6   7   8').
+\end{verbatimtab}
+\caption{Predicado ``printHorizSep'' e ``printColNumbers''.}
+\end{code}
+
+
+
+\begin{code}[H]
+	\begin{verbatimtab}
+
+% Critério de paragem.
+printFullRow([], _).
+
+% Imprime o número da linha no ínicio e no fim de cada iteração,
+% bem como o separador horizontal. Chama também o predicado que irá
+% imprimir todas as células de cada linha, com a respectiva peça.
+% Por fim chama recursivamente a mesma função com a cauda da
+% lista (contendo as restantes células da linha correspondente),
+% e o número actual da linha, até atingir o critério de paragem,
+printFullRow([H|T], N) :-
+	N1 is N+1,
+	printHorizSep,
+	nl,
+	write(N),
+	write(' '),
+	printRow(H),
+	write(N),
+	nl,
+	printFullRow(T, N1).
+\end{verbatimtab}
+\caption{Predicado ``printFullRow''.}
+\end{code}
+
+
+
+\begin{code}[H]
+	\begin{verbatimtab}
+
+% Regra a ser usada quando é passado um tabuleiro vazio.
+printBoard([]).
+
+% Imprime o tabuleiro, chamando o predicado que imprime o número
+% das colunas (no início e no fim do tabuleiro),
+% e de seguida o predicado que imprime cada linha individual.
+% É imprimido também o separador horizontal do tabuleiro.
+printBoard([H|T]) :-
+	printColNumbers,
+	nl,
+	printFullRow([H|T], 1),
+	printHorizSep,
+	nl,
+	printColNumbers.
+\end{verbatimtab}
+\caption{Predicado ``printBoard''.}
+\end{code}
+
+
+%************************************************************************************************
+%************************************************************************************************
 
 \section{Conclusões e Perspectivas de Desenvolvimento}
 Que conclui da análise do jogo e da pesquisa bibliográfica realizada? Como vai ser desenvolvido o trabalho? Que parte (\%) do trabalho estima que falta fazer?
@@ -361,31 +437,33 @@ Que conclui da análise do jogo e da pesquisa bibliográfica realizada? Como vai
 
 \begin{code}[H]
 	\begin{verbatimtab} % verbatimtab para codigo com tabs
-% Imprime a peça do jogador correspondente
+initBoard([
+	   [ 1, 1, 1, 1, 1, 1, 1, 1 ],
+	   [ 1, 1, 1, 1, 1, 1, 1, 1 ],
+	   [ 0, 0, 0, 0, 0, 0, 0, 0 ],
+	   [ 0, 0, 0, 0, 0, 0, 0, 0 ],
+	   [ 0, 0, 0, 0, 0, 0, 0, 0 ],
+	   [ 0, 0, 0, 0, 0, 0, 0, 0 ],
+	   [ 2, 2, 2, 2, 2, 2, 2, 2 ],
+	   [ 2, 2, 2, 2, 2, 2, 2, 2 ]
+	  ]).
 writePlayer(1) :-
 	write('1').
 writePlayer(2) :-
 	write('2').
 writePlayer(0) :-
 	write(' ').
-
-% Imprime elementos da sublista
-printRow([])    :-
+printRow([])    :- 
 	write('| ').
 printRow([H|T]) :-
 	write('| '),
 	writePlayer(H),
 	write(' '),
 	printRow(T).
-
-% Imprimie a linha de separação horizontal
 printHorizSep   :-
 	write('   --- --- --- --- --- --- --- ---').
-% Imprimie os números das colunas
 printColNumbers :-
 	write('    1   2   3   4   5   6   7   8').
-
-%Acrescenta número da linha no início e no fim da sublista
 printFullRow([], _).
 printFullRow([H|T], N) :-
 	N1 is N+1,
@@ -397,8 +475,6 @@ printFullRow([H|T], N) :-
 	write(N),
 	nl,
 	printFullRow(T, N1).
-
-%Imprime tabuleiro,  com as linhas e colunas numeradas
 printBoard([]).
 printBoard([H|T]) :-
 	printColNumbers,
@@ -407,8 +483,6 @@ printBoard([H|T]) :-
 	printHorizSep,
 	nl,
 	printColNumbers.
-
-%Imprime tabuleiro inicial
 init :-
 	initBoard(A),
 	printBoard(A).
