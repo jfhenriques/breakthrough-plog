@@ -6,7 +6,8 @@
 \usepackage[utf8]{inputenc}
 \usepackage{indentfirst}
 \usepackage{graphicx}
-\usepackage{verbatim}
+%\usepackage{verbatim}
+\usepackage{moreverb}
 \usepackage{subfig}
 \usepackage{float}
 
@@ -39,7 +40,7 @@
 \\ João Guedes - 070509043
 \\ João Henriques - 110509026
 \\\linebreak\linebreak \\
- \\ Faculdade de Engenharia da Universidade do Porto
+\\ Faculdade de Engenharia da Universidade do Porto
 \\ Rua Roberto Frias, s\/n, 4200-465 Porto, Portugal
 \linebreak\linebreak\linebreak
 \linebreak\linebreak\vspace{1cm}}
@@ -142,6 +143,7 @@ De notar que apesar da nossa implementação consistir num tabuleiro convenciona
 %************************************************************************************************
 
 \section{Descrição do Problema}
+
 %Descrever sucintamente o jogo, a sua história e, principalmente, as suas regras. Devem ser criadas/utilizadas imagens apropriadas para explicar o funcionamento do jogo.
 
 O \textit{Breakthrough} foi criado no ano 2000 por \textit{Dan Troyka}  e disponibilizado para a plataforma comercial \textit{Zillion of Games}.
@@ -190,6 +192,7 @@ O \textit{Breakthrough} foi criado no ano 2000 por \textit{Dan Troyka}  e dispon
 %************************************************************************************************
  
 \section{Representação do Estado do Jogo}
+
 A representação do tabuleiro 8x8 é feita em Prolog por uma lista de listas.
 Cada item do tabuleiro é representado no formato ``<Jogador>", em que este pode ser:
 \begin{itemize}
@@ -199,66 +202,141 @@ Cada item do tabuleiro é representado no formato ``<Jogador>", em que este pode
 \end{itemize}
 
 \begin{code}[H]
-	\begin{verbatim}
-initBoard(
-		  [
-		  [1,1,1,1,1,1,1,1],
-		  [1,1,1,1,1,1,1,1],
-		  [0,0,0,0,0,0,0,0],
-		  [0,0,0,0,0,0,0,0],
-		  [0,0,0,0,0,0,0,0],
-		  [0,0,0,0,0,0,0,0],
-		  [2,2,2,2,2,2,2,2],
-		  [2,2,2,2,2,2,2,2]
-		  ]).
-\end{verbatim}
-\caption{Representação de tabuleiro inicial.}      
+	\begin{verbatimtab}
+
+.
+\end{verbatimtab}
+\caption{Representação de tabuleiro inicial.}
 \end{code}
 
+
 \begin{code}[H]
-	\begin{verbatim}
+	\begin{verbatimtab}
+
 intermediumBoard(
-		  [
-		  [1,1,1,1,1,1,1,1],
-		  [1,1,0,1,1,1,0,1],
-		  [0,0,1,0,0,0,0,0],
-		  [0,0,0,0,0,1,0,0],
-		  [0,0,0,0,0,2,0,0],
-		  [0,0,0,2,0,0,0,2],
-		  [2,2,2,0,2,0,0,2]
-		  [2,2,2,2,2,2,2,2]
-		  ]).
-\end{verbatim}
+	[
+		[ 1, 1, 1, 1, 1, 1, 1, 1 ],
+		[ 1, 1, 0, 1, 1, 1, 0, 1 ],
+		[ 0, 0, 1, 0, 0, 0, 0, 0 ],
+		[ 0, 0, 0, 0, 0, 1, 0, 0 ],
+		[ 0, 0, 0, 0, 0, 2, 0, 0 ],
+		[ 0, 0, 0, 2, 0, 0, 0, 2 ],
+		[ 2, 2, 2, 0, 2, 0, 0, 2 ],
+		[ 2, 2, 2, 2, 2 ,2 ,2, 2 ]
+	]).
+\end{verbatimtab}
 \caption{Representação de tabuleiro intermédio.}
 \end{code}
 
+
 \begin{code}[H]
-	\begin{verbatim}
+	\begin{verbatimtab}
+
 finalBoard(
-		  [
-		  [1,1,1,1,1,1,1,1],
-		  [1,1,0,1,1,0,0,1],
-		  [0,0,1,0,0,0,0,0],
-		  [0,0,0,0,0,0,0,0],
-		  [0,2,0,0,0,1,0,0],
-		  [0,0,0,2,0,0,0,2],
-		  [2,2,0,0,2,0,0,2]
-		  [2,2,2,1,2,2,2,2]
-		  ]).
-\end{verbatim}
+	[
+		[ 1, 1, 1, 1, 1, 1, 1, 1 ],
+		[ 1, 1, 0, 1, 1, 0, 0, 1 ],
+		[ 0, 0, 1, 0, 0, 0, 0, 0 ],
+		[ 0, 0, 0, 0, 0, 0, 0, 0 ],
+		[ 0, 2, 0, 0, 0, 1, 0, 0 ],
+		[ 0, 0, 0, 2, 0, 0, 0, 2 ],
+		[ 2, 2, 0, 0, 2, 0, 0, 2 ],
+		[ 2, 2, 2, 1, 2, 2, 2, 2 ]
+	]).
+\end{verbatimtab}
 \caption{Representação de tabuleiro final, em que o jogador 1 venceu.}
 \end{code}
 
+
+%************************************************************************************************
+%************************************************************************************************
+
 \section{Representação de um Movimento}
-Descrever a forma de representação dos diversos tipos de jogadas (movimentos) permitidos no jogo. Só é necessário apresentar os cabeçalhos dos predicados que serão utilizados para as diferentes jogadas (que ainda não precisam de estar implementados).
+
+%Descrever a forma de representação dos diversos tipos de jogadas (movimentos) permitidos no jogo.
+%Só é necessário apresentar os cabeçalhos dos predicados que serão utilizados para as diferentes jogadas (que ainda não precisam de estar implementados).
+
+Conforme explicado inicialmente, o jogador só pode mover a sua peça para para a casa a Noroeste, Norte ou Nordeste de onde se encontra, e se esta se encontrar vazia. Para isso, basta utilizar uma única função de movimento:
+\begin{code}[H]
+	\begin{verbatimtab}
+
+	movePawn([Ox,Oy], [Dx,Dy]).
+\end{verbatimtab}
+\caption{Predicado para mover a peça.}
+\end{code}
+Esta função aceita o X e Y da casa de origem e o X e Y da casa de destino, e terá de verificar se ambas as casas são adjecentes, e validar a jogada, consoante o jogador que estiver na casa de origem.
+
+\begin{code}[H]
+	\begin{verbatimtab}
+
+	movePawn([ 7, 5 ], [ 6 , 4 ]).
+\end{verbatimtab}
+\caption{Exemplificação de um movimento.}
+\end{code}
+A peça que se encontra em (X, Y), (7, 5), é movido para a casa (6, 4).
+
+
+%************************************************************************************************
+%************************************************************************************************
 
 \section{Visualização do Tabuleiro}
-Descrever a forma de visualização do tabuleiro em modo de texto e os predicados Prolog construídos para o efeito. O código (predicado) desenvolvido, deve receber como parâmetro a representação do tabuleiro (estado do jogo) e permitir visualizar, no ecrã, em modo de texto, o estado do jogo. Deve ser incluída no relatório, pelo menos, uma imagem demonstrando a visualização em modo de texto do tabuleiro.
+
+%Descrever a forma de visualização do tabuleiro em modo de texto e os predicados Prolog construídos para o efeito.
+%O código (predicado) desenvolvido, deve receber como parâmetro a representação do tabuleiro (estado do jogo) e permitir visualizar, no ecrã, em modo de texto, o estado do jogo.
+%Deve ser incluída no relatório, pelo menos, uma imagem demonstrando a visualização em modo de texto do tabuleiro.
+
+O tabuleiro do jogo, é apresentado no ecrã através do predicado ``printBoard''.
+Esta função apresenta as células do tabuleiro representadas pelo número do jogador correspondente, ou em branco, caso a mesma se encontre vazia.
+Apresenta também as linhas e colunas numeradas, do número 1 até ao número da ordem de colunas ou linhas, à volta do tabuleiro.
+
+%Figura do tabuleiro
+\begin{figure}[h!]
+\begin{center}
+\includegraphics[scale=1]{fig_tab.png}
+\caption{Tabuleiro imprimido com ``printBoard''.}
+\label{fig:3}
+\end{center}
+\end{figure}
+
+Na construção do código para esta função, ``printBoard'', foram criados os seguintes predicados:
+
+\begin{code}[H]
+	\begin{verbatimtab}
+
+% A função "printBoard", que imprime o tabuleiro,
+% com as linhas e colunas numeradas
+printBoard([H|T]).
+
+% Imprime a peça do jogador correspondente
+writePlayer(1).
+writePlayer(2).
+writePlayer(0).
+
+% Imprime elementos da sublista
+printRow([H|T]).
+	
+% Imprimie a linha de separação horizontal
+printHorizSep.
+% Imprimie os números das colunas
+printColNumbers.
+
+% Acrescenta número da linha no início e no fim da sublista
+printFullRow([H|T], N).
+\end{verbatimtab}
+\caption{Cabeçalho dos predicados utilizados para imprimir no ecrã.}
+\end{code}
+
+Mais detalhe sobre estes predicados pode ser consultado no ``anexo A''.
+
+
+
+
 
 \section{Conclusões e Perspectivas de Desenvolvimento}
 Que conclui da análise do jogo e da pesquisa bibliográfica realizada? Como vai ser desenvolvido o trabalho? Que parte (\%) do trabalho estima que falta fazer?
 
 \clearpage
+
 \addcontentsline{toc}{section}{Bibliografia}
 \renewcommand\refname{Bibliografia}
 \bibliographystyle{plain}
@@ -270,61 +348,63 @@ Que conclui da análise do jogo e da pesquisa bibliográfica realizada? Como vai
 
 \newpage
 \appendix
-\section{Nome do Anexo A}
+\section{Código Prolog}
 
 \begin{code}[H]
-	\begin{verbatim}
-writePlayer(1):-
+	\begin{verbatimtab} % verbatimtab para codigo com tabs
+% Imprime a peça do jogador correspondente
+writePlayer(1) :-
 	write('1').
-
-writePlayer(2):-
+writePlayer(2) :-
 	write('2').
-
-writePlayer(0):-
+writePlayer(0) :-
 	write(' ').
 
 % Imprime elementos da sublista
-printRow([]).		
-printRow([H|T]):-
+printRow([])    :-
+	write('| ').
+printRow([H|T]) :-
 	write('| '),
 	writePlayer(H),
 	write(' '),
 	printRow(T).
 
+% Imprimie a linha de separação horizontal
+printHorizSep   :-
+	write('   --- --- --- --- --- --- --- ---').
+% Imprimie os números das colunas
+printColNumbers :-
+	write('    1   2   3   4   5   6   7   8').
+
 %Acrescenta número da linha no início e no fim da sublista
 printFullRow([], _).
-printFullRow([H|T], N):-
+printFullRow([H|T], N) :-
 	N1 is N+1,
-	write('  |   |   |   |   |   |   |   |   |'),
+	printHorizSep,
 	nl,
 	write(N),
 	write(' '),
 	printRow(H),
-	write('|'),
-	write(' '),
 	write(N),
 	nl,
 	printFullRow(T, N1).
 
-%Imprime tabuleiro, com colunas numeradas
+%Imprime tabuleiro,  com as linhas e colunas numeradas
 printBoard([]).
-printBoard([H|T]):-
-	write('    a   b   c   d   e   f   g   h'),
-	nl,
-	write('   --------------------------------'),
+printBoard([H|T]) :-
+	printColNumbers,
 	nl,
 	printFullRow([H|T], 1),
-	write('   --------------------------------'),
+	printHorizSep,
 	nl,
-	write('    a   b   c   d   e   f   g   h').
+	printColNumbers.
 
 %Imprime tabuleiro inicial
-init:-
+init :-
 	initBoard(A),
-	printBoard(A),
-
-%TODO: predicados dos movimentos
-\end{verbatim}
+	printBoard(A).
+\end{verbatimtab}
+\caption{Código dos predicados utilizados.}
 \end{code}
 
 \end{document}

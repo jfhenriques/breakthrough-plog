@@ -1,15 +1,16 @@
 initBoard([
-	   [1, 1, 1, 1, 1, 1, 1, 1],
-	   [1, 1, 1, 1, 1, 1, 1, 1],
-	   [0, 0, 0, 0, 0, 0, 0, 0],
-	   [0, 0, 0, 0, 0, 0, 0, 0],
-	   [0, 0, 0, 0, 0, 0, 0, 0],
-	   [0, 0, 0, 0, 0, 0, 0, 0],
-	   [2, 2, 2, 2, 2, 2, 2, 2],
-	   [2, 2, 2, 2, 2, 2, 2, 2]
+	   [ 1, 1, 1, 1, 1, 1, 1, 1 ],
+	   [ 1, 1, 1, 1, 1, 1, 1, 1 ],
+	   [ 0, 0, 0, 0, 0, 0, 0, 0 ],
+	   [ 0, 0, 0, 0, 0, 0, 0, 0 ],
+	   [ 0, 0, 0, 0, 0, 0, 0, 0 ],
+	   [ 0, 0, 0, 0, 0, 0, 0, 0 ],
+	   [ 2, 2, 2, 2, 2, 2, 2, 2 ],
+	   [ 2, 2, 2, 2, 2, 2, 2, 2 ]
 	  ]).
 
 
+% Imprime a peça do jogador correspondente
 writePlayer(1) :-
 	write('1').
 writePlayer(2) :-
@@ -18,69 +19,50 @@ writePlayer(0) :-
 	write(' ').
 
 % Imprime elementos da sublista
-printRow([]).
+printRow([])    :-
+	write('| ').
 printRow([H|T]) :-
 	write('| '),
 	writePlayer(H),
 	write(' '),
 	printRow(T).
-printHorizSep :-
+
+% Imprimie a linha de separação horizontal
+printHorizSep   :-
 	write('   --- --- --- --- --- --- --- ---').
-printColLetters :-
-	write('    a   b   c   d   e   f   g   h').
+% Imprimie os números das colunas
+printColNumbers :-
+	write('    1   2   3   4   5   6   7   8').
 
 %Acrescenta número da linha no início e no fim da sublista
 printFullRow([], _).
-printFullRow([H|T], N):-
+printFullRow([H|T], N) :-
 	N1 is N+1,
-	%write(' | | | | | | | | |'),
 	printHorizSep,
 	nl,
 	write(N),
 	write(' '),
 	printRow(H),
-	write('|'),
-	write(' '),
 	write(N),
 	nl,
 	printFullRow(T, N1).
 
-%Imprime tabuleiro, com colunas numeradas
+%Imprime tabuleiro,  com as linhas e colunas numeradas
 printBoard([]).
-printBoard([H|T]):-
-	%write('   a   b c d e f g h'),
-	%write('   ------------------------------'),
-	%nl,
-	%write(' -----------------------------------'),
-	printColLetters,
+printBoard([H|T]) :-
+	printColNumbers,
 	nl,
 	printFullRow([H|T], 1),
-	%write(' -----------------------------------'),
-	%nl,
-	%write(' a b c d e f g h').
 	printHorizSep,
 	nl,
-	printColLetters.
+	printColNumbers.
 
 %Imprime tabuleiro inicial
-init:-
+init :-
 	initBoard(A),
 	printBoard(A).
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+	
+	
+	
+% Move C1R1 para C2R2
+%movePawn([Ox,Oy], [Dx,D2]).
