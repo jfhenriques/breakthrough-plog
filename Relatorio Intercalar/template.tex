@@ -65,7 +65,7 @@
 
 O \textit{Breakthrough} é um jogo de tabuleiro tradicional semelhante às damas, premiado e com um conjunto de regras muito simples e acessível.
 
-A implementação pretendida irá oferecer três modos de jogo - ``Humano/Humano", ``Humano/Computador" e ``Computador/Computador" - sendo que o Computador terá vários níveis
+A implementação pretendida irá oferecer três modos de jogo - Humano/Humano, Humano/Computador e Computador/Computador - sendo que o Computador terá vários níveis
 de dificuldade.
 
 Recorreremos à linguagem de programação \textit{ProLog} para o fazer, e a \textit{C++}  para o módulo de visualização gráfico do jogo.
@@ -76,8 +76,6 @@ Recorreremos à linguagem de programação \textit{ProLog} para o fazer, e a \te
 %************************************************************************************************
 %************************************************************************************************
 
-%************************************************************************************************
-%************************************************************************************************
 \newpage
 
 
@@ -92,54 +90,15 @@ Recorreremos à linguagem de programação \textit{ProLog} para o fazer, e a \te
 
 Este trabalho tem como principal motivação a consolidação do nosso conhecimento em ProLog, visto que o paradigma de programação é totalmente diferente daquele a que temos vindo a estar habituados ao longo do curso.
 
-Por ser menos exigente e mais exequível dados os nossos conhecimentos, começaremos por implementar o modo ``Humano/Humano" através de regras lógicas.
+Por ser menos exigente e mais exequível dados os nossos conhecimentos, começaremos por implementar o modo Humano/Humano através de regras lógicas.
 
 Seguidamente recorreremos a algoritmos de inteligência artificial e à teoria dos jogos para implementar os modos que envolvam o Computador.
 
 
 Escolhemos este trabalho porque gostamos da sua simplicidade e fluidez, e apesar de não ter um conjunto de regras muito vasto, é um jogo com potencial estratégico. 
-Se o oponente não estiver atento, é capaz de ser vencido muito rapidamente.
+Se o oponente não estiver atento é capaz de ser vencido muito rapidamente.
 
-De notar que apesar da nossa implementação consistir num tabuleiro convencional de ``8x8", o \textit{Breakthrough} pode ser jogado com outras configurações, como tabuleiros ``7x7" ou tabuleiros não-quadrados
-
-%Código para inserção de figuras
-%\begin{figure}[h!]
-%\begin{center}
-%escolher entre uma das seguintes três linhas:
-%\includegraphics[height=20cm,width=15cm]{path relativo da imagem}
-%\includegraphics[scale=0.5]{path relativo da imagem}
-%\includegraphics{path relativo da imagem}
-%\caption{legenda da figura}
-%\label{fig:codigoFigura}
-%\end{center}
-%\end{figure}
-
-%Ajuda:
-
-%\textit{Para escrever em itálico}
-
-%\textbf{Para escrever em negrito}
-
-%Para escrever em letra normal
-
-%``Para escrever texto entre aspas''
-
-%Para fazer parágrafo, deixar uma linha em branco.
-
-%Como fazer bullet points:
-
-%\begin{itemize}
-%\item Item1
-%\item Item2
-%\end{itemize}
-
-%Como enumerar itens:
-
-%\begin{enumerate}
-%\item Item 1
-%\end{enumerate}
-
-%\begin{quote}``Isto é uma citação''\end{quote}
+De notar que, apesar da nossa implementação consistir num tabuleiro convencional de 8x8, o \textit{Breakthrough} pode ser jogado com outras configurações, como tabuleiros 7x7 ou tabuleiros não-quadrados.
 
 %************************************************************************************************
 %************************************************************************************************
@@ -160,7 +119,8 @@ O \textit{Breakthrough} foi criado no ano 2000 por \textit{Dan Troyka}  e dispon
 \begin{enumerate}
 \item Um jogador pode mover uma peça se a casa de destino estiver vazia, diagonalmente ou em frente, conforme ilustrado.
 \item Os jogadores movimentam-se sempre em direção à base do adversário, e nunca podem retroceder.
-\item Uma peça pode ser capturada (substituída) se se encontrar diagonalmente ao adversário, quando este avança em direção à base oposta. A captura não é obrigatória nem encadeada como nas damas.
+\item Quando o jogador avança em direção à base oposta e se depara com uma peça adversária diagonalmente, pode capturá-la, sendo a peça capturada eliminada do tabuleiro e substituída pela peça do capturador. 
+No entanto a captura não é obrigatória nem encadeada como nas damas.
 \end{enumerate}
 
 %Figura 1
@@ -184,7 +144,7 @@ O \textit{Breakthrough} foi criado no ano 2000 por \textit{Dan Troyka}  e dispon
 
 \subsection{Vitória}
 \begin{enumerate}
-\item O primeiro jogador a atingir a base do adversário, vence. No caso anterior, se o jogador preto atingisse a linha 1, venceria.
+\item O primeiro jogador a atingir a base do adversário, vence. No caso anterior, se o jogador 2 (peças pretas) atingisse a linha 1, venceria.
 \item Se todas as peças de um jogador forem capturadas, este perde o jogo.
 \item Um empate é matemáticamente impossível, e todas as peças têm sempre pelo menos uma jogada na diagonal possível.
 \end{enumerate}
@@ -196,10 +156,10 @@ O \textit{Breakthrough} foi criado no ano 2000 por \textit{Dan Troyka}  e dispon
 \section{Representação do Estado do Jogo}
 
 A representação do tabuleiro 8x8 é feita em Prolog por uma lista de listas.
-Cada item do tabuleiro é representado no formato ``<Jogador>", em que este pode ser:
+Cada item do tabuleiro é representado no formato ``Jogador", em que este pode ser:
 \begin{itemize}
-\item 1 - jogador de peças brancas
-\item 2 - jogador de peças pretas
+\item 1 - jogador de peças brancas (Norte)
+\item 2 - jogador de peças pretas (Sul)
 \item 0 - casa vazia
 \end{itemize}
 
@@ -268,10 +228,12 @@ finalBoard(
 % Descrever a forma de representação dos diversos tipos de jogadas (movimentos) permitidos no jogo.
 % Só é necessário apresentar os cabeçalhos dos predicados que serão utilizados para as diferentes jogadas (que ainda não precisam de estar implementados).
 
-Da perspetiva do jogador que começa a Sul - o jogador das peças pretas - este só pode mover a sua peça para a casa adjacente nas seguintes condições:
+A descrição seguinte será feita tomando o jogador 2 (que avança na direcção Sul-Norte) como referência.
+
+O jogador pode mover uma dada peça sua para uma casa adjacente a:
 \begin{enumerate}
-\item casa Norte, se esta estiver vazia
-\item casa Noroeste ou Nordeste, se esta estiver vazia ou contiver uma peça do oponente, sendo que neste último caso acontece uma captura.
+\item Norte, se esta estiver vazia.
+\item Noroeste ou Nordeste, se esta estiver vazia ou contiver uma peça do oponente, sendo que neste último caso há forçosamente uma captura.
 \end{enumerate}
 Para efetuar um movimento, chamamos a seguinte função:
 \begin{code}[H]
@@ -443,13 +405,11 @@ printBoard([H|T]) :-
 % Como vai ser desenvolvido o trabalho?
 % Que parte (\%) do trabalho estima que falta fazer?
 
-Da análise do jogo e da pesquisa bibliográfica efectuada, concluímos que o jogo apresenta muitas semelhanças ao jogo das damas.
-
-Dados os conhecimentos adquiridos, podemos concluir que o código do predicado para efectuar a jogada deverá ser simples de implementar, bastando avaliar se a casa de destino é adjacente à casa de origem, se o movimento é posterior à posição de partida do jogador e verificar se na casa de destino encontra-se alguma outra peça. 
-O trabalho já começou a ser desenvolvido em Prolog, e será posteriormente criada uma interface em ambiente gráfico no contexto de LAIG.
+Dados os conhecimentos adquiridos, podemos concluir que o código dos predicados para efectuar quer um movimento, quer uma captura, deverá ser simples de implementar, bastando avaliar se a casa de destino é adjacente à casa de origem, se o movimento é posterior à posição de partida do jogador e verificar se na casa de destino se encontra alguma peça. 
+O trabalho já começou a ser desenvolvido em Prolog, e posteriormente sera criado um interface em ambiente gráfico no contexto de LAIG.
 
  Por enquanto, a implementação incidirá apenas no ambiente em modo de texto.
-Estimamos que apenas 10\% do total do projeto esteja concluído, uma vez que os modos de jogo ``Humano/Computador'' e ``Computador/Computador'', sendo baseadas na implementação de algoritmos de inteligência artificial, irão necessitar de mais investigação, e por conseguinte mais tempo dispendido.
+Estimamos que cerca de 10\% do total do projeto esteja concluído, uma vez que os modos de jogo Humano/Computador' e Computador/Computador', sendo baseadas na implementação de algoritmos de inteligência artificial, irão necessitar de mais investigação, e por conseguinte mais tempo dispendido.
 
 
 
