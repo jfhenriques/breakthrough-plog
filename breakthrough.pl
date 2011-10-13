@@ -26,7 +26,7 @@ writePlayer(2) :-
 writePlayer(0) :-
         write(' ').
 
-        
+
 % **********************************************************************
 % **********************************************************************
 
@@ -43,7 +43,7 @@ printRow([H|T]) :-
         writePlayer(H),
         write(' '),
         printRow(T).
-        
+
 
 % **********************************************************************
 % **********************************************************************
@@ -59,7 +59,7 @@ printColNumbers :-
 
 % **********************************************************************
 % **********************************************************************
-        
+
 % Critério de paragem.
 printFullRow([], _).
 
@@ -81,8 +81,8 @@ printFullRow([H|T], N) :-
         write(N),
         nl,
         printFullRow(T, N1).
-        
-                
+
+
 % **********************************************************************
 % **********************************************************************
 
@@ -101,7 +101,7 @@ printBoard([H|T]) :-
         nl,
         printColNumbers.
 
-        
+
 % **********************************************************************
 % **********************************************************************
 
@@ -109,28 +109,27 @@ printBoard([H|T]) :-
 init :-
         initBoard(A),
         printBoard(A).
-        
-        
+
+
 % **********************************************************************
 % **********************************************************************
-%getPawn([iTab_H|iTab_T], Ox, Oy, Jogador) :-
-%   Ox < 20,
-%   Oy < 20,
-%   getPawnCol([iTab_H|iTab_T], Oy, 1, L),
-%  getPawnRow(L, Ox, 1, Jogador).
+getPawnPos([InTabH|_], Oy, Oy, InTabH) :- !.
+
+getPawnPos([_|InTabT], Oy, Y, Linha) :-
+   Y1 is Y + 1,
+   getPawnPos(InTabT, Oy, Y1, Linha).
+
+getPawn(InTab, X, Y, Jogador) :-
+   X < 20,
+   Y < 20,
+   getPawnPos(InTab, Y, 1, L),
+   getPawnPos(L, X, 1, Jogador).
 
 
-%getPawnRow([Row_H|_], Ox, X, J) :-
-%   Ox = X,
-%   J is Row_H.
+printPlayer(J):-
+       initBoard(A),
+       getPawn(A, 6, 7, J).
 
-%getPawnCol([iTab_H|iTab_T], Oy, Y, Linha) :-
-%   Oy = Y,
-%   Linha is iTab_H.
-  
-%getPawnCol([_|iTab_T], Oy, Y, Linha) :-
-%   Y1 is Y + 1,
-%   getPawnCol(iTab_T, Oy, Y1, Linha).
 
 % Move C1R1 para C2R2
 %movePawn(+[Ox,Oy], +[Dx,D2], +Tabuleiro_in, -Tabuleiro_out).
@@ -138,5 +137,5 @@ init :-
 %   movePawn([Ox,Oy], [Dx,Dy], [iTab_H|iTab_T], Tab_out):-
 
 
-% Captura a peça na casa de destino 
+% Captura a peça na casa de destino
 %capturePawn( [ Dx, Dy ] ).
