@@ -14,6 +14,25 @@ initBoard([
            [ 2, 2, 2, 2, 2, 2, 2, 2 ]
           ]).
 
+finalBoard([
+           [ 1, 1, 1, 1, 1, 1, 1, 1 ],
+           [ 1, 1, 1, 0, 1, 0, 1, 0 ],
+           [ 0, 0, 0, 0, 0, 0, 0, 0 ],
+           [ 0, 0, 2, 0, 1, 1, 0, 0 ],
+           [ 0, 0, 0, 0, 0, 0, 1, 0 ],
+           [ 0, 0, 0, 0, 0, 0, 0, 0 ],
+           [ 2, 2, 0, 2, 2, 2, 2, 0 ],
+           [ 2, 2, 2, 2, 2, 2, 1, 2 ]
+          ]).
+
+
+smallBoard([
+	    [1,1,1,1],
+	    [0,0,0,0],
+	    [0,0,0,0],
+	    [2,2,2,2]
+	   ]
+	  ).
 
 % **********************************************************************
 % **********************************************************************
@@ -119,7 +138,7 @@ init :-
 
 % Condição de paragem, encontrou a casa.
 % Retorna InTabH
-getPawnPos([InTabH|_], Dest, Dest, InTabH) :- !.
+getPawnPos([Player|_], Dest, Dest, Player) :- !.
 
 % Percorre o tabuleiro
 getPawnPos([_|InTabT], Dest, BaseIncrement, Value) :-
@@ -128,16 +147,46 @@ getPawnPos([_|InTabT], Dest, BaseIncrement, Value) :-
 
 % Verifica se X e Y estão dentro dos valores permitidos
 % Recorre a getPawnPos para percorrer o tabuleiro e encontra o jogador
-getPawn(InTab, X, Y, Jogador) :-
+getPawn(InTab, X, Y, Player) :-
    X < 20,
    Y < 20,
    getPawnPos(InTab, Y, 1, L),
-   getPawnPos(L, X, 1, Jogador).
+   getPawnPos(L, X, 1, Player).
 
 printPlayer(J):-
        initBoard(A),
        getPawn(A, 6, 7, J).
 
+% Verificar se há peças do jogador 2 primeira linha
+% Verificar se há peças do jogador 1 última linha
+
+checkForInvasion([]).
+checkForInvasionOfP1([]).
+
+checkForInvasionOfP1([InTabT], Player):-
+	member(1, InTabT),
+	Player is 1,
+	!.
+
+checkForInvasionOfP1([_|InTabT], Player):-
+	checkForInvasionOfP1(InTabT, Player).
+
+checkForInvasion([InTabH|_], Player):-
+	member(2, InTabH),
+	Player is 2,
+	!.
+
+checkForInvasion([_|InTabT], Player):-
+	checkForInvasionOfP1(InTabT, Player).
+
+checkWinner(Tab, Player) :-
+	checkForInvasion(Tab, Player).
+%falta fazer a contagem de peças de cada jogador,
+%que é a segunda forma de determinar o vencedor.
+
+verificaVencedor(P):-
+	finalBoard(A),
+	checkWinner(A, P).
 
 % Move C1R1 para C2R2
 %movePawn(+[Ox,Oy], +[Dx,D2], +Tabuleiro_in, -Tabuleiro_out).
