@@ -48,11 +48,11 @@ printRow([H|T]) :-
 % **********************************************************************
 % **********************************************************************
 
-% Imprimie a linha de separação horizontal.
+% Imprime a linha de separação horizontal.
 printHorizSep   :-
         write('   --- --- --- --- --- --- --- ---').
 
-% Imprimie os números das colunas.
+% Imprime os números das colunas.
 printColNumbers :-
         write('    1   2   3   4   5   6   7   8').
 
@@ -112,19 +112,27 @@ init :-
 
 
 % **********************************************************************
+% getPawn(+Tabuleiro, +X, +Y, -Jogador)
+% Retorna o número do jogador na posição (X,Y) do Tabuleiro.
+% Recorre a getPawnPos() para percorrer o tabuleiro.
 % **********************************************************************
-getPawnPos([InTabH|_], Oy, Oy, InTabH) :- !.
 
-getPawnPos([_|InTabT], Oy, Y, Linha) :-
-   Y1 is Y + 1,
-   getPawnPos(InTabT, Oy, Y1, Linha).
+% Condição de paragem, encontrou a casa.
+% Retorna InTabH
+getPawnPos([InTabH|_], Dest, Dest, InTabH) :- !.
 
+% Percorre o tabuleiro
+getPawnPos([_|InTabT], Dest, BaseIncrement, Value) :-
+   Increment is BaseIncrement + 1,
+   getPawnPos(InTabT, Dest, Increment, Value).
+
+% Verifica se X e Y estão dentro dos valores permitidos
+% Recorre a getPawnPos para percorrer o tabuleiro e encontra o jogador
 getPawn(InTab, X, Y, Jogador) :-
    X < 20,
    Y < 20,
    getPawnPos(InTab, Y, 1, L),
    getPawnPos(L, X, 1, Jogador).
-
 
 printPlayer(J):-
        initBoard(A),
