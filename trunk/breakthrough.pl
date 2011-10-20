@@ -118,15 +118,6 @@ printBoard([H|T]) :-
 
 
 % **********************************************************************
-% **********************************************************************
-
-% Inicializa e imprime tabuleiro no estado inicial.
-init :-
-        initBoard(A),
-        printBoard(A).
-
-
-% **********************************************************************
 % getPawn(+Tabuleiro, +X, +Y, -Jogador)
 % Retorna o número do jogador na posição (X,Y) do Tabuleiro.
 % Recorre a getPawnPos() para percorrer o tabuleiro.
@@ -144,6 +135,8 @@ getPawnPos([_|InTabT], Dest, BaseIncrement, Value) :-
 % Verifica se X e Y estão dentro dos valores permitidos
 % Recorre a getPawnPos para percorrer o tabuleiro e encontra o jogador
 getPawn(InTab, X, Y, Player) :-
+   X > 0,
+   Y > 0,
    X < 20,
    Y < 20,
    getPawnPos(InTab, Y, 1, L),
@@ -223,31 +216,43 @@ isWinner(Tab, 2) :-
 
 %movePawn(_, _,_, _,_, [], Tab_out ).
 
-%movePawn(P, L,C, Ox,Oy, Dx,Dy, [iLinha_H|iLinha_T], Tab_out ):-
-%	L = Oy;
-%	L = Dy,
+%movePawn(P, L, Ox,Oy, Dx,Dy, [iLinha_H|iLinha_T], Tab_out ):-
+%	L = Oy; L = Dy,
 %	L2 is L + 1,
 %	append( Tab_out, iLinha_H, new_Tab ),
-%	movePawn( P, L2,C, Ox,Oy, Dx,Dy, iLinha_T, new_Tab ).
+%	movePawn( P, L2, Ox,Oy, Dx,Dy, iLinha_T, new_Tab ).
 	
-%movePawn(P, L,C, Ox,Oy, Dx,Dy, [iLinha_H|iLinha_T], Tab_out ):-
+%movePawn(P, L, Ox,Oy, Dx,Dy, [iLinha_H|iLinha_T], Tab_out ):-
 %	L = Oy,
 %	L2 is L + 1,
 %	append( Tab_out, iLinha_H, new_Tab ),
-%	movePawn( P, L2,C, Ox,Oy, Dx,Dy, iLinha_T, new_Tab ).
+%	movePawn( P, L2, Ox,Oy, Dx,Dy, iLinha_T, new_Tab ).
 		
 %movePawn( Ox,Oy, Dx,Dy, [iLinha_H|_], Tab_out ):-
 
-%movePawn_iter_linha( linha, Oy, Dy, 
+%movePawn_linha( linha, Oy, Dy, 
 	
 	
 
+% **********************************************************************
+% Capture player
+% **********************************************************************
 
 % Captura a peça na casa de destino
 %capturePawn( [ Dx, Dy ] ).
 
 
 
+% **********************************************************************
+% **********************************************************************
+
+% Inicializa e imprime tabuleiro no estado inicial.
+init :-
+        initBoard(A),
+        printBoard(A).
+		
+		
+		
 % *********************************************************************
 % TESTES
 % *********************************************************************
