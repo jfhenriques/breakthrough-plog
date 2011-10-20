@@ -25,15 +25,11 @@ finalBoard([
            [ 2, 2, 2, 2, 2, 2, 1, 2 ]
           ]).
 
-
 smallBoard([
-	    [1,1,1,1],
-	    [0,0,0,0],
-	    [0,0,0,0],
-	    [2,2,2,2]
-	   ]
-	  ).
-
+           [1,1],
+           [0,0],
+           [2,0]
+           ]).
 % **********************************************************************
 % **********************************************************************
 
@@ -153,40 +149,84 @@ getPawn(InTab, X, Y, Player) :-
    getPawnPos(InTab, Y, 1, L),
    getPawnPos(L, X, 1, Player).
 
-printPlayer(J):-
-       initBoard(A),
-       getPawn(A, 6, 7, J).
-
-% Verificar se há peças do jogador 2 primeira linha
-% Verificar se há peças do jogador 1 última linha
+% **********************************************************************
+% checkWinner(+Tabuleiro, -Jogador)
+% Verifica se houve um vencedor e retorna-o
+% **********************************************************************
 
 checkForInvasion([]).
 checkForInvasionOfP1([]).
 
+% Verificar se há peças do jogador 1 na última linha
 checkForInvasionOfP1([InTabT], Player):-
-	member(1, InTabT),
-	Player is 1,
-	!.
+        member(1, InTabT),
+        Player is 1,
+        !.
 
+% Corrre resto do tabuleiro recursivamente.
 checkForInvasionOfP1([_|InTabT], Player):-
-	checkForInvasionOfP1(InTabT, Player).
+        checkForInvasionOfP1(InTabT, Player).
 
+% Verificar se há peças do jogador 2 na primeira linha
 checkForInvasion([InTabH|_], Player):-
-	member(2, InTabH),
-	Player is 2,
-	!.
+        member(2, InTabH),
+        Player is 2,
+        !.
 
+% Se não encontrar peças do jogador 2, corre
+% recursivamente o resto do tabuleiro até chegar à ultima linha.
 checkForInvasion([_|InTabT], Player):-
-	checkForInvasionOfP1(InTabT, Player).
+        checkForInvasionOfP1(InTabT, Player).
 
-checkWinner(Tab, Player) :-
-	checkForInvasion(Tab, Player).
-%falta fazer a contagem de peças de cada jogador,
-%que é a segunda forma de determinar o vencedor.
+hasPieces([], _).
+hasPieces([H|T], P) :-
+             not(member(P, H)),
+             hasPieces(T, P).
+
+% count(+Tabuleiro, +Jogador, +Numero)
+% Retorna o número de peças do Jogador presentes
+% no Tabuleiro.
+
+%count([], _, 0).
+
+%count([H|T], H, N):-
+%       count(T, H, N1),
+%       N is N1+1.
+
+%count([H|T], P, N):-
+%       is_list(H),
+%       count(H, P, N1),
+%       count(T, P, N2),
+%       N is N1+N2.
+
+%count([H|T], P, N):-
+%       not(is_list(H)),
+%       count(T, P, N).
+
+% O jogador é vencedor se 1 de 2 casos acontecer:
+% 1. tiver chegado à base adversária
+% 2. o adversário não tiver peças.
+
+isWinner(Tab, 1) :-
+        checkForInvasion(Tab, 1);
+        hasPieces(Tab, 2).
+
+isWinner(Tab, 2) :-
+        checkForInvasion(Tab, 2);
+        hasPieces(Tab, 1).
+
+% *********************************************************************
+% TESTES
+% *********************************************************************
+
+printPlayer(J):-
+       initBoard(A),
+       getPawn(A, 6, 7, J).
 
 verificaVencedor(P):-
-	finalBoard(A),
-	checkWinner(A, P).
+        finalBoard(A),
+        isWinner(A, P).
+
 
 % Move C1R1 para C2R2
 %movePawn(+[Ox,Oy], +[Dx,D2], +Tabuleiro_in, -Tabuleiro_out).
