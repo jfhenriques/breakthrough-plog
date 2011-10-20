@@ -214,23 +214,44 @@ isWinner(Tab, 2) :-
 % Move player
 % **********************************************************************
 
-%movePawn(_, _,_, _,_, [], Tab_out ).
+%movePawn( _, _,_, _,_, [], _ ).
 
-%movePawn(P, L, Ox,Oy, Dx,Dy, [iLinha_H|iLinha_T], Tab_out ):-
-%	L = Oy; L = Dy,
+%movePawn( Player, L, Ox,Oy, Dx,Dy, [iLinha_H|iLinha_T], Tab_out ) :-
+%	not(L = Oy ; L = Dy),
 %	L2 is L + 1,
-%	append( Tab_out, iLinha_H, new_Tab ),
-%	movePawn( P, L2, Ox,Oy, Dx,Dy, iLinha_T, new_Tab ).
+%	append( Tab_out, iLinha_H, newTab ),
+%	movePawn( Player, L2, Ox,Oy, Dx,Dy, new_Tab, newTab ).
 	
-%movePawn(P, L, Ox,Oy, Dx,Dy, [iLinha_H|iLinha_T], Tab_out ):-
-%	L = Oy,
-%	L2 is L + 1,
-%	append( Tab_out, iLinha_H, new_Tab ),
-%	movePawn( P, L2, Ox,Oy, Dx,Dy, iLinha_T, new_Tab ).
-		
-%movePawn( Ox,Oy, Dx,Dy, [iLinha_H|_], Tab_out ):-
+	
+%movePawn( Player, L, Ox,Oy, Dx,Dy, [_|iLinha_T], Tab_out ) :-
+%	L = Oy; L = Dy,
+%	( L = Oy ->
+%		( NP is 0,
+%		  NX is Ox );
+%		( NP is Player,
+%		  NX is Dx )
+%	),
+%	movePawn_linha( NP, 1, NX, [iCol_H|iCol_T], Linha),
+%	L2 = L + 1,
+%	append( Tab_out, Linha, new_Tab ),
+%	movePawn( Player, L2, Ox,Oy, Dx,Dy, iLinha_T, new_Tab ).
 
-%movePawn_linha( linha, Oy, Dy, 
+	
+
+%movePawn_linha( _, _, _, [], _ ).
+
+%movePawn_linha( Player, C, X, [iCol_H|iCol_T], Linha) :-
+%	not(C = X),
+%	C2 is C + 1,
+%	append(Linha, iCol_H, new_Linha),
+%	movePawn_linha( Player, C2, X, iCol_T, new_Linha).
+	
+%movePawn_linha( Player, C, X, [_|iCol_T], Linha) :-
+%	C = X,
+%	C2 is C + 1,
+%	append(Linha, Player, new_Linha),
+%	movePawn_linha( Player, C2, X, iCol_T, new_Linha).
+	
 	
 	
 
