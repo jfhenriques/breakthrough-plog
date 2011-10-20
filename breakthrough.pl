@@ -215,6 +215,39 @@ isWinner(Tab, 2) :-
         checkForInvasion(Tab, 2);
         hasPieces(Tab, 1).
 
+
+
+% **********************************************************************
+% Move player
+% **********************************************************************
+
+%movePawn(_, _,_, _,_, [], Tab_out ).
+
+%movePawn(P, L,C, Ox,Oy, Dx,Dy, [iLinha_H|iLinha_T], Tab_out ):-
+%	L = Oy;
+%	L = Dy,
+%	L2 is L + 1,
+%	append( Tab_out, iLinha_H, new_Tab ),
+%	movePawn( P, L2,C, Ox,Oy, Dx,Dy, iLinha_T, new_Tab ).
+	
+%movePawn(P, L,C, Ox,Oy, Dx,Dy, [iLinha_H|iLinha_T], Tab_out ):-
+%	L = Oy,
+%	L2 is L + 1,
+%	append( Tab_out, iLinha_H, new_Tab ),
+%	movePawn( P, L2,C, Ox,Oy, Dx,Dy, iLinha_T, new_Tab ).
+		
+%movePawn( Ox,Oy, Dx,Dy, [iLinha_H|_], Tab_out ):-
+
+%movePawn_iter_linha( linha, Oy, Dy, 
+	
+	
+
+
+% Captura a peça na casa de destino
+%capturePawn( [ Dx, Dy ] ).
+
+
+
 % *********************************************************************
 % TESTES
 % *********************************************************************
@@ -226,13 +259,3 @@ printPlayer(J):-
 verificaVencedor(P):-
         finalBoard(A),
         isWinner(A, P).
-
-
-% Move C1R1 para C2R2
-%movePawn(+[Ox,Oy], +[Dx,D2], +Tabuleiro_in, -Tabuleiro_out).
-
-%   movePawn([Ox,Oy], [Dx,Dy], [iTab_H|iTab_T], Tab_out):-
-
-
-% Captura a peça na casa de destino
-%capturePawn( [ Dx, Dy ] ).
