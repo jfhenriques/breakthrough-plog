@@ -143,14 +143,14 @@ getPawn(InTab, X, Y, Player) :-
    getPawnPos(L, X, 1, Player).
 
 % **********************************************************************
-% checkWinner(+Tabuleiro, -Jogador)
-% Verifica se houve um vencedor e retorna-o
+% Verificação de um vencedor
 % **********************************************************************
 
 checkForInvasion([]).
 checkForInvasionOfP1([]).
 
 % Verificar se há peças do jogador 1 na última linha
+% (Último predicado a ser executado)
 checkForInvasionOfP1([InTabT], Player):-
         member(1, InTabT),
         Player is 1,
@@ -161,6 +161,7 @@ checkForInvasionOfP1([_|InTabT], Player):-
         checkForInvasionOfP1(InTabT, Player).
 
 % Verificar se há peças do jogador 2 na primeira linha
+% (Primeiro predicado a ser executado).
 checkForInvasion([InTabH|_], Player):-
         member(2, InTabH),
         Player is 2,
@@ -171,10 +172,125 @@ checkForInvasion([InTabH|_], Player):-
 checkForInvasion([_|InTabT], Player):-
         checkForInvasionOfP1(InTabT, Player).
 
+% Verifica se existe pelo menos 1 peça do jogador P
 hasPieces([], _).
 hasPieces([H|T], P) :-
              not(member(P, H)),
              hasPieces(T, P).
+
+
+% Predicado principal
+% O jogador é vencedor se 1 de 2 casos acontecer:
+% 1. tiver chegado à base adversária
+% 2. o adversário não tiver peças.
+isWinner(Tab, 1) :-
+        checkForInvasion(Tab, 1);
+        hasPieces(Tab, 2).
+
+isWinner(Tab, 2) :-
+        checkForInvasion(Tab, 2);
+        hasPieces(Tab, 1).
+
+% **********************************************************************
+% Validação de uma jogada
+% **********************************************************************
+
+% checkMove(+Tab, +Ox, +Oy, +Dx, +Dy, +P)
+% Valida movimentos exclusivamente verticais
+checkMove(Tab, Ox, Oy, Ox, Dy, 1) :-
+	Dy =:= Oy+1,
+	getPawn(Tab, Ox, Dy, P),
+	P = 0.
+
+checkMove(Tab, Ox, Oy, Ox, Dy, 2) :-
+	Dy =:= Oy-1,
+	getPawn(Tab, Ox, Dy, P),
+	P = 0.
+
+% **********************************************************************
+% Move player
+% **********************************************************************
+
+%movePawn( _, _,_, _,_, [], _ ).
+
+%movePawn( Player, L, Ox,Oy, Dx,Dy, [iLinha_H|iLinha_T], Tab_out ) :-
+%	not(L = Oy ; L = Dy),
+%	L2 is L + 1,
+%	append( Tab_out, iLinha_H, newTab ),
+%	movePawn( Player, L2, Ox,Oy, Dx,Dy, new_Tab, newTab ).
+
+
+%movePawn( Player, L, Ox,Oy, Dx,Dy, [_|iLinha_T], Tab_out ) :-
+%	L = Oy; L = Dy,
+%	( L = Oy ->
+%		( NP is 0,
+%		  NX is Ox );
+%		( NP is Player,
+%		  NX is Dx )
+%	),
+%	movePawn_linha( NP, 1, NX, [iCol_H|iCol_T], Linha),
+%	L2 = L + 1,
+%	append( Tab_out, Linha, new_Tab ),
+%	movePawn( Player, L2, Ox,Oy, Dx,Dy, iLinha_T, new_Tab ).
+
+
+
+%movePawn_linha( _, _, _, [], _ ).
+
+%movePawn_linha( Player, C, X, [iCol_H|iCol_T], Linha) :-
+%	not(C = X),
+%	C2 is C + 1,
+%	append(Linha, iCol_H, new_Linha),
+%	movePawn_linha( Player, C2, X, iCol_T, new_Linha).
+
+%movePawn_linha( Player, C, X, [_|iCol_T], Linha) :-
+%	C = X,
+%	C2 is C + 1,
+%	append(Linha, Player, new_Linha),
+%	movePawn_linha( Player, C2, X, iCol_T, new_Linha).
+
+
+
+
+% **********************************************************************
+% Capture player
+% **********************************************************************
+
+% Captura a peça na casa de destino
+%capturePawn( [ Dx, Dy ] ).
+
+
+
+% **********************************************************************
+% **********************************************************************
+
+% Inicializa e imprime tabuleiro no estado inicial.
+init :-
+        initBoard(A),
+        printBoard(A).
+
+
+
+% *********************************************************************
+% Testes
+% *********************************************************************
+
+getPlayer(J, X, Y):-
+       initBoard(A),
+       getPawn(A, X, Y, J).
+
+verificaVencedor(P):-
+        finalBoard(A),
+        isWinner(A, P).
+
+validaJogada(Ox, Oy, Dx, Dy):-
+	initBoard(A),
+	getPawn(A, Ox, Oy, P),
+	checkMove(A, Ox, Oy, Dx, Dy, P).
+
+% *********************************************************************
+% Outro código
+% *********************************************************************
 
 % count(+Tabuleiro, +Jogador, +Numero)
 % Retorna o número de peças do Jogador presentes
@@ -195,93 +311,3 @@ hasPieces([H|T], P) :-
 %count([H|T], P, N):-
 %       not(is_list(H)),
 %       count(T, P, N).
-
-% O jogador é vencedor se 1 de 2 casos acontecer:
-% 1. tiver chegado à base adversária
-% 2. o adversário não tiver peças.
-
-isWinner(Tab, 1) :-
-        checkForInvasion(Tab, 1);
-        hasPieces(Tab, 2).
-
-isWinner(Tab, 2) :-
-        checkForInvasion(Tab, 2);
-        hasPieces(Tab, 1).
-
-
-
-% **********************************************************************
-% Move player
-% **********************************************************************
-
-%movePawn( _, _,_, _,_, [], _ ).
-
-%movePawn( Player, L, Ox,Oy, Dx,Dy, [iLinha_H|iLinha_T], Tab_out ) :-
-%	not(L = Oy ; L = Dy),
-%	L2 is L + 1,
-%	append( Tab_out, iLinha_H, newTab ),
-%	movePawn( Player, L2, Ox,Oy, Dx,Dy, new_Tab, newTab ).
-	
-	
-%movePawn( Player, L, Ox,Oy, Dx,Dy, [_|iLinha_T], Tab_out ) :-
-%	L = Oy; L = Dy,
-%	( L = Oy ->
-%		( NP is 0,
-%		  NX is Ox );
-%		( NP is Player,
-%		  NX is Dx )
-%	),
-%	movePawn_linha( NP, 1, NX, [iCol_H|iCol_T], Linha),
-%	L2 = L + 1,
-%	append( Tab_out, Linha, new_Tab ),
-%	movePawn( Player, L2, Ox,Oy, Dx,Dy, iLinha_T, new_Tab ).
-
-	
-
-%movePawn_linha( _, _, _, [], _ ).
-
-%movePawn_linha( Player, C, X, [iCol_H|iCol_T], Linha) :-
-%	not(C = X),
-%	C2 is C + 1,
-%	append(Linha, iCol_H, new_Linha),
-%	movePawn_linha( Player, C2, X, iCol_T, new_Linha).
-	
-%movePawn_linha( Player, C, X, [_|iCol_T], Linha) :-
-%	C = X,
-%	C2 is C + 1,
-%	append(Linha, Player, new_Linha),
-%	movePawn_linha( Player, C2, X, iCol_T, new_Linha).
-	
-	
-	
-
-% **********************************************************************
-% Capture player
-% **********************************************************************
-
-% Captura a peça na casa de destino
-%capturePawn( [ Dx, Dy ] ).
-
-
-
-% **********************************************************************
-% **********************************************************************
-
-% Inicializa e imprime tabuleiro no estado inicial.
-init :-
-        initBoard(A),
-        printBoard(A).
-		
-		
-		
-% *********************************************************************
-% TESTES
-% *********************************************************************
-
-printPlayer(J):-
-       initBoard(A),
-       getPawn(A, 6, 7, J).
-
-verificaVencedor(P):-
-        finalBoard(A),
-        isWinner(A, P).
