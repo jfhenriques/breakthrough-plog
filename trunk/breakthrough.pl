@@ -14,6 +14,17 @@ initBoard([
            [ 2, 2, 2, 2, 2, 2, 2, 2 ]
           ]).
 
+midBoard([
+           [ 1, 1, 1, 1, 1, 1, 1, 1 ],
+           [ 1, 1, 1, 1, 1, 0, 1, 1 ],
+           [ 0, 0, 0, 0, 0, 0, 0, 0 ],
+           [ 0, 0, 0, 0, 0, 1, 0, 0 ],
+           [ 0, 0, 0, 0, 2, 2, 0, 0 ],
+           [ 0, 0, 0, 0, 0, 0, 0, 0 ],
+           [ 2, 2, 2, 2, 2, 0, 0, 2 ],
+           [ 2, 2, 2, 2, 2, 2, 2, 2 ]
+          ]).
+
 finalBoard([
            [ 1, 1, 1, 1, 1, 1, 1, 1 ],
            [ 1, 1, 1, 0, 1, 0, 1, 0 ],
@@ -197,15 +208,35 @@ isWinner(Tab, 2) :-
 
 % checkMove(+Tab, +Ox, +Oy, +Dx, +Dy, +P)
 % Valida movimentos exclusivamente verticais
+
+% JOGADOR 1
+% Movimento vertical
 checkMove(Tab, Ox, Oy, Ox, Dy, 1) :-
 	Dy =:= Oy+1,
 	getPawn(Tab, Ox, Dy, P),
 	P = 0.
 
+% Movimento diagonal
+checkMove(_, Ox, Oy, Dx, Dy, 1) :-
+	Dx =:= Ox+1;
+	Dx =:= Ox-1,
+	!,
+	Dy =:= Oy+1.
+
+% JOGADOR 2
+% Movimento vertical
 checkMove(Tab, Ox, Oy, Ox, Dy, 2) :-
 	Dy =:= Oy-1,
 	getPawn(Tab, Ox, Dy, P),
 	P = 0.
+
+% Movimento diagonal
+checkMove(_, Ox, Oy, Dx, Dy, 2) :-
+	Dx =:= Ox+1;
+	Dx =:= Ox-1,
+	!,
+	Dy =:= Oy-1.
+
 
 % **********************************************************************
 % Move player
@@ -284,7 +315,7 @@ verificaVencedor(P):-
         isWinner(A, P).
 
 validaJogada(Ox, Oy, Dx, Dy):-
-	initBoard(A),
+	midBoard(A),
 	getPawn(A, Ox, Oy, P),
 	checkMove(A, Ox, Oy, Dx, Dy, P).
 
