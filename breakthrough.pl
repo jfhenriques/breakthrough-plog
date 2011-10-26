@@ -212,30 +212,44 @@ isWinner(Tab, 2) :-
 % JOGADOR 1
 % Movimento vertical
 checkMove(Tab, Ox, Oy, Ox, Dy, 1) :-
+	!,
 	Dy =:= Oy+1,
 	getPawn(Tab, Ox, Dy, P),
 	P = 0.
 
 % Movimento diagonal
-checkMove(_, Ox, Oy, Dx, Dy, 1) :-
-	Dx =:= Ox+1;
+checkMove(Tab, Ox, Oy, Dx, Dy, 1) :-
+       	Dy =:= Oy+1,
+	Dx =:= Ox+1,
+	getPawn(Tab, Dx, Dy, P),
+	P \= 1.
+
+checkMove(Tab, Ox, Oy, Dx, Dy, 1) :-
+       	Dy =:= Oy+1,
 	Dx =:= Ox-1,
-	!,
-	Dy =:= Oy+1.
+	getPawn(Tab, Dx, Dy, P),
+	P \= 1.
 
 % JOGADOR 2
 % Movimento vertical
 checkMove(Tab, Ox, Oy, Ox, Dy, 2) :-
+	!,
 	Dy =:= Oy-1,
 	getPawn(Tab, Ox, Dy, P),
 	P = 0.
 
 % Movimento diagonal
-checkMove(_, Ox, Oy, Dx, Dy, 2) :-
-	Dx =:= Ox+1;
+checkMove(Tab, Ox, Oy, Dx, Dy, 2) :-
+	Dy =:= Oy-1,
+	Dx =:= Ox+1,
+	getPawn(Tab, Dx, Dy, P),
+	P \= 2.
+
+checkMove(Tab, Ox, Oy, Dx, Dy, 2) :-
+	Dy =:= Oy-1,
 	Dx =:= Ox-1,
-	!,
-	Dy =:= Oy-1.
+	getPawn(Tab, Dx, Dy, P),
+	P \= 2.
 
 
 % **********************************************************************
