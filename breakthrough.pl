@@ -32,14 +32,26 @@ finalBoard([
            [ 0, 0, 2, 0, 1, 1, 0, 0 ],
            [ 0, 0, 0, 0, 0, 0, 1, 0 ],
            [ 0, 0, 0, 0, 0, 0, 0, 0 ],
-           [ 2, 2, 0, 2, 2, 2, 2, 0 ],
-           [ 2, 2, 2, 2, 2, 2, 1, 2 ]
+           [ 2, 2, 0, 2, 2, 1, 2, 0 ],
+           [ 2, 2, 2, 2, 2, 2, 2, 2 ]
           ]).
 
+finalBoard2([
+           [ 0, 0, 0, 0, 0, 0, 0, 0 ],
+           [ 0, 0, 0, 0, 0, 0, 0, 0 ],
+           [ 0, 0, 0, 0, 0, 0, 0, 0 ],
+           [ 0, 0, 2, 0, 0, 0, 0, 0 ],
+           [ 0, 0, 0, 0, 0, 0, 0, 0 ],
+           [ 0, 0, 0, 0, 0, 1, 0, 0 ],
+           [ 2, 2, 0, 2, 2, 0, 2, 0 ],
+           [ 2, 2, 2, 2, 2, 2, 2, 2 ]
+          ]).
+
+
 smallBoard([
-           [1,1],
-           [0,0],
-           [2,0]
+           [1,1,1],
+           [0,0,0],
+           [2,2,2]
            ]).
 % **********************************************************************
 % **********************************************************************
@@ -153,6 +165,54 @@ getPawn(InTab, X, Y, Player) :-
    getPawnPos(InTab, Y, 1, L),
    getPawnPos(L, X, 1, Player).
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Obter valor de casa
+% getll(Linha,Coluna,Tabuleiro,Valor)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Obtem o valor de determinada posição N numa Lista.
+getl(Lista,N,Valor):-
+          getl(Lista,N,1,Valor).
+
+getl([H|_],N,N,H):-!.
+
+getl([_|R],N,Nactual,Valor):-
+          NR is Nactual+1,
+          getl(R,N,NR,Valor).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Obtem o valor de determinada posição (Linha,Coluna) num Tabuleiro
+getll(Linha,Coluna,Tabuleiro,Valor):-
+          % Obtemos primeiro uma Linha completa
+          getl(Tabuleiro,Linha,Lista),
+          % Obtemos o valor da coluna na Linha obtida
+          getl(Lista,Coluna,Valor).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Substitui a peça de uma Casa por outra
+% substll(Tabuleiro,Linha, Coluna, Valor, Resultado)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+substl(Lista,N,Valor,Resultado):-
+          substl(Lista,N,1,Valor,[],Resultado).
+
+substl([],_,_,_,NovaLista,NovaLista).
+
+substl([_|R],N,N,Valor,NovaLista,Resultado):- !,
+          append(NovaLista,[Valor],NovaNovaLista),
+          NR is N+1,
+          substl(R,N,NR,Valor,NovaNovaLista,Resultado).
+
+substl([H|R],N,Nactual,Valor,NovaLista,Resultado):-
+          append(NovaLista,[H],NovaNovaLista),
+          NR is Nactual+1,
+          substl(R,N,NR,Valor,NovaNovaLista,Resultado).
+
+substll(Tabuleiro,Linha, Coluna, Valor, Resultado):-
+          getl(Tabuleiro,Linha,Lista),
+          substl(Lista,Coluna,Valor,NovaLista),
+          substl(Tabuleiro,Linha,NovaLista,Resultado).
+
 % **********************************************************************
 % Verificação de um vencedor
 % **********************************************************************
@@ -256,6 +316,30 @@ checkMove(Tab, Ox, Oy, Dx, Dy, 2) :-
 % Move player
 % **********************************************************************
 
+switchPlayer(1,2).
+switchPlayer(2,1).
+
+movePawn(Tab, Ox, Oy, Dx, Dy, TabOut) :-
+	getPawn(Tab, Ox, Oy, Me),
+	checkMove(Tab, Ox, Oy, Dx, Dy, Me),
+	getPawn(Tab, Dx, Dy, Opponent),
+	Opponent = 0,
+	substll(Tab, Dy, Dx, Me, TabTmpOut),
+	substll(TabTmpOut, Oy, Ox, 0, TabOut).
+
+movePawn(Tab, Ox, Oy, Dx, Dy, TabOut) :-
+	getPawn(Tab, Ox, Oy, Me),
+	checkMove(Tab, Ox, Oy, Dx, Dy, Me),
+	getPawn(Tab, Dx, Dy, Opponent),
+	Opponent \= 0,
+	write('Quer capturar a peça adversária? (y/n)'),
+	nl,
+        read(Ans),
+	Ans = 'y',
+	substll(Tab, Dy, Dx, Me, TabTmpOut),
+	substll(TabTmpOut, Oy, Ox, 0, TabOut).
+
+
 %movePawn( _, _,_, _,_, [], _ ).
 
 %movePawn( Player, L, Ox,Oy, Dx,Dy, [iLinha_H|iLinha_T], Tab_out ) :-
@@ -312,7 +396,40 @@ checkMove(Tab, Ox, Oy, Dx, Dy, 2) :-
 % Inicializa e imprime tabuleiro no estado inicial.
 init :-
         initBoard(A),
-        printBoard(A).
+        printBoard(A),
+	move(A, 1). %TODO gerar numero aleatorio
+
+
+move(A, _):-
+	isWinner(A, 1),
+	nl,
+	write('O jogo terminou! Venceu o Jogador 1.'),
+        !.
+
+move(A, _):-
+	isWinner(A, 2),
+	nl,
+	write('O jogo terminou! Venceu o Jogador 2.'),
+        !.
+
+move(A, P) :-
+	not(isWinner(A, 1)),
+	not(isWinner(A, 2)),
+	nl,nl,
+	write('Jogador '), write(P), nl,
+	write('Peça a mover?'), nl,
+	write('X ='), nl, read(Ox),nl,
+	write('Y ='), nl, read(Oy),nl,
+	write('Casa de destino?'), nl,
+	write('X ='), nl, read(Dx),nl,
+	write('Y ='), nl, read(Dy),nl,
+	getPawn(A, Ox, Oy, P),
+	movePawn(A, Ox, Oy, Dx, Dy, Tab),
+	repeat,
+	printBoard(Tab),
+	switchPlayer(P, NP),
+	move(Tab, NP).
+
 
 
 
@@ -332,6 +449,11 @@ validaJogada(Ox, Oy, Dx, Dy):-
 	midBoard(A),
 	getPawn(A, Ox, Oy, P),
 	checkMove(A, Ox, Oy, Dx, Dy, P).
+
+movePawn(Ox, Oy, Dx, Dy):-
+	midBoard(A),
+	movePawn(A, Ox, Oy, Dx, Dy, Tab),
+	printBoard(Tab).
 
 % *********************************************************************
 % Outro código
