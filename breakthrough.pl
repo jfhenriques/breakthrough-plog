@@ -3,16 +3,6 @@
 % **********************************************************************
 
 % Inicializa o tabuleiro.
-initBoard([
-           [ 1, 1, 1, 1, 1, 1, 1, 1 ],
-           [ 1, 1, 1, 1, 1, 1, 1, 1 ],
-           [ 0, 0, 0, 0, 0, 0, 0, 0 ],
-           [ 0, 0, 0, 0, 0, 0, 0, 0 ],
-           [ 0, 0, 0, 0, 0, 0, 0, 0 ],
-           [ 0, 0, 0, 0, 0, 0, 0, 0 ],
-           [ 2, 2, 2, 2, 2, 2, 2, 2 ],
-           [ 2, 2, 2, 2, 2, 2, 2, 2 ]
-          ]).
 
 midBoard([
            [ 1, 1, 1, 1, 1, 1, 1, 1 ],
@@ -48,11 +38,32 @@ finalBoard2([
           ]).
 
 
-smallBoard([
-           [1,1,1],
-           [0,0,0],
-           [2,2,2]
-           ]).
+
+board4x4([
+	   [ 1, 1, 1, 1],
+           [ 0, 0, 0, 0],
+           [ 0, 0, 0, 0],
+           [ 2, 2, 2, 2]
+          ]).
+
+board3x3([
+	   [ 1, 1, 1],
+           [ 0, 0, 0],
+           [ 2, 2, 2]
+          ]).
+
+board8x8([
+           [ 1, 1, 1, 1, 1, 1, 1, 1 ],
+           [ 1, 1, 1, 1, 1, 1, 1, 1 ],
+           [ 0, 0, 0, 0, 0, 0, 0, 0 ],
+           [ 0, 0, 0, 0, 0, 0, 0, 0 ],
+           [ 0, 0, 0, 0, 0, 0, 0, 0 ],
+           [ 0, 0, 0, 0, 0, 0, 0, 0 ],
+           [ 2, 2, 2, 2, 2, 2, 2, 2 ],
+           [ 2, 2, 2, 2, 2, 2, 2, 2 ]
+          ]).
+
+
 % **********************************************************************
 % **********************************************************************
 
@@ -87,19 +98,43 @@ printRow([H|T]) :-
 % **********************************************************************
 
 % Imprime a linha de separação horizontal.
-printHorizSep   :-
-        write('   --- --- --- --- --- --- --- ---').
+%
+printHorizSepp(S,S):-!.
+
+printHorizSepp(S, N) :-
+	N1 is N+1,
+	printHorizSepp(S, N1),
+	write('--- ').
+
+
+printHorizSep(S)   :-
+	write('   '),
+	printHorizSepp(S, 0).
 
 % Imprime os números das colunas.
-printColNumbers :-
-        write('    1   2   3   4   5   6   7   8').
+
+%printColNumbers([], _).
+
+printColNumbers([_], N) :-
+	write(N),
+	!.
+
+printColNumbers([_|T], N) :-
+	N1 is N+1,
+	write(N),
+	write('   '),
+	printColNumbers(T, N1).
+
+printColNumbers([H|T]) :-
+        write('    '),
+	printColNumbers([H|T], 1).
 
 
 % **********************************************************************
 % **********************************************************************
 
 % Critério de paragem.
-printFullRow([], _).
+printFullRow([], _, _).
 
 % Imprime o número da linha no ínicio e no fim de cada iteração,
 % bem como o separador horizontal. Chama também o predicado que irá
@@ -108,9 +143,9 @@ printFullRow([], _).
 % lista (contendo as restantes células da linha correspondente),
 % e o número actual da linha, até atingir o critério de paragem,
 % ou seja, quando a a cauda for uma lista vazia.
-printFullRow([H|T], N) :-
+printFullRow([H|T], N, S) :-
         N1 is N+1,
-        printHorizSep,
+        printHorizSep(S),
         nl,
         write(N),
         write(' '),
@@ -118,7 +153,7 @@ printFullRow([H|T], N) :-
         write('| '),
         write(N),
         nl,
-        printFullRow(T, N1).
+        printFullRow(T, N1, S).
 
 
 % **********************************************************************
@@ -132,12 +167,13 @@ printBoard([]).
 % e de seguida o predicado que imprime cada linha individual.
 % É imprimido também o separador horizontal do tabuleiro.
 printBoard([H|T]) :-
-        printColNumbers,
+	length([H|T], S),
+        printColNumbers([H|T]),
         nl,
-        printFullRow([H|T], 1),
-        printHorizSep,
+        printFullRow([H|T], 1, S),
+        printHorizSep(S),
         nl,
-        printColNumbers.
+        printColNumbers([H|T]).
 
 
 % **********************************************************************
@@ -394,8 +430,14 @@ movePawn(Tab, Ox, Oy, Dx, Dy, TabOut) :-
 % **********************************************************************
 
 % Inicializa e imprime tabuleiro no estado inicial.
-init :-
-        initBoard(A),
+
+initHH3x3 :-
+	board3x3(A),
+	printBoard(A),
+	move(A, 1).
+
+initHH8x8 :-
+        board8x8(A),
         printBoard(A),
 	move(A, 1). %TODO gerar numero aleatorio
 
@@ -418,10 +460,10 @@ move(A, P) :-
 	nl,nl,
 	write('Jogador '), write(P), nl,
 	write('Peça a mover?'), nl,
-	write('X ='), nl, read(Ox),nl,
+	write('X ='), nl, read(Ox),
 	write('Y ='), nl, read(Oy),nl,
 	write('Casa de destino?'), nl,
-	write('X ='), nl, read(Dx),nl,
+	write('X ='), nl, read(Dx),
 	write('Y ='), nl, read(Dy),nl,
 	getPawn(A, Ox, Oy, P),
 	movePawn(A, Ox, Oy, Dx, Dy, Tab),
@@ -438,7 +480,7 @@ move(A, P) :-
 % *********************************************************************
 
 getPlayer(J, X, Y):-
-       initBoard(A),
+       board8x8(A),
        getPawn(A, X, Y, J).
 
 verificaVencedor(P):-
