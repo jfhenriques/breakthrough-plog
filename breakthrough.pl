@@ -37,8 +37,6 @@ finalBoard2([
            [ 2, 2, 2, 2, 2, 2, 2, 2 ]
           ]).
 
-
-
 board4x4([
 		  [ 1, 1, 1, 1],
           [ 0, 0, 0, 0],
@@ -77,8 +75,12 @@ writePlayer(0) :-
 
 
 % **********************************************************************
+% Imprime o número da coluna ou da linha, com um espaço à esqueda
+% ou à direita, de forma ao tabuleiro ser disposto correctamente com
+% linhas ou colounas de número superior a 9.
+% printSpaceNumberL(+N)
+% printSpaceNumberR(+N)
 % **********************************************************************
-
 
 printSpaceNumberL(N) :-
 		write(N),
@@ -94,6 +96,9 @@ printSpaceNumberR(N) :-
 		write(N).
 
 
+% **********************************************************************
+% printRow(+[H|T])
+% **********************************************************************
 
 % Critério de paragem.
 % Imprime também a borda direita da última célula de cada linha.
@@ -394,58 +399,8 @@ movePawn(Tab, Ox, Oy, Dx, Dy, TabOut) :-
 		substll(TabTmpOut, Oy, Ox, 0, TabOut).
 
 
-%movePawn( _, _,_, _,_, [], _ ).
-
-%movePawn( Player, L, Ox,Oy, Dx,Dy, [iLinha_H|iLinha_T], Tab_out ) :-
-%	not(L = Oy ; L = Dy),
-%	L2 is L + 1,
-%	append( Tab_out, iLinha_H, newTab ),
-%	movePawn( Player, L2, Ox,Oy, Dx,Dy, new_Tab, newTab ).
-
-
-%movePawn( Player, L, Ox,Oy, Dx,Dy, [_|iLinha_T], Tab_out ) :-
-%	L = Oy; L = Dy,
-%	( L = Oy ->
-%		( NP is 0,
-%		  NX is Ox );
-%		( NP is Player,
-%		  NX is Dx )
-%	),
-%	movePawn_linha( NP, 1, NX, [iCol_H|iCol_T], Linha),
-%	L2 = L + 1,
-%	append( Tab_out, Linha, new_Tab ),
-%	movePawn( Player, L2, Ox,Oy, Dx,Dy, iLinha_T, new_Tab ).
-
-
-
-%movePawn_linha( _, _, _, [], _ ).
-
-%movePawn_linha( Player, C, X, [iCol_H|iCol_T], Linha) :-
-%	not(C = X),
-%	C2 is C + 1,
-%	append(Linha, iCol_H, new_Linha),
-%	movePawn_linha( Player, C2, X, iCol_T, new_Linha).
-
-%movePawn_linha( Player, C, X, [_|iCol_T], Linha) :-
-%	C = X,
-%	C2 is C + 1,
-%	append(Linha, Player, new_Linha),
-%	movePawn_linha( Player, C2, X, iCol_T, new_Linha).
-
-
-
-
 % **********************************************************************
-% Capture player
-% **********************************************************************
-
-% Captura a peça na casa de destino
-%capturePawn( [ Dx, Dy ] ).
-
-
-
-% **********************************************************************
-% Inicializa dinamicamente o o tabuleiro
+% Inicializa dinamicamente do o tabuleiro
 % initDynBoard(+Side, -Board)
 % **********************************************************************
 
@@ -472,7 +427,7 @@ initDynBoard_col(BaseNumber, Side, BoardIn, BoardOut) :-
 		initDynBoard_col(L, Side, [X|BoardIn], BoardOut).
 
 initDynBoard(Side, Board) :-
-	Side > 5,
+	Side > 4,
 	Side < 20,
 	initDynBoard_col(0, Side, [], Board).
 	
@@ -484,9 +439,12 @@ initDynBoard(Side, Board) :-
 
 % Inicializa e imprime tabuleiro no estado inicial.
 
-initb :-
-		initDynBoard(15, B),
-		printBoard(B).
+init :-
+		write('Lado do tabuleiro [5,19] = '), read(L),
+        initDynBoard(L, A),
+		nl,
+        printBoard(A),
+		move(A, 1).
 
 initHH3x3 :-
 		board3x3(A),
@@ -517,11 +475,11 @@ move(A, P) :-
 		nl,nl,
 		write('Jogador '), write(P), nl,
 		write('Peça a mover?'), nl,
-		write('X ='), nl, read(Ox),
-		write('Y ='), nl, read(Oy),nl,
+		write('X = '), read(Ox),
+		write('Y = '), read(Oy),nl,
 		write('Casa de destino?'), nl,
-		write('X ='), nl, read(Dx),
-		write('Y ='), nl, read(Dy),nl,
+		write('X = '), read(Dx),
+		write('Y = '), read(Dy),nl,
 		getPawn(A, Ox, Oy, P),
 		movePawn(A, Ox, Oy, Dx, Dy, Tab),
 		repeat,
