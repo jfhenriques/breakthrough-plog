@@ -38,14 +38,14 @@ finalBoard2([
           ]).
 
 board4x4([
-		  [ 1, 1, 1, 1],
+                  [ 1, 1, 1, 1],
           [ 0, 0, 0, 0],
           [ 0, 0, 0, 0],
           [ 2, 2, 2, 2]
          ]).
 
 board3x3([
-	      [ 1, 1, 1],
+              [ 1, 1, 1],
           [ 0, 0, 0],
           [ 2, 2, 2]
          ]).
@@ -83,17 +83,17 @@ writePlayer(0) :-
 % **********************************************************************
 
 printSpaceNumberL(N) :-
-		write(N),
-		(N < 10 ->
-			write(' ') ;
-			write('')
-		).
+                write(N),
+                (N < 10 ->
+                        write(' ') ;
+                        write('')
+                ).
 printSpaceNumberR(N) :-
-		(N < 10 ->
-			write(' ') ;
-			write('')
-		),
-		write(N).
+                (N < 10 ->
+                        write(' ') ;
+                        write('')
+                ),
+                write(N).
 
 
 % **********************************************************************
@@ -122,31 +122,31 @@ printRow([H|T]) :-
 printHorizSepp(S,S) :- !.
 
 printHorizSepp(S, N) :-
-		N1 is N+1,
-		printHorizSepp(S, N1),
-		write('--- ').
+                N1 is N+1,
+                printHorizSepp(S, N1),
+                write('--- ').
 
 
 printHorizSep(S)   :-
-		write('    '),
-		printHorizSepp(S, 0).
+                write('    '),
+                printHorizSepp(S, 0).
 
 % Imprime os números das colunas.
 %printColNumbers([], _).
 
 printColNumbers([_], N) :-
-		printSpaceNumberR(N),
-		!.
+                printSpaceNumberR(N),
+                !.
 
 printColNumbers([_|T], N) :-
-		N1 is N+1,
-		printSpaceNumberR(N),
-		write('  '),
-		printColNumbers(T, N1).
+                N1 is N+1,
+                printSpaceNumberR(N),
+                write('  '),
+                printColNumbers(T, N1).
 
 printColNumbers([H|T]) :-
-		write('    '),
-		printColNumbers([H|T], 1).
+                write('    '),
+                printColNumbers([H|T], 1).
 
 
 % **********************************************************************
@@ -187,7 +187,7 @@ printBoard([]).
 % e de seguida o predicado que imprime cada linha individual.
 % É imprimido também o separador horizontal do tabuleiro.
 printBoard([H|T]) :-
-		length([H|T], S),
+                length([H|T], S),
         printColNumbers([H|T]),
         nl,
         printFullRow([H|T], 1, S),
@@ -208,19 +208,21 @@ getPawnPos([Player|_], Dest, Dest, Player) :- !.
 
 % Percorre o tabuleiro
 getPawnPos([_|InTabT], Dest, BaseIncrement, Value) :-
-		Increment is BaseIncrement + 1,
-		getPawnPos(InTabT, Dest, Increment, Value).
+                Increment is BaseIncrement + 1,
+                getPawnPos(InTabT, Dest, Increment, Value).
 
 % Verifica se X e Y estão dentro dos valores permitidos
 % Recorre a getPawnPos para percorrer o tabuleiro e encontra o jogador
 getPawn(InTab, X, Y, Player) :-
-		X > 0,
-		Y > 0,
-		X < 20,
-		Y < 20,
-		getPawnPos(InTab, Y, 1, L),
-		getPawnPos(L, X, 1, Player).
+				length(InTab, Len),
+                X > 0,
+                Y > 0,
+                X =< Len,
+                Y =< Len,
+                getPawnPos(InTab, Y, 1, L),
+                getPawnPos(L, X, 1, Player).
 
+        
 % **********************************************************************
 % getll(Linha,Coluna,Tabuleiro,Valor)
 % Obter o valor da casa
@@ -228,7 +230,7 @@ getPawn(InTab, X, Y, Player) :-
 
 % Obtem o valor de determinada posição N numa Lista.
 getl(Lista,N,Valor) :-
-		getl(Lista,N,1,Valor).
+                getl(Lista,N,1,Valor).
 
 getl([H|_],N,N,H) :- !.
 
@@ -245,15 +247,15 @@ getll(Linha,Coluna,Tabuleiro,Valor) :-
         % Obtemos o valor da coluna na Linha obtida
         getl(Lista,Coluna,Valor).
 
-		 
-		 
+                 
+                 
 % **********************************************************************
 % substll(Tabuleiro,Linha, Coluna, Valor, Resultado)
 % Substitui a peça de uma Casa por outra
 % **********************************************************************
 
 substl(Lista,N,Valor,Resultado):-
-		substl(Lista,N,1,Valor,[],Resultado).
+                substl(Lista,N,1,Valor,[],Resultado).
 
 substl([],_,_,_,NovaLista,NovaLista).
 
@@ -305,7 +307,7 @@ checkForInvasion([_|InTabT], Player):-
 % Verifica se existe pelo menos 1 peça do jogador P
 hasPieces([], _).
 hasPieces([H|T], P) :-
-        not(member(P, H)),
+        \+(member(P, H)),
         hasPieces(T, P).
 
 
@@ -338,13 +340,13 @@ checkMove(Tab, Ox, Oy, Ox, Dy, 1) :-
 
 % Movimento diagonal
 checkMove(Tab, Ox, Oy, Dx, Dy, 1) :-
-       	Dy =:= Oy+1,
+        Dy =:= Oy+1,
 		Dx =:= Ox+1,
 		getPawn(Tab, Dx, Dy, P),
 		P \= 1.
 
 checkMove(Tab, Ox, Oy, Dx, Dy, 1) :-
-       	Dy =:= Oy+1,
+        Dy =:= Oy+1,
 		Dx =:= Ox-1,
 		getPawn(Tab, Dx, Dy, P),
 		P \= 1.
@@ -379,25 +381,22 @@ switchPlayer(1,2).
 switchPlayer(2,1).
 
 movePawn(Tab, Ox, Oy, Dx, Dy, TabOut) :-
-		getPawn(Tab, Ox, Oy, Me),
-		checkMove(Tab, Ox, Oy, Dx, Dy, Me),
-		getPawn(Tab, Dx, Dy, Opponent),
-		Opponent = 0,
-		substll(Tab, Dy, Dx, Me, TabTmpOut),
-		substll(TabTmpOut, Oy, Ox, 0, TabOut).
+                getPawn(Tab, Ox, Oy, Me),
+                checkMove(Tab, Ox, Oy, Dx, Dy, Me),
+                getPawn(Tab, Dx, Dy, Opponent),
+                Opponent = 0,
+                substll(Tab, Dy, Dx, Me, TabTmpOut),
+                substll(TabTmpOut, Oy, Ox, 0, TabOut).
 
 movePawn(Tab, Ox, Oy, Dx, Dy, TabOut) :-
-		getPawn(Tab, Ox, Oy, Me),
-		checkMove(Tab, Ox, Oy, Dx, Dy, Me),
-		getPawn(Tab, Dx, Dy, Opponent),
-		Opponent \= 0,
-		write('Quer capturar a peça adversária? (y/n)'),
-		nl,
-			read(Ans),
-		Ans = 'y',
-		substll(Tab, Dy, Dx, Me, TabTmpOut),
-		substll(TabTmpOut, Oy, Ox, 0, TabOut).
+                getPawn(Tab, Ox, Oy, Me),
+                checkMove(Tab, Ox, Oy, Dx, Dy, Me),
+                getPawn(Tab, Dx, Dy, Opponent),
+                Opponent \= 0,
+                substll(Tab, Dy, Dx, Me, TabTmpOut),
+                substll(TabTmpOut, Oy, Ox, 0, TabOut).
 
+%movePawn(Tab, _, _, _, _, Tab).
 
 % **********************************************************************
 % Inicializa dinamicamente do o tabuleiro
@@ -405,34 +404,73 @@ movePawn(Tab, Ox, Oy, Dx, Dy, TabOut) :-
 % **********************************************************************
 
 initDynBoard_line(BaseNumber, BaseNumber, _, LineIn, LineOut) :-
-		append(LineIn, [], LineOut).
+                append(LineIn, [], LineOut).
 
 initDynBoard_line(BaseNumber, Side, V, LineIn, LineOut) :-
-		N is BaseNumber + 1,
-		initDynBoard_line(N, Side, V, [V|LineIn], LineOut).
-		
-		
+                N is BaseNumber + 1,
+                initDynBoard_line(N, Side, V, [V|LineIn], LineOut).
+                
+                
 initDynBoard_col(BaseNumber, BaseNumber, BoardIn, BoardOut) :-
-		append(BoardIn, [], BoardOut).
+                append(BoardIn, [], BoardOut).
 
 initDynBoard_col(BaseNumber, Side, BoardIn, BoardOut) :-
-		L is BaseNumber + 1,
-		( ( L =:= 1 ; L =:= 2 ) ->
-			initDynBoard_line( 0, Side, 2, [], X ) ;
-			( ( L =:= Side ; L =:= Side - 1 ) ->
-				initDynBoard_line( 0, Side, 1, [], X ) ;
-				initDynBoard_line( 0, Side, 0, [], X )
-			)
-		 ),
-		initDynBoard_col(L, Side, [X|BoardIn], BoardOut).
+                L is BaseNumber + 1,
+                (
+                        ( L =:= 1 ; L =:= 2 ) ->
+                                X is 2 ;
+                                ( ( L =:= Side ; L =:= Side - 1 ) ->
+                                        X is 1 ;
+                                        X is 0
+                                )
+                 ),
+                 initDynBoard_line( 0, Side, X, [], Y ),
+                initDynBoard_col(L, Side, [Y|BoardIn], BoardOut).
 
 initDynBoard(Side, Board) :-
-	Side > 4,
-	Side < 20,
-	initDynBoard_col(0, Side, [], Board).
-	
-	
-	
+                Side > 4,
+                Side < 20,
+                initDynBoard_col(0, Side, [], Board).
+        
+        
+% **********************************************************************
+% **********************************************************************        
+
+checkPoss(Board, _, Side, X, Y, PosOut) :-
+                X > 0,
+                X =< Side,
+                Y > 0,
+                Y =< Side,
+                getPawn(Board, X, Y, Pawn),
+                append(Pawn, [], PosOut).
+                
+
+doNothing(_).
+
+getPossiblePlays_int(Board, Player, Side, X, Y, Plays) :-
+                X1 is X-1,
+                X2 is X+1,
+                (checkPoss(Board, Player, Side, X1, Y, A) -> append([], A, Plays1); Plays1 = [0]),
+                (checkPoss(Board, Player, Side, X , Y, B) -> append(Plays1, B, Plays2); append(Plays1, [0], Plays2)),
+                ( checkPoss(Board, Player, Side, X2, Y, C) -> append(Plays2, C, Plays); append(Plays2, [0], Plays)).
+
+% getPossiblePlays/6            
+getPossiblePlays(Board, 1, Side, X, Y, Plays) :-
+                Y2 is Y + 1,
+                getPossiblePlays_int(Board, 1, Side, X, Y2, Plays).
+                
+getPossiblePlays(Board, 2, Side, X, Y, Plays) :-
+                Y2 is Y - 1,
+                getPossiblePlays_int(Board, 2, Side, X, Y2, Plays).
+                
+
+% getPossiblePlays/5
+getPossiblePlays(Board, Side, X, Y, Plays) :-
+                getPawn(Board, X, Y, Pawn),
+                getPossiblePlays(Board, Pawn, Side, X, Y, Plays).
+                
+        
+        
 
 % **********************************************************************
 % **********************************************************************
@@ -440,52 +478,41 @@ initDynBoard(Side, Board) :-
 % Inicializa e imprime tabuleiro no estado inicial.
 
 init :-
-		write('Lado do tabuleiro [5,19] = '), read(L),
-        initDynBoard(L, A),
-		nl,
-        printBoard(A),
-		move(A, 1).
-
-initHH3x3 :-
-		board3x3(A),
-		printBoard(A),
-		move(A, 1).
-
-initHH8x8 :-
-        board8x8(A),
-        printBoard(A),
-		move(A, 1). %TODO gerar numero aleatorio
-
+	repeat,
+	write('Lado do tabuleiro [5,19] = '), read(L),
+	integer(L),
+	L >= 5,
+	L =< 19,
+	initDynBoard(L, A),
+	nl,
+	printBoard(A),
+	move(A, 1).
 
 move(A, _):-
-		isWinner(A, 1),
-		nl,
-		write('O jogo terminou! Venceu o Jogador 1.'),
-        !.
-
-move(A, _):-
-		isWinner(A, 2),
-		nl,
-		write('O jogo terminou! Venceu o Jogador 2.'),
-        !.
-
-move(A, P) :-
-		not(isWinner(A, 1)),
-		not(isWinner(A, 2)),
-		nl,nl,
-		write('Jogador '), write(P), nl,
-		write('Peça a mover?'), nl,
-		write('X = '), read(Ox),
-		write('Y = '), read(Oy),nl,
-		write('Casa de destino?'), nl,
-		write('X = '), read(Dx),
-		write('Y = '), read(Dy),nl,
-		getPawn(A, Ox, Oy, P),
-		movePawn(A, Ox, Oy, Dx, Dy, Tab),
-		repeat,
-		printBoard(Tab),
-		switchPlayer(P, NP),
-		move(Tab, NP).
+	nl,
+	isWinner(A, X),
+	write('O jogo terminou! Venceu o Jogador '),
+	write(X),
+	!.
+        
+move(A, P) :- 
+	nl,
+	write('Jogador '), write(P), nl,
+	repeat,
+	write('Peça a mover?'), nl,
+	write('X = '), read(Ox),
+	write('Y = '), read(Oy),nl,
+	integer(Ox),
+	integer(Oy),
+	getPawn(A, Ox, Oy, P1),
+	P1 = P,
+	write('Casa de destino?'), nl,
+	write('X = '), read(Dx),
+	write('Y = '), read(Dy),nl,
+	movePawn(A, Ox, Oy, Dx, Dy, Tab),
+	printBoard(Tab),
+	switchPlayer(P, NP),
+	move(Tab, NP).
 
 
 % *********************************************************************
@@ -493,22 +520,22 @@ move(A, P) :-
 % *********************************************************************
 
 getPlayer(J, X, Y):-
-       board8x8(A),
-       getPawn(A, X, Y, J).
+	board8x8(A),
+	getPawn(A, X, Y, J).
 
 verificaVencedor(P):-
-        finalBoard(A),
-        isWinner(A, P).
+	finalBoard(A),
+	isWinner(A, P).
 
 validaJogada(Ox, Oy, Dx, Dy):-
-		midBoard(A),
-		getPawn(A, Ox, Oy, P),
-		checkMove(A, Ox, Oy, Dx, Dy, P).
+	midBoard(A),
+	getPawn(A, Ox, Oy, P),
+	checkMove(A, Ox, Oy, Dx, Dy, P).
 
 movePawn(Ox, Oy, Dx, Dy):-
-		midBoard(A),
-		movePawn(A, Ox, Oy, Dx, Dy, Tab),
-		printBoard(Tab).
+	midBoard(A),
+	movePawn(A, Ox, Oy, Dx, Dy, Tab),
+	printBoard(Tab).
 
 % *********************************************************************
 % Outro código
