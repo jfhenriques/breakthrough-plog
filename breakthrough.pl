@@ -187,7 +187,7 @@ printBoard([]).
 % e de seguida o predicado que imprime cada linha individual.
 % É imprimido também o separador horizontal do tabuleiro.
 printBoard([H|T]) :-
-                length([H|T], S),
+        length([H|T], S),
         printColNumbers([H|T]),
         nl,
         printFullRow([H|T], 1, S),
@@ -404,74 +404,88 @@ movePawn(Tab, Ox, Oy, Dx, Dy, TabOut) :-
 % **********************************************************************
 
 initDynBoard_line(BaseNumber, BaseNumber, _, LineIn, LineOut) :-
-                append(LineIn, [], LineOut).
+        append(LineIn, [], LineOut).
 
 initDynBoard_line(BaseNumber, Side, V, LineIn, LineOut) :-
-                N is BaseNumber + 1,
-                initDynBoard_line(N, Side, V, [V|LineIn], LineOut).
-                
+		N is BaseNumber + 1,
+		initDynBoard_line(N, Side, V, [V|LineIn], LineOut).
+		
                 
 initDynBoard_col(BaseNumber, BaseNumber, BoardIn, BoardOut) :-
-                append(BoardIn, [], BoardOut).
+		append(BoardIn, [], BoardOut).
 
 initDynBoard_col(BaseNumber, Side, BoardIn, BoardOut) :-
-                L is BaseNumber + 1,
-                (
-                        ( L =:= 1 ; L =:= 2 ) ->
-                                X is 2 ;
-                                ( ( L =:= Side ; L =:= Side - 1 ) ->
-                                        X is 1 ;
-                                        X is 0
-                                )
-                 ),
-                 initDynBoard_line( 0, Side, X, [], Y ),
-                initDynBoard_col(L, Side, [Y|BoardIn], BoardOut).
+		L is BaseNumber + 1,
+		(
+				( L =:= 1 ; L =:= 2 ) ->
+						X is 2 ;
+						( ( L =:= Side ; L =:= Side - 1 ) ->
+								X is 1 ;
+								X is 0
+						)
+		),
+		initDynBoard_line( 0, Side, X, [], Y ),
+		initDynBoard_col(L, Side, [Y|BoardIn], BoardOut).
 
 initDynBoard(Side, Board) :-
-                Side > 4,
-                Side < 20,
-                initDynBoard_col(0, Side, [], Board).
+		Side > 4,
+		Side < 20,
+		initDynBoard_col(0, Side, [], Board).
         
         
 % **********************************************************************
 % **********************************************************************        
 
-checkPoss(Board, _, Side, X, Y, PosOut) :-
-                X > 0,
-                X =< Side,
-                Y > 0,
-                Y =< Side,
-                getPawn(Board, X, Y, Pawn),
-                append(Pawn, [], PosOut).
-                
+checkPoss_prior(1, 0, 1).
+checkPoss_prior(2, 0, 1).
+checkPoss_prior(1, 2, 2).
+checkPoss_prior(2, 1, 2).
+checkPoss_prior(_, _, 0).
 
-doNothing(_).
+checkPoss(Board, Player, Side, X, Y, ListIn, ListOut) :-
+		( ( X > 0,
+			X =< Side,
+			Y > 0,
+			Y =< Side,
+			getPawn(Board, X, Y, Pawn)
+		  )
+		  -> checkPoss_prior(Player, Pawn, Prior)
+		   ; Prior is 0
+		),
+		append( ListIn, [Prior], ListOut ).
+		
 
 getPossiblePlays_int(Board, Player, Side, X, Y, Plays) :-
-                X1 is X-1,
-                X2 is X+1,
-                (checkPoss(Board, Player, Side, X1, Y, A) -> append([], A, Plays1); Plays1 = [0]),
-                (checkPoss(Board, Player, Side, X , Y, B) -> append(Plays1, B, Plays2); append(Plays1, [0], Plays2)),
-                ( checkPoss(Board, Player, Side, X2, Y, C) -> append(Plays2, C, Plays); append(Plays2, [0], Plays)).
+		X1 is X-1,
+		X2 is X+1,
+		checkPoss(Board, Player, Side, X1, Y, [], L1),
+		checkPoss(Board, Player, Side, X , Y, L1, L2),
+		checkPoss(Board, Player, Side, X2, Y, L2, Plays).
 
-% getPossiblePlays/6            
+%(checkPoss(Board, Player, Side, X1, Y, A) -> append([], A, Plays1); Plays1 = [0]),
+%(checkPoss(Board, Player, Side, X , Y, B) -> append(Plays1, B, Plays2); append(Plays1, [0], Plays2)),
+%(checkPoss(Board, Player, Side, X2, Y, C) -> append(Plays2, C, Plays); append(Plays2, [0], Plays)).
+
+% getPossiblePlays/6		
 getPossiblePlays(Board, 1, Side, X, Y, Plays) :-
-                Y2 is Y + 1,
-                getPossiblePlays_int(Board, 1, Side, X, Y2, Plays).
-                
+		Y2 is Y + 1,
+		getPossiblePlays_int(Board, 1, Side, X, Y2, Plays).
+		
 getPossiblePlays(Board, 2, Side, X, Y, Plays) :-
-                Y2 is Y - 1,
-                getPossiblePlays_int(Board, 2, Side, X, Y2, Plays).
-                
+		Y2 is Y - 1,
+		getPossiblePlays_int(Board, 2, Side, X, Y2, Plays).
+		
 
 % getPossiblePlays/5
 getPossiblePlays(Board, Side, X, Y, Plays) :-
-                getPawn(Board, X, Y, Pawn),
-                getPossiblePlays(Board, Pawn, Side, X, Y, Plays).
-                
+		getPawn(Board, X, Y, Pawn),
+		getPossiblePlays(Board, Pawn, Side, X, Y, Plays).
         
         
-
+test :-
+		initDynBoard(10, A),
+		trace,
+		getPossiblePlays(A, 10, 1, 1, Plays).
 % **********************************************************************
 % **********************************************************************
 
