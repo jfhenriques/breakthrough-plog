@@ -214,9 +214,9 @@ getPawnPos([_|InTabT], Dest, BaseIncrement, Value) :-
 % Verifica se X e Y estão dentro dos valores permitidos
 % Recorre a getPawnPos para percorrer o tabuleiro e encontra o jogador
 getPawn(InTab, X, Y, Player) :-
-				length(InTab, Len),
                 X > 0,
                 Y > 0,
+				length(InTab, Len),
                 X =< Len,
                 Y =< Len,
                 getPawnPos(InTab, Y, 1, L),
@@ -403,16 +403,16 @@ movePawn(Tab, Ox, Oy, Dx, Dy, TabOut) :-
 % initDynBoard(+Side, -Board)
 % **********************************************************************
 
-initDynBoard_line(BaseNumber, BaseNumber, _, LineIn, LineOut) :-
-        append(LineIn, [], LineOut).
+initDynBoard_line(BaseNumber, BaseNumber, _, Line, Line).
+%append(LineIn, [], LineOut).
 
 initDynBoard_line(BaseNumber, Side, V, LineIn, LineOut) :-
 		N is BaseNumber + 1,
 		initDynBoard_line(N, Side, V, [V|LineIn], LineOut).
 		
                 
-initDynBoard_col(BaseNumber, BaseNumber, BoardIn, BoardOut) :-
-		append(BoardIn, [], BoardOut).
+initDynBoard_col(BaseNumber, BaseNumber, Board, Board).
+%append(BoardIn, [], BoardOut).
 
 initDynBoard_col(BaseNumber, Side, BoardIn, BoardOut) :-
 		L is BaseNumber + 1,
@@ -436,56 +436,128 @@ initDynBoard(Side, Board) :-
 % **********************************************************************
 % **********************************************************************        
 
-checkPoss_prior(1, 0, 1).
-checkPoss_prior(2, 0, 1).
-checkPoss_prior(1, 2, 2).
-checkPoss_prior(2, 1, 2).
-checkPoss_prior(_, _, 0).
+checkPoss_prior(_, _, 1, 0, 1):- !.
+checkPoss_prior(_, _, 2, 0, 1):- !.
+checkPoss_prior(X, X, 1, 2, 0):- !.
+checkPoss_prior(X, X, 2, 1, 0):- !.
+checkPoss_prior(_, _, 1, 2, 2):- !.
+checkPoss_prior(_, _, 2, 1, 2):- !.
+checkPoss_prior(_, _, _, _, 0):- !.
 
-checkPoss(Board, Player, Side, X, Y, ListIn, ListOut) :-
+checkPoss(Board, Side, Player, Ox, X, Y, ListIn, ListOut) :-
 		( ( X > 0,
 			X =< Side,
 			Y > 0,
 			Y =< Side,
 			getPawn(Board, X, Y, Pawn)
 		  )
-		  -> checkPoss_prior(Player, Pawn, Prior)
+		  -> checkPoss_prior(Ox, X, Player, Pawn, Prior)
 		   ; Prior is 0
 		),
 		append( ListIn, [Prior], ListOut ).
 		
 
-getPossiblePlays_int(Board, Player, Side, X, Y, Plays) :-
+		
+getPossiblePlays_int(Board, Side, Player, X, Y, Plays) :-
 		X1 is X-1,
 		X2 is X+1,
-		checkPoss(Board, Player, Side, X1, Y, [], L1),
-		checkPoss(Board, Player, Side, X , Y, L1, L2),
-		checkPoss(Board, Player, Side, X2, Y, L2, Plays).
+		checkPoss(Board, Side, Player, X, X1, Y, [], L1),
+		checkPoss(Board, Side, Player, X, X , Y, L1, L2),
+		checkPoss(Board, Side, Player, X, X2, Y, L2, Plays).
 
-%(checkPoss(Board, Player, Side, X1, Y, A) -> append([], A, Plays1); Plays1 = [0]),
-%(checkPoss(Board, Player, Side, X , Y, B) -> append(Plays1, B, Plays2); append(Plays1, [0], Plays2)),
-%(checkPoss(Board, Player, Side, X2, Y, C) -> append(Plays2, C, Plays); append(Plays2, [0], Plays)).
-
-% getPossiblePlays/6		
-getPossiblePlays(Board, 1, Side, X, Y, Plays) :-
-		Y2 is Y + 1,
-		getPossiblePlays_int(Board, 1, Side, X, Y2, Plays).
 		
-getPossiblePlays(Board, 2, Side, X, Y, Plays) :-
+		
+% getPossiblePlays/7		
+
+getPossiblePlays(Board, Side, 1, X, Y, Y2, Plays) :-
+		Y2 is Y + 1,
+		getPossiblePlays_int(Board, Side, 1, X, Y2, Plays).
+		
+getPossiblePlays(Board, Side, 2, X, Y, Y2, Plays) :-
 		Y2 is Y - 1,
-		getPossiblePlays_int(Board, 2, Side, X, Y2, Plays).
+		getPossiblePlays_int(Board, Side, 2, X, Y2, Plays).
+		
+getPossiblePlays(_, _, _, _, _, _, [0, 0, 0]).
 		
 
 % getPossiblePlays/5
 getPossiblePlays(Board, Side, X, Y, Plays) :-
 		getPawn(Board, X, Y, Pawn),
-		getPossiblePlays(Board, Pawn, Side, X, Y, Plays).
+		getPossiblePlays(Board, Side, Pawn, X, Y, _, Plays).
+		
+
         
-        
+% **********************************************************************
+% **********************************************************************
+
+getFirstMaxPriorityMove([], _, Pri, Ox, Oy, Dx, Dy, Max) :-
+		Pri > 0,
+		Max = Pri-Ox-Oy-Dx-Dy.
+		
+getFirstMaxPriorityMove([P|Tail], Inc, PriIn, Ox, Oy, Dx, Dy, Max) :-
+		Inc2 is Inc + 1,
+		( ( P > 0, P > PriIn) ->
+			( X is Ox + Inc - 1,
+			  Pri is P ) ;
+			( X is Dx,
+			  Pri is PriIn )
+		),
+		getFirstMaxPriorityMove(Tail, Inc2, Pri, Ox, Oy, X, Dy, Max).	
+		
+		
+addMove(Board, Side, Player, Player, X, Y, MovesIn, MovesOut) :-
+		getPossiblePlays(Board, Side, Player, X, Y, Y2, Plays),
+		getFirstMaxPriorityMove(Plays, 0, 0, X, Y, 0, Y2, Move),
+		append(MovesIn, [Move], MovesOut).
+
+addMove(_, _, _, _, _, _, Moves, Moves).		
+
+
+checkNextMoves_line([], _, _, _, _, _, Moves, Moves).
+checkNextMoves_line([Cell|LineTail], Board, Side, X, Y, Player, MovesIn, MovesOut) :-
+		X1 is X + 1,
+		addMove(Board, Side, Cell, Player, X, Y, MovesIn, MovesOutTemp),
+		checkNextMoves_line(LineTail, Board, Side, X1, Y, Player, MovesOutTemp, MovesOut).
+	
+
+% checkNextMoves/7
+checkNextMoves([], _, _, _, _, Moves, Moves).
+checkNextMoves([Line|BoardTail], Board, Side, Y, Player, MovesIn, MovesOut) :-
+		Y1 is Y + 1,
+		checkNextMoves_line(Line, Board, Side, 1, Y, Player, MovesIn, MovesOutTemp),
+		checkNextMoves(BoardTail, Board, Side, Y1, Player, MovesOutTemp, MovesOut).
+
+% checkNextMoves/4
+checkNextMoves(Board, Side, Player, MovesOut) :-
+		checkNextMoves(Board, Board, Side, 1, Player, [], MovesOut).
+
+
+% **********************************************************************
+% **********************************************************************
+
+pickNextMove([Pri-Ox-Oy-Dx-Dy|MovesTail], PriIn-_-_-_-_, OxOut, OyOut, DxOut, DyOut ) :-
+		Pri > PriIn,
+		pickNextMove(MovesTail, Pri-Ox-Oy-Dx-Dy, OxOut, OyOut, DxOut, DyOut ).
+
+pickNextMove([_|MovesTail], PriIn-OxIn-OyIn-DxIn-DyIn, OxOut, OyOut, DxOut, DyOut ) :-
+		pickNextMove(MovesTail, PriIn-OxIn-OyIn-DxIn-DyIn, OxOut, OyOut, DxOut, DyOut ).
+		
+pickNextMove([], _-Ox-Oy-Dx-Dy, Ox, Oy, Dx, Dy ) :- !.
+		
+pickNextMove(Board, Side, Player, Ox, Oy, Dx, Dy ) :-
+		checkNextMoves(Board, Side, Player, Moves),
+		pickNextMove(Moves, 0-0-0-0-0, Ox, Oy, Dx, Dy ).
+		
+		
+		
+		
 test :-
 		initDynBoard(10, A),
-		trace,
-		getPossiblePlays(A, 10, 1, 1, Plays).
+		printBoard(A),
+		getPossiblePlays(A, 10, 2, 5, Plays),
+		nl,
+		printRow(Plays).
+		
 % **********************************************************************
 % **********************************************************************
 
