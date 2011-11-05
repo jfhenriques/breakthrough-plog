@@ -549,56 +549,149 @@ pickNextMove(Board, Side, Player, Ox, Oy, Dx, Dy ) :-
 		pickNextMove(Moves, 0-0-0-0-0, Ox, Oy, Dx, Dy ).
 		
 		
+% **********************************************************************
+% **********************************************************************
+
+readXY(X,Y) :-
+		write('X = '), read(XX),
+		integer(XX),
+		write('Y = '), read(YY), nl,
+		integer(YY),
+		X is XX,
+		Y is YY.
 		
+printPlayer(Player) :-
+	nl, nl,
+	write('[Jogador: '),
+	write(Player),
+	write(']'), nl.
+	
+checkCorrectPlayer(Player, Pawn) :-
+		Player \= Pawn,
+		write('Esse peão não é seu, tente novamente!'), nl,
+		Player = Pawn.
 		
-test :-
-		initDynBoard(10, A),
-		printBoard(A),
-		getPossiblePlays(A, 10, 2, 5, Plays),
-		nl,
-		printRow(Plays).
+checkCorrectPlayer(Pawn, Pawn).
+
+% **********************************************************************
+% **********************************************************************
+
+verificaVencedor(Board, _, _, _) :-
+		isWinner(Board, Player),
+		write('Jogo terminado! Venceu o jogador ['),
+		write(Player),
+		write(']'), nl.
+	
+verificaVencedor(Board, Side, GameMode, Player) :-
+		printPlayer(Player),
+		play(Board, Side, GameMode, Player).
+	
+% **********************************************************************
+% **********************************************************************
+
+transitPlay(BoardIn, Side, GameMode, Player, Ox, Oy, Dx, Dy) :-
+		movePawn(BoardIn, Ox, Oy, Dx, Dy, Board),
+		write('Jogador ['), write(Player), write('] moveu a peça ['),
+		write(Ox), write(','), write(Oy), write('] para ['),
+		write(Dx), write(','), write(Dy), write(']'), nl, nl,
+		printBoard(Board),
+		switchPlayer(Player, NextPlayer),
+		verificaVencedor(Board, Side, GameMode,NextPlayer).
+
+transitPlay(Board, Side, GameMode, 1, _, _, _, _) :- !,
+		write('Jogada Inválida, tente outra vez!'), nl,
+		play(Board, Side, GameMode, 1).
+
+
+% **********************************************************************
+% **********************************************************************
+
+play(Board, Side, 2, 2) :- !,
+		pickNextMove(Board, Side, 2, Ox, Oy, Dx, Dy ),
+		transitPlay(Board, Side, 2, 2, Ox, Oy, Dx, Dy ).
+
+play(Board, Side, GameMode, Player) :- !,
+	repeat,
+	nl,
+	write('Peça a mover?'), nl,
+	readXY( Ox, Oy ),
+	getPawn(Board, Ox, Oy, Pawn),
+	checkCorrectPlayer(Player, Pawn),
+	repeat,
+	write('Casa de destino?'), nl,	
+	readXY( Dx, Dy ),
+	transitPlay(Board, Side, GameMode, Player, Ox, Oy, Dx, Dy ).
+	
+play(Board, Side, GameMode) :-
+		play(Board, Side, GameMode, 1).
+
+
+% **********************************************************************
+% **********************************************************************
+	
+init :-
+		repeat,
+		write('Lado do tabuleiro [5,19] = '), read(Side), nl,
+		integer(Side),
+		Side >= 5,
+		Side =< 19,
+		initDynBoard(Side, Board),
+		repeat,
+		write('Modo de jogo:'), nl,
+		write('1 - Humano/Humano'), nl,
+		write('2 - Humano/Computador'), nl,
+		write('> '), read(Mode), nl,
+		integer(Mode),
+		Mode > 0,
+		Mode < 3,
+		printBoard(Board),
+		printPlayer(1),
+		play(Board, Side, Mode).
 		
 % **********************************************************************
 % **********************************************************************
 
+
+	
 % Inicializa e imprime tabuleiro no estado inicial.
 
-init :-
-	repeat,
-	write('Lado do tabuleiro [5,19] = '), read(L),
-	integer(L),
-	L >= 5,
-	L =< 19,
-	initDynBoard(L, A),
-	nl,
-	printBoard(A),
-	move(A, 1).
+%init :-
+%	repeat,
+%	write('Lado do tabuleiro [5,19] = '), read(L),
+%	integer(L),
+%	L >= 5,
+%	L =< 19,
+%	initDynBoard(L, A),
+%	nl,
+%	printBoard(A),
+%	move(A, 1).
 
-move(A, _):-
-	nl,
-	isWinner(A, X),
-	write('O jogo terminou! Venceu o Jogador '),
-	write(X),
-	!.
+%move(A, _):-
+%	nl,
+%	isWinner(A, X),
+%	write('O jogo terminou! Venceu o Jogador '),
+%	write(X),
+%	!.
         
-move(A, P) :- 
-	nl,
-	write('Jogador '), write(P), nl,
-	repeat,
-	write('Peça a mover?'), nl,
-	write('X = '), read(Ox),
-	write('Y = '), read(Oy),nl,
-	integer(Ox),
-	integer(Oy),
-	getPawn(A, Ox, Oy, P1),
-	P1 = P,
-	write('Casa de destino?'), nl,
-	write('X = '), read(Dx),
-	write('Y = '), read(Dy),nl,
-	movePawn(A, Ox, Oy, Dx, Dy, Tab),
-	printBoard(Tab),
-	switchPlayer(P, NP),
-	move(Tab, NP).
+%move(A, P) :- 
+%	nl,
+%	write('Jogador '), write(P), nl,
+%	repeat,
+%	write('Peça a mover?'), nl,
+%	write('X = '), read(Ox),
+%	write('Y = '), read(Oy),nl,
+%	integer(Ox),
+%	integer(Oy),
+%	getPawn(A, Ox, Oy, P1),
+%	P1 = P,
+%	write('Casa de destino?'), nl,
+%	write('X = '), read(Dx),
+%	write('Y = '), read(Dy),nl,
+%	movePawn(A, Ox, Oy, Dx, Dy, Tab),
+%	printBoard(Tab),
+%	switchPlayer(P, NP),
+%	move(Tab, NP).
+
 
 
 % *********************************************************************
