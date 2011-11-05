@@ -4,62 +4,62 @@
 
 % Inicializa o tabuleiro.
 
-midBoard([
-           [ 1, 1, 1, 1, 1, 1, 1, 1 ],
-           [ 1, 1, 1, 1, 1, 0, 1, 1 ],
-           [ 0, 0, 0, 0, 0, 0, 0, 0 ],
-           [ 0, 0, 0, 0, 0, 1, 0, 0 ],
-           [ 0, 0, 0, 0, 2, 2, 0, 0 ],
-           [ 0, 0, 0, 0, 0, 0, 0, 0 ],
-           [ 2, 2, 2, 2, 2, 0, 0, 2 ],
-           [ 2, 2, 2, 2, 2, 2, 2, 2 ]
-          ]).
+%midBoard([
+%           [ 1, 1, 1, 1, 1, 1, 1, 1 ],
+%           [ 1, 1, 1, 1, 1, 0, 1, 1 ],
+%           [ 0, 0, 0, 0, 0, 0, 0, 0 ],
+%           [ 0, 0, 0, 0, 0, 1, 0, 0 ],
+%           [ 0, 0, 0, 0, 2, 2, 0, 0 ],
+%           [ 0, 0, 0, 0, 0, 0, 0, 0 ],
+%           [ 2, 2, 2, 2, 2, 0, 0, 2 ],
+%           [ 2, 2, 2, 2, 2, 2, 2, 2 ]
+%          ]).
 
-finalBoard([
-           [ 1, 1, 1, 1, 1, 1, 1, 1 ],
-           [ 1, 1, 1, 0, 1, 0, 1, 0 ],
-           [ 0, 0, 0, 0, 0, 0, 0, 0 ],
-           [ 0, 0, 2, 0, 1, 1, 0, 0 ],
-           [ 0, 0, 0, 0, 0, 0, 1, 0 ],
-           [ 0, 0, 0, 0, 0, 0, 0, 0 ],
-           [ 2, 2, 0, 2, 2, 1, 2, 0 ],
-           [ 2, 2, 2, 2, 2, 2, 2, 2 ]
-          ]).
+%finalBoard([
+%           [ 1, 1, 1, 1, 1, 1, 1, 1 ],
+%           [ 1, 1, 1, 0, 1, 0, 1, 0 ],
+%           [ 0, 0, 0, 0, 0, 0, 0, 0 ],
+%           [ 0, 0, 2, 0, 1, 1, 0, 0 ],
+%           [ 0, 0, 0, 0, 0, 0, 1, 0 ],
+%           [ 0, 0, 0, 0, 0, 0, 0, 0 ],
+%           [ 2, 2, 0, 2, 2, 1, 2, 0 ],
+%           [ 2, 2, 2, 2, 2, 2, 2, 2 ]
+%          ]).
 
-finalBoard2([
-           [ 0, 0, 0, 0, 0, 0, 0, 0 ],
-           [ 0, 0, 0, 0, 0, 0, 0, 0 ],
-           [ 0, 0, 0, 0, 0, 0, 0, 0 ],
-           [ 0, 0, 2, 0, 0, 0, 0, 0 ],
-           [ 0, 0, 0, 0, 0, 0, 0, 0 ],
-           [ 0, 0, 0, 0, 0, 1, 0, 0 ],
-           [ 2, 2, 0, 2, 2, 0, 2, 0 ],
-           [ 2, 2, 2, 2, 2, 2, 2, 2 ]
-          ]).
+%finalBoard2([
+%           [ 0, 0, 0, 0, 0, 0, 0, 0 ],
+%           [ 0, 0, 0, 0, 0, 0, 0, 0 ],
+%           [ 0, 0, 0, 0, 0, 0, 0, 0 ],
+%           [ 0, 0, 2, 0, 0, 0, 0, 0 ],
+%           [ 0, 0, 0, 0, 0, 0, 0, 0 ],
+%           [ 0, 0, 0, 0, 0, 1, 0, 0 ],
+%           [ 2, 2, 0, 2, 2, 0, 2, 0 ],
+%           [ 2, 2, 2, 2, 2, 2, 2, 2 ]
+%          ]).
 
-board4x4([
-                  [ 1, 1, 1, 1],
-          [ 0, 0, 0, 0],
-          [ 0, 0, 0, 0],
-          [ 2, 2, 2, 2]
-         ]).
+%board4x4([
+%                  [ 1, 1, 1, 1],
+%          [ 0, 0, 0, 0],
+%          [ 0, 0, 0, 0],
+%          [ 2, 2, 2, 2]
+%         ]).
 
-board3x3([
-              [ 1, 1, 1],
-          [ 0, 0, 0],
-          [ 2, 2, 2]
-         ]).
+%board3x3([
+ %             [ 1, 1, 1],
+ %         [ 0, 0, 0],
+ %         [ 2, 2, 2]
+ %        ]).
 
-board8x8([
-           [ 1, 1, 1, 1, 1, 1, 1, 1 ],
-           [ 1, 1, 1, 1, 1, 1, 1, 1 ],
-           [ 0, 0, 0, 0, 0, 0, 0, 0 ],
-           [ 0, 0, 0, 0, 0, 0, 0, 0 ],
-           [ 0, 0, 0, 0, 0, 0, 0, 0 ],
-           [ 0, 0, 0, 0, 0, 0, 0, 0 ],
-           [ 2, 2, 2, 2, 2, 2, 2, 2 ],
-           [ 2, 2, 2, 2, 2, 2, 2, 2 ]
-          ]).
+%board8x8([
+%           [ 1, 1, 1, 1, 1, 1, 1, 1 ],
+%           [ 1, 1, 1, 1, 1, 1, 1, 1 ],
+%           [ 0, 0, 0, 0, 0, 0, 0, 0 ],
+%           [ 0, 0, 0, 0, 0, 0, 0, 0 ],
+%           [ 0, 0, 0, 0, 0, 0, 0, 0 ],
+%           [ 0, 0, 0, 0, 0, 0, 0, 0 ],
+%           [ 2, 2, 2, 2, 2, 2, 2, 2 ],
+%           [ 2, 2, 2, 2, 2, 2, 2, 2 ]
+%          ]).
 
 
 % **********************************************************************
@@ -552,19 +552,30 @@ pickNextMove(Board, Side, Player, Ox, Oy, Dx, Dy ) :-
 % **********************************************************************
 % **********************************************************************
 
+checkAbort('sair') :-
+		abort.
+checkAbort('Sair') :-
+		abort.
+checkAbort('SAIR') :-
+		abort.
+checkAbort(_).
+
+readIntegerAbort(Text, Value) :-
+		write(Text),
+		read(Input),
+		checkAbort(Input),
+		integer(Input),
+		Value = Input.
+		
 readXY(X,Y) :-
-		write('X = '), read(XX),
-		integer(XX),
-		write('Y = '), read(YY), nl,
-		integer(YY),
-		X is XX,
-		Y is YY.
+		readIntegerAbort('X = ', X),
+		readIntegerAbort('Y = ', Y).
 		
 printPlayer(Player) :-
-	nl, nl,
-	write('[Jogador: '),
-	write(Player),
-	write(']'), nl.
+		nl, nl,
+		write('[Jogador: '),
+		write(Player),
+		write(']'), nl.
 	
 checkCorrectPlayer(Player, Pawn) :-
 		Player \= Pawn,
@@ -611,16 +622,16 @@ play(Board, Side, 2, 2) :- !,
 		transitPlay(Board, Side, 2, 2, Ox, Oy, Dx, Dy ).
 
 play(Board, Side, GameMode, Player) :- !,
-	repeat,
-	nl,
-	write('Peça a mover?'), nl,
-	readXY( Ox, Oy ),
-	getPawn(Board, Ox, Oy, Pawn),
-	checkCorrectPlayer(Player, Pawn),
-	repeat,
-	write('Casa de destino?'), nl,	
-	readXY( Dx, Dy ),
-	transitPlay(Board, Side, GameMode, Player, Ox, Oy, Dx, Dy ).
+		repeat,
+		nl,
+		write('Peça a mover?'), nl,
+		readXY( Ox, Oy ), nl,
+		getPawn(Board, Ox, Oy, Pawn),
+		checkCorrectPlayer(Player, Pawn),
+		repeat,
+		write('Casa de destino?'), nl,	
+		readXY( Dx, Dy ), nl,
+		transitPlay(Board, Side, GameMode, Player, Ox, Oy, Dx, Dy ).
 	
 play(Board, Side, GameMode) :-
 		play(Board, Side, GameMode, 1).
@@ -631,8 +642,7 @@ play(Board, Side, GameMode) :-
 	
 init :-
 		repeat,
-		write('Lado do tabuleiro [5,19] = '), read(Side), nl,
-		integer(Side),
+		readIntegerAbort('Lado do tabuleiro [5,19] = ', Side), nl,
 		Side >= 5,
 		Side =< 19,
 		initDynBoard(Side, Board),
@@ -640,8 +650,7 @@ init :-
 		write('Modo de jogo:'), nl,
 		write('1 - Humano/Humano'), nl,
 		write('2 - Humano/Computador'), nl,
-		write('> '), read(Mode), nl,
-		integer(Mode),
+		readIntegerAbort('> ', Mode), nl,
 		Mode > 0,
 		Mode < 3,
 		printBoard(Board),
@@ -698,23 +707,23 @@ init :-
 % Testes
 % *********************************************************************
 
-getPlayer(J, X, Y):-
-	board8x8(A),
-	getPawn(A, X, Y, J).
+%getPlayer(J, X, Y):-
+%	board8x8(A),
+%	getPawn(A, X, Y, J).
 
-verificaVencedor(P):-
-	finalBoard(A),
-	isWinner(A, P).
+%verificaVencedor(P):-
+%	finalBoard(A),
+%	isWinner(A, P).
 
-validaJogada(Ox, Oy, Dx, Dy):-
-	midBoard(A),
-	getPawn(A, Ox, Oy, P),
-	checkMove(A, Ox, Oy, Dx, Dy, P).
+%validaJogada(Ox, Oy, Dx, Dy):-
+%	midBoard(A),
+%	getPawn(A, Ox, Oy, P),
+%	checkMove(A, Ox, Oy, Dx, Dy, P).
 
-movePawn(Ox, Oy, Dx, Dy):-
-	midBoard(A),
-	movePawn(A, Ox, Oy, Dx, Dy, Tab),
-	printBoard(Tab).
+%movePawn(Ox, Oy, Dx, Dy):-
+%	midBoard(A),
+%	movePawn(A, Ox, Oy, Dx, Dy, Tab),
+%	printBoard(Tab).
 
 % *********************************************************************
 % Outro código
