@@ -636,9 +636,14 @@ printPlayer(Player) :-
 		write('[Jogador: '),
 		write(Player),
 		write(']'), nl.
-	
+
+checkCorrectPlayer(Player, 0) :- !,
+		write('Casa inválida, tente novamente!'), nl,
+		Pawn \= 0.
+		
 checkCorrectPlayer(Player, Pawn) :-
 		Player \= Pawn,
+		!,
 		write('Esse peão não é seu, tente novamente!'), nl,
 		Player = Pawn.
 		
