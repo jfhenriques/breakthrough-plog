@@ -150,246 +150,46 @@ No entanto a captura não é obrigatória nem encadeada como nas damas.
 
 %************************************************************************************************
 %************************************************************************************************
- 
-\section{Representação do Estado do Jogo}
+\newpage
 
-A representação do tabuleiro 8x8 é feita em Prolog por uma lista de listas.
-Cada item do tabuleiro é representado no formato ``Jogador", em que este pode ser:
-\begin{itemize}
-\item 1 - jogador de peças brancas (Norte)
-\item 2 - jogador de peças pretas (Sul)
-\item 0 - casa vazia
-\end{itemize}
-
-\begin{code}[H]
-	\begin{verbatimtab}
-initBoard(
-	[
-		[ 1, 1, 1, 1, 1, 1, 1, 1 ],
-		[ 1, 1, 1, 1, 1, 1, 1, 1 ],
-		[ 0, 0, 0, 0, 0, 0, 0, 0 ],
-		[ 0, 0, 0, 0, 0, 0, 0, 0 ],
-		[ 0, 0, 0, 0, 0, 0, 0, 0 ],
-		[ 0, 0, 0, 0, 0, 0, 0, 0 ],
-		[ 2, 2, 2, 2, 2, 2, 2, 2 ],
-		[ 2, 2, 2, 2, 2, 2, 2, 2 ]
-	]).
-\end{verbatimtab}
-\caption{Representação de tabuleiro inicial.}
-\end{code}
-
-
-\begin{code}[H]
-	\begin{verbatimtab}
-
-intermediumBoard(
-	[
-		[ 1, 1, 1, 1, 1, 1, 1, 1 ],
-		[ 1, 1, 0, 1, 1, 1, 0, 1 ],
-		[ 0, 0, 1, 0, 0, 0, 0, 0 ],
-		[ 0, 0, 0, 0, 0, 1, 0, 0 ],
-		[ 0, 0, 0, 0, 0, 2, 0, 0 ],
-		[ 0, 0, 0, 2, 0, 0, 0, 2 ],
-		[ 2, 2, 2, 0, 2, 0, 0, 2 ],
-		[ 2, 2, 2, 2, 2 ,2 ,2, 2 ]
-	]).
-\end{verbatimtab}
-\caption{Representação de tabuleiro intermédio.}
-\end{code}
-
-
-\begin{code}[H]
-	\begin{verbatimtab}
-
-finalBoard(
-	[
-		[ 1, 1, 1, 1, 1, 1, 1, 1 ],
-		[ 1, 1, 0, 1, 1, 0, 0, 1 ],
-		[ 0, 0, 1, 0, 0, 0, 0, 0 ],
-		[ 0, 0, 0, 0, 0, 0, 0, 0 ],
-		[ 0, 2, 0, 0, 0, 1, 0, 0 ],
-		[ 0, 0, 0, 2, 0, 0, 0, 2 ],
-		[ 2, 2, 0, 0, 2, 0, 0, 2 ],
-		[ 2, 2, 2, 1, 2, 2, 2, 2 ]
-	]).
-\end{verbatimtab}
-\caption{Representação de tabuleiro final, em que o jogador 1 venceu.}
-\end{code}
+\section{Arquitectura do Sistema}
+Descrever em linhas gerais o sistema e os módulos que o constituem. Deve ser abordada a comunicação com o visualizador, que mesmo que ainda não esteja implementada, já deverá estar pensada. Assim, deve ser incluída a sintaxe das mensagens a trocar com o visualizador.
 
 
 %************************************************************************************************
 %************************************************************************************************
 \newpage
 
-\section{Representação de um Movimento}
-
-% Descrever a forma de representação dos diversos tipos de jogadas (movimentos) permitidos no jogo.
-% Só é necessário apresentar os cabeçalhos dos predicados que serão utilizados para as diferentes jogadas (que ainda não precisam de estar implementados).
-
-A descrição seguinte será feita tomando o jogador 2 (que avança na direcção Sul-Norte) como referência.
-
-O jogador pode mover uma dada peça sua para uma casa adjacente a:
-\begin{enumerate}
-\item Norte, se esta estiver vazia.
-\item Noroeste ou Nordeste, se esta estiver vazia ou contiver uma peça do oponente, sendo que neste último caso há forçosamente uma captura.
-\end{enumerate}
-Para efetuar um movimento, chamamos a seguinte função:
-\begin{code}[H]
-	\begin{verbatimtab}
-
-	movePawn([Ox,Oy], [Dx,Dy]).
-\end{verbatimtab}
-\caption{Predicado para mover a peça.}
-\end{code}
-Esta função aceita o X e Y da casa de origem e da casa de destino, e terá de verificar se ambas as casas são adjacentes, bem como validar a jogada, consoante o jogador que estiver na casa de origem.
-
-\begin{code}[H]
-	\begin{verbatimtab}
-
-	movePawn([ 7, 5 ], [ 6 , 4 ]).
-\end{verbatimtab}
-\caption{Exemplificação de um movimento.}
-\end{code}
-A peça que se encontra em (7, 5), é movida para a casa (6, 4).
-\linebreak \linebreak
-  Para capturar uma peça do adversário na casa de destino, será usado o seguinte predicado:
-
-\begin{code}[H]
-	\begin{verbatimtab}
-
-	capturePawn([Dx, Dy]).
-\end{verbatimtab}
-\caption{Captura de peça na casa de destino.}
-\end{code}
-
-
+\section{Módulo de Lógica do Jogo}
+Descrever o projecto e implementação do módulo Prolog, incluindo a forma de representação do estado do tabuleiro,  verificação do cumprimento das regras do jogo, determinação do final do jogo e cálculo das jogadas a realizar pelo computador  utilizando diversos níveis de jogo.
 
 %************************************************************************************************
+
+\subsection{Representação do Estado do Jogo} \textit{estado(?Tabuleiro).}
+
 %************************************************************************************************
+\subsection{Visualização do Estado do Jogo} \textit{visualiza\_estado(+Tabuleiro).}
 
-\section{Visualização do Tabuleiro}
+%************************************************************************************************
+\subsection{Validação de Jogadas} \textit{movimento\_valido(?Jogada, +Tabuleiro).}
 
-% Descrever a forma de visualização do tabuleiro em modo de texto e os predicados Prolog construídos para o efeito.
-% O código (predicado) desenvolvido, deve receber como parâmetro a representação do tabuleiro (estado do jogo) e permitir visualizar, no ecrã, em modo de texto, o estado do jogo.
-% Deve ser incluída no relatório, pelo menos, uma imagem demonstrando a visualização em modo de texto do tabuleiro.
+%************************************************************************************************
+\subsection{Execução de Jogadas}\textit{executa\_movimento(+Jogada, + Tabuleiro, -NovoTabuleiro).}
 
-O tabuleiro do jogo, é apresentado no ecrã através do predicado ``printBoard''.
-Esta função apresenta as células do tabuleiro representadas pelo número do jogador correspondente, ou em branco, caso a mesma se encontre vazia.
-Apresenta também as linhas e colunas à volta do tabuleiro, numeradas do número 1 até ao número da ordem de colunas ou linhas.
+%************************************************************************************************
+\subsection{Lista de Jogadas Válidas}\textit{lista\_jogadas(+Tabuleiro, -ListaJogadas).}
 
-% Figura do tabuleiro
-\begin{figure}[h!]
-\begin{center}
-\includegraphics[scale=1]{fig_tab.png}
-\caption{Tabuleiro impresso com ``printBoard', mostrando o estado inicial de um jogo'.}
-\label{fig:3}
-\end{center}
-\end{figure}
+%************************************************************************************************
+\subsection{Avaliação do Tabuleiro}\textit{avalia\_tabuleiro(+Tabuleiro, -Valor).}
 
-Na construção do código para esta função, ``printBoard'', foram criados os seguintes predicados:
+%************************************************************************************************
+\subsection{Final do Jogo} \textit{fim\_jogo(+Tabuleiro, -Vencedor).}
 
-\begin{code}[H]
-	\begin{verbatimtab}
+%************************************************************************************************
+\subsection{Cálculo da Jogada do Computador}\textit{calcula\_jogada(+Nível, +Tabuleiro, -Jogada).}
 
-% Imprime a peça do jogador correspondente.
-writePlayer(1) :-
-	write('1').
-writePlayer(2) :-
-	write('2').
-writePlayer(0) :-
-	write(' ').
-\end{verbatimtab}
-\caption{Predicado ``writePlayer' .}
-\end{code}
-
-
-
-\begin{code}[H]
-	\begin{verbatimtab}
-
-% Critério de paragem.
-printRow([]).
-
-% Imprime a borda esquerda da célula, e a respetiva
-% peça do jogador (cabeça da lista).
-% Por fim chama recursivamente a mesma função com
-% a cauda da lista, até encontrar o critério de paragem.
-printRow([H|T]) :-
-	write('| '),
-	writePlayer(H),
-	write(' '),
-	printRow(T).
-\end{verbatimtab}
-\caption{Predicado ``printRow'' .}
-\end{code}
-
-
-
-\begin{code}[H]
-	\begin{verbatimtab}
-
-% Imprime a linha de separação horizontal.
-printHorizSep   :-
-	write('   --- --- --- --- --- --- --- ---').
-
-% Imprime os números das colunas.
-printColNumbers :-
-	write('    1   2   3   4   5   6   7   8').
-\end{verbatimtab}
-\caption{Predicado ``printHorizSep'' e ``printColNumbers''.}
-\end{code}
-
-
-
-\begin{code}[H]
-	\begin{verbatimtab}
-
-% Critério de paragem.
-printFullRow([], _).
-
-% Imprime o número da linha no ínicio e no fim de cada iteração,
-% bem como o separador horizontal. Chama também o predicado que irá
-% imprimir todas as células de cada linha, com a respectiva peça.
-% Por fim chama recursivamente a mesma função com a cauda da
-% lista (contendo as restantes células da linha correspondente),
-% e o número actual da linha, até atingir o critério de paragem.
-printFullRow([H|T], N) :-
-	N1 is N+1,
-	printHorizSep,
-	nl,
-	write(N),
-	write(' '),
-	printRow(H),
-	write('| '),
-	write(N),
-	nl,
-	printFullRow(T, N1).
-\end{verbatimtab}
-\caption{Predicado ``printFullRow''.}
-\end{code}
-
-
-
-\begin{code}[H]
-	\begin{verbatimtab}
-
-% Regra a ser usada quando é passado um tabuleiro vazio.
-printBoard([]).
-
-% Imprime o tabuleiro, chamando o predicado que imprime o número
-% das colunas (no início e no fim do tabuleiro),
-% e de seguida o predicado que imprime cada linha individual.
-% É impresso também o separador horizontal do tabuleiro.
-printBoard([H|T]) :-
-	printColNumbers,
-	nl,
-	printFullRow([H|T], 1),
-	printHorizSep,
-	nl,
-	printColNumbers.
-\end{verbatimtab}
-\caption{Predicado ``printBoard''.}
-\end{code}
+%************************************************************************************************
+\subsection{Recepção de mensagem do visualizador}\textit{recebe\_mensagem(+ Mensagem, - Resposta).}
 
 
 %************************************************************************************************
@@ -434,60 +234,5 @@ Olhando otimisticamente para o projeto, achamos que a sua relativa simplicidade 
 \appendix
 \section{Código Prolog}
 
-\begin{code}[H]
-	\begin{verbatimtab} % verbatimtab para codigo com tabs
-initBoard([[ 1, 1, 1, 1, 1, 1, 1, 1 ],
-	   [ 1, 1, 1, 1, 1, 1, 1, 1 ],
-	   [ 0, 0, 0, 0, 0, 0, 0, 0 ],
-	   [ 0, 0, 0, 0, 0, 0, 0, 0 ],
-	   [ 0, 0, 0, 0, 0, 0, 0, 0 ],
-	   [ 0, 0, 0, 0, 0, 0, 0, 0 ],
-	   [ 2, 2, 2, 2, 2, 2, 2, 2 ],
-	   [ 2, 2, 2, 2, 2, 2, 2, 2 ]]).
-writePlayer(1) :-
-	write('1').
-writePlayer(2) :-
-	write('2').
-writePlayer(0) :-
-	write(' ').
-printRow([]).
-printRow([H|T]) :-
-	write('| '),
-	writePlayer(H),
-	write(' '),
-	printRow(T).
-printHorizSep   :-
-	write('   --- --- --- --- --- --- --- ---').
-printColNumbers :-
-	write('    1   2   3   4   5   6   7   8').
-printFullRow([], _).
-printFullRow([H|T], N) :-
-	N1 is N+1,
-	printHorizSep,
-	nl,
-	write(N),
-	write(' '),
-	printRow(H),
-	write('| '),
-	write(N),
-	nl,
-	printFullRow(T, N1).
-printBoard([]).
-printBoard([H|T]) :-
-	printColNumbers,
-	nl,
-	printFullRow([H|T], 1),
-	printHorizSep,
-	nl,
-	printColNumbers.
-init :-
-	initBoard(A),
-	printBoard(A).
-% Protótipos do predicados da função de movimento e captura de uma peça.
-% movePawn([Ox, Oy], [Dx, D2]).
-% capturePawn([Dx, Dy]).
-\end{verbatimtab}
-\caption{Código dos predicados utilizados.}
-\end{code}
 
 \end{document}
