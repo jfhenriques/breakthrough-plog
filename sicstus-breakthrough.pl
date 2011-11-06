@@ -438,22 +438,25 @@ initDynBoard(Side, Board) :-
 % **********************************************************************
 % **********************************************************************        
 
-checkPoss_prior(_, _, 1, 0, 1):- !.
-checkPoss_prior(_, _, 2, 0, 1):- !.
-checkPoss_prior(X, X, 1, 2, 0):- !.
-checkPoss_prior(X, X, 2, 1, 0):- !.
-checkPoss_prior(_, _, 1, 2, 2):- !.
-checkPoss_prior(_, _, 2, 1, 2):- !.
-checkPoss_prior(_, _, _, _, 0):- !.
+checkPoss_prior(_, _, 1, _, 2, 0, 3):- !.
+checkPoss_prior(_, _, S, S, 1, 0, 3):- !.
+checkPoss_prior(_, _, 1, _, 2, 1, 4):- !.
+checkPoss_prior(_, _, S, S, 1, 2, 4):- !.
+checkPoss_prior(_, _, _, _, _, 0, 1):- !.
+checkPoss_prior(X, X, _, _, 1, 2, 0):- !.
+checkPoss_prior(X, X, _, _, 2, 1, 0):- !.
+checkPoss_prior(_, _, _, _, 1, 2, 2):- !.
+checkPoss_prior(_, _, _, _, 2, 1, 2):- !.
+checkPoss_prior(_, _, _, _, _, _, 0):- !.
 
 
-checkPoss(Board, Side, Player, Ox, X, Y, ListIn, ListOut) :-
-		X > 0,
-		X =< Side,
-		Y > 0,
-		Y =< Side,
-		getPawn(Board, X, Y, Pawn),
-		checkPoss_prior(Ox, X, Player, Pawn, Prior),
+checkPoss(Board, Side, Player, Ox, Dx, Dy, ListIn, ListOut) :-
+		Dx > 0,
+		Dx =< Side,
+		Dy > 0,
+		Dy =< Side,
+		getPawn(Board, Dx, Dy, Pawn),
+		checkPoss_prior(Ox, Dx, Dy, Side, Player, Pawn, Prior),
 		append( ListIn, [Prior], ListOut ).
 		
 checkPoss(_, _, _, _, _, _, ListIn, ListOut) :-
@@ -463,24 +466,24 @@ checkPoss(_, _, _, _, _, _, ListIn, ListOut) :-
 % **********************************************************************
 % **********************************************************************    
 		
-getPossiblePlays_int(Board, Side, Player, X, Y, Plays) :-
-		X1 is X-1,
-		X2 is X+1,
-		checkPoss(Board, Side, Player, X, X1, Y, [], L1),
-		checkPoss(Board, Side, Player, X, X , Y, L1, L2),
-		checkPoss(Board, Side, Player, X, X2, Y, L2, Plays).
+getPossiblePlays_int(Board, Side, Player, Ox, Dy, Plays) :-
+		Dx1 is Ox-1,
+		Dx2 is Ox+1,
+		checkPoss(Board, Side, Player, Ox, Dx1, Dy, [], Lista1),
+		checkPoss(Board, Side, Player, Ox, Ox , Dy, Lista1, Lista2),
+		checkPoss(Board, Side, Player, Ox, Dx2, Dy, Lista2, Plays).
 
 		
 		
 % getPossiblePlays/7		
 
-getPossiblePlays(Board, Side, 1, X, Y, Y2, Plays) :-
-		Y2 is Y + 1,
-		getPossiblePlays_int(Board, Side, 1, X, Y2, Plays).
+getPossiblePlays(Board, Side, 1, Ox, Oy, Dy, Plays) :-
+		Dy is Oy + 1,
+		getPossiblePlays_int(Board, Side, 1, Ox, Dy, Plays).
 		
-getPossiblePlays(Board, Side, 2, X, Y, Y2, Plays) :-
-		Y2 is Y - 1,
-		getPossiblePlays_int(Board, Side, 2, X, Y2, Plays).
+getPossiblePlays(Board, Side, 2, Ox, Oy, Dy, Plays) :-
+		Dy is Oy - 1,
+		getPossiblePlays_int(Board, Side, 2, Ox, Dy, Plays).
 		
 getPossiblePlays(_, _, _, _, _, _, [0, 0, 0]).
 		
