@@ -114,7 +114,7 @@ escapeinside={\$}{)}         % if you want to add a comment within your code
 
 O \textit{Breakthrough} é um jogo de tabuleiro tradicional semelhante às damas, premiado e com um conjunto de regras muito simples e acessíveis.
 
-A implementação ferece dois modos de jogo - Humano/Humano e Humano/Computador.
+A implementação oferece três modos de jogo - Humano/Humano, Humano/Computador e Computador/Computador.
 
 A linguagem utilizada para esta implementação foi \textit{ProLog}.
 
@@ -206,7 +206,7 @@ No entanto a captura não é obrigatória nem encadeada como nas damas.
 % a comunicação com o visualizador, que mesmo que ainda não esteja implementada, já
 % deverá estar pensada. Assim, deve ser incluída a sintaxe das mensagens a trocar com o visualizador.
 
-O jogo do Breakthrough foi constitúido por três módulos.
+O jogo do Breakthrough subdivide-se em três módulos.
 
 \begin{enumerate}
 \item Módulo de Lógica.
@@ -214,7 +214,7 @@ O jogo do Breakthrough foi constitúido por três módulos.
 \item Módulo de Comunicação.
 \end{enumerate}
 
-Os dois últimos módulos consomem o \textit{Módulo de Lógica}, dando dois usos possiveis ao mesmo.
+Os dois últimos módulos consomem o \textit{Módulo de Lógica}, dando dois usos possíveis ao mesmo.
 
 
 
@@ -222,11 +222,12 @@ Os dois últimos módulos consomem o \textit{Módulo de Lógica}, dando dois uso
 
 \subsection{Módulo de Lógica}
 
-Este módulo é o mais importante de todo este trabalho, porque é aquele que trata de lógica toda associada ao mesmo, fazendo mover o "motor" do jogo e tratando das
-operações mais básicas que definem as regras do mesmo.
+Este módulo representa a camada mais inferior da aplicação.
+Trata de toda a componente lógica, fazendo mover o "motor" de jogo e tratando das
+operações mais básicas definidas nas regras.
 
-É aqui que são definidos os predicados para a validação das jogadas, inicialização do tabuleuro, verificação de um vencedor - seja por ter conseguido chegar a linha de partida do adversario, ou por ter adquirido todas as pessas do seu oponente. Também fazem parte deste módulo, os predicados da inteligência artificial do módo Humano/Computador.
-
+É aqui que são definidos os predicados para a validação das jogadas, inicialização do tabuleiro e verificação de um vencedor. 
+Também fazem parte deste módulo, os predicados da inteligência artificial do modo Humano/Computador.
 
 \lstset{ caption={Predicados do módulo de \textit{Módulo de Lógica}.}}
 \begin{lstlisting}
@@ -242,35 +243,33 @@ pickNextMove(+Board, +Side, +Player, -Ox, -Oy, -Dx, -Dy).
 
 \subsection{Módulo de Interacção}
 
-Este módulo, fazendo uso do \textit{Módulo de Lógica}, serve para interagir com o jogo directamente em prolog.
+Este módulo representa a camada imediatamente acima do \textit{Módulo de Lógica}, interagindo entre o utilizador e a camada lógica.
 
-São utilizados diversos predicados, construídos para o efeito, mantendo o jogo a correr de forma linear, tratando dos eventuais problemas de introduzão que possam ocurrer e respondendo devidamente aos mesmos.
+São utilizados diversos predicados, construídos para o efeito, mantendo o jogo a correr de forma linear, tratando dos eventuais problemas de introdução que possam ocorrer, respondendo devidamente aos mesmos.
 
-Neste módulo, os predicados são sucessivamente encadeados, conforme a progressao de cada jogada. Desta forma, o jogo só termina quando é verificada a existência de um vencedor, caso contrário, dá sucessao à
+Neste módulo, os predicados são sucessivamente encadeados, conforme a progressão de cada jogada. Desta forma, o jogo só termina quando é verificada a existência de um vencedor, caso contrário, dá lugar à
 próxima ronda.
 
-\lstset{ caption={Predicados do módulo do \textit{Módulo de Interacção}.}}
+\lstset{ caption={Predicados do \textit{Módulo de Interacção}.}}
 \begin{lstlisting}
-verificaVencedor/4
 transitPlay/8
 play/3
 play/4
 init/0
 \end{lstlisting}
 
-De forma a utilizar este módulo, deve ser utilizado o predicado \textit{init/0}.
+Para dar início ao jogo, o utilizador comunica com este módulo através do predicado \textit{init/0}.
 
 %************************************************************************************************
 
 \subsection{Módulo de Comunicação}
 
-Este é módulo inicia o jogo em modo de servidor, e possibilita a comunicação com qualquer programa externo, como por exemplo a
+Este módulo inicia o jogo em modo de servidor, e possibilita a comunicação com qualquer programa externo, como por exemplo a
 comunicação com um visualisador a ser implementado posteriormente.
 
-Este módulo consome os serviços que o \textit{Módulo de Lógica} tem para oferecer, e disponibliza-os de uma forma mais geral, proporcionando
-assim que uma grande variedade de diferentes meios tenham acesso ao motor do jogo, e difundido o mesmo para novos ambientes externos.
+Este módulo consome os serviços do \textit{Módulo de Lógica} e disponibiliza-os de uma forma mais geral, fornecendo acesso à logica de jogo a ambientes externos.
 
-O servidor pode ser iniciado através do predicado \textit{server/0} e fica "sentado" à espera de uma ligação.
+O servidor pode ser iniciado através do predicado \textit{server/0}, resultando numa chamada bloqueante que aguarda uma ligação de um cliente.
 
 Através do predicado \textit{server\_input(+Pergunta, -Resposta)}, o servidor consegue responder às perguntas que sejam colocadas no socket.
 
@@ -445,7 +444,7 @@ Verifica se \textit{Jogador} chegou à base oposta.
 
 \textit{hasPieces(+Tabuleiro, -Jogador)}
 
-Retorna verdade se \textit{Jogador} não tiver pelo menos 1 peça.
+Retorna \textit{True} se \textit{Jogador} não tiver pelo menos 1 peça.
 
 %************************************************************************************************
 
