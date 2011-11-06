@@ -105,7 +105,7 @@ De notar que, apesar da nossa implementação consistir num tabuleiro convencion
 
 %Descrever sucintamente o jogo, a sua história e, principalmente, as suas regras. Devem ser criadas/utilizadas imagens apropriadas para explicar o funcionamento do jogo.
 
-O \textit{Breakthrough} foi criado no ano 2000 por \textit{Dan Troyka}  e disponibilizado para a plataforma comercial \textit{Zillion of Games}.
+O \textit{Breakthrough} foi criado no ano 2000 por \textit{Dan Troyka}  e disponibilizado para a plataforma comercial \textit{Zillion of Games}. 
 
 \subsection{Preparação de jogo}
 \begin{enumerate}
@@ -234,7 +234,37 @@ assim uma vasta utilização do motor do jogo, bem como a sua difusão para meio
 \subsection{Representação do Estado do Jogo}
 % \textit{estado(?Tabuleiro).}
 
+A representação do tabuleiro é feita em Prolog por uma lista de listas.
 
+O tabuleiro é quadrado - número de linhas igual ao número de colunas - e dinâmico, podendo assumir valores compreendidos entre 5 e 19, inclusivé.
+Cada item do tabuleiro é representado no formato ``Jogador", em que este pode ser:
+\begin{itemize}
+\item 1 - jogador de peças brancas (Norte)
+\item 2 - jogador de peças pretas (Sul)
+\item 0 - casa vazia
+\end{itemize}
+
+\begin{code}[H]
+	\begin{verbatimtab}
+initDynBoard(Side, Board)
+\end{verbatimtab}
+\caption{Inicializa tabuleiro dinâmico}
+\end{code}
+
+Este predicado inicializa o tabuleiro \textit{Board} com nº de linhas/colunas \textit{Side}.
+
+\begin{code}[H]
+	\begin{verbatimtab}
+B = [
+	[1,1,1,1,1],
+	[1,1,1,1,1],
+	[0,0,0,0,0],
+	[2,2,2,2,2],
+	[2,2,2,2,2]
+	]
+\end{verbatimtab}
+\caption{Ex. de chamada a \textit{initDynBoard(5, B)}}
+\end{code}
 
 %************************************************************************************************
 
