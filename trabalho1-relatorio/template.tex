@@ -20,6 +20,51 @@
 \floatname{code}{Código fonte}
 
 
+\lstset{ %
+language=Prolog,                % choose the language of the code
+basicstyle=\footnotesize,       % the size of the fonts that are used for the code
+numbers=left,                   % where to put the line-numbers
+numberstyle=\footnotesize,      % the size of the fonts that are used for the line-numbers
+stepnumber=1,                   % the step between two line-numbers. If it is 1 each line will be numbered
+numbersep=5pt,                  % how far the line-numbers are from the code
+backgroundcolor=\color{white},  % choose the background color. You must add \usepackage{color}
+commentstyle=\color{blue},
+showspaces=false,               % show spaces adding particular underscores
+showstringspaces=false,         % underline spaces within strings
+showtabs=false,                 % show tabs within strings adding particular underscores
+frame=single,   		% adds a frame around the code
+tabsize=2,  		% sets default tabsize to 2 spaces
+captionpos=b,   		% sets the caption-position to bottom
+breaklines=true,    	% sets automatic line breaking
+breakatwhitespace=false,    % sets if automatic breaks should only happen at whitespace
+escapeinside={\$}{)}         % if you want to add a comment within your code
+}
+
+
+\lstset{literate=%
+{á}{{\'a}}1
+{Á}{{\'A}}1
+{é}{{\'e}}1
+{É}{{\'E}}1
+{í}{{\'i}}1
+{Í}{{\'I}}1
+{ó}{{\'o}}1
+{Ó}{{\'O}}1
+{ú}{{\'u}}1
+{Ú}{{\'U}}1
+{ç}{{\c{c}}}1
+{Ç}{{\c{C}}}1
+{ã}{{a}}1
+{Ã}{{A}}1
+{à}{{\`a}}1
+{À}{{\`A}}1
+{ê}{{\^e}}1
+{Ê}{{\^E}}1
+{õ}{{o}}1
+{Õ}{{O}}1
+}
+
+
 \begin{document}
 
 \setlength{\textwidth}{16cm}
@@ -161,7 +206,7 @@ No entanto a captura não é obrigatória nem encadeada como nas damas.
 % a comunicação com o visualizador, que mesmo que ainda não esteja implementada, já
 % deverá estar pensada. Assim, deve ser incluída a sintaxe das mensagens a trocar com o visualizador.
 
-O jogo do Breakthrough foi constitúido tendo em base três módulos elementares. Estados todos eles interligados, seja directa, ou indirectamente, através de um intermediário. Estes módulos estão listados do menos geral para o menos específico, uma vez que consoante aparecem na seguinte lista, o módulo numéricamente acima, consome o módulo numéricamente abaixo.
+O jogo do Breakthrough foi constitúido por três módulos.
 
 \begin{enumerate}
 \item Módulo de Lógica.
@@ -169,56 +214,100 @@ O jogo do Breakthrough foi constitúido tendo em base três módulos elementares
 \item Módulo de Comunicação.
 \end{enumerate}
 
+Os dois últimos módulos consomem o \textit{Módulo de Lógica}, dando dois usos possiveis ao mesmo.
+
 
 
 %************************************************************************************************
 
 \subsection{Módulo de Lógica}
 
-Este é módulo mais importante de todo este trabalho, porque é aquele que trata da lógica toda associada ao mesmo, fazendo mover o "motor" do jogo e tratando das
+Este módulo é o mais importante de todo este trabalho, porque é aquele que trata de lógica toda associada ao mesmo, fazendo mover o "motor" do jogo e tratando das
 operações mais básicas que definem as regras do mesmo.
 
-É aqui que são definidos os predicados que são utilizados pelos predicados mais gerias para a validação das jogadas, inicialização do tabuleuro, verificação de um vencedor - seja por ter conseguido chegar a linha de partida do adversario, ou por ter adquirido todas as pessas do seu oponente. Também fazem parte deste módulo, os predicados da inteligência artificial do módo Humano/Computador.
+É aqui que são definidos os predicados para a validação das jogadas, inicialização do tabuleuro, verificação de um vencedor - seja por ter conseguido chegar a linha de partida do adversario, ou por ter adquirido todas as pessas do seu oponente. Também fazem parte deste módulo, os predicados da inteligência artificial do módo Humano/Computador.
+
+
+\lstset{ caption={Predicados do módulo de \textit{Módulo de Lógica}.}}
+\begin{lstlisting}
+initDynBoard(+Side, -Board).
+isWinner(+Board, +/-Player).
+checkMove(+Board, +Ox, +Oy, +Dx, +Dy, +Player).
+movePawn(+Board, +Ox, +Oy, +Dx, +Dy, -NewBoard).
+pickNextMove(+Board, +Side, +Player, -Ox, -Oy, -Dx, -Dy).
+\end{lstlisting}
 
 
 %************************************************************************************************
 
 \subsection{Módulo de Interacção}
 
-Este módulo, consome o \textit{Módulo de Lógica}, e serve de interface para o utilizador e/ou para o módulo de comunicação.
+Este módulo, fazendo uso do \textit{Módulo de Lógica}, serve para interagir com o jogo directamente em prolog.
 
-Aqui sao definidos os predicados que facilitam a interacção com o jogo, e dada a sua generalidade, podem ser utilizadas pra diferentes fins, como anteriormente referido.
+São utilizados diversos predicados, construídos para o efeito, mantendo o jogo a correr de forma linear, tratando dos eventuais problemas de introduzão que possam ocurrer e respondendo devidamente aos mesmos.
 
-\begin{code}[H]
-	\begin{verbatimtab} % verbatimtab para codigo com tabs
+Neste módulo, os predicados são sucessivamente encadeados, conforme a progressao de cada jogada. Desta forma, o jogo só termina quando é verificada a existência de um vencedor, caso contrário, dá sucessao à
+próxima ronda.
 
+\lstset{ caption={Predicados do módulo do \textit{Módulo de Interacção}.}}
+\begin{lstlisting}
+verificaVencedor/4
+transitPlay/8
+play/3
+play/4
+init/0
+\end{lstlisting}
 
-initDynBoard(+Side, -Board).
-isWinner(+Board, +/-Player).
-checkMove(+Board, +Ox, +Oy, +Dx, +Dy, +Player).
-movePawn(+Board, +Ox, +Oy, +Dx, +Dy, -NewBoard).
-pickNextMove(+Board, +Side, +Player, -Ox, -Oy, -Dx, -Dy).
-\end{verbatimtab}
-\caption{Fazem parte deste módulo predicados tais como:}
-\end{code}
+De forma a utilizar este módulo, deve ser utilizado o predicado \textit{init/0}.
 
 %************************************************************************************************
 
 \subsection{Módulo de Comunicação}
 
-Este é módulo que serve como servidor do jogo, que possibilita a comunicação com qualquer programa externo e possibilta por sua vez a
+Este é módulo inicia o jogo em modo de servidor, e possibilita a comunicação com qualquer programa externo, como por exemplo a
 comunicação com um visualisador a ser implementado posteriormente.
-Este módulo consome os serviços que o \textit{Módulo de Interacção} tem para oferecer, e disponibliza-os de uma forma ainda mais geral que anteriormente, possibilitando
-assim uma vasta utilização do motor do jogo, bem como a sua difusão para meios diferentes e externos ao mesmo.
 
-\begin{code}[H]
-	\begin{verbatimtab} % verbatimtab para codigo com tabs
+Este módulo consome os serviços que o \textit{Módulo de Lógica} tem para oferecer, e disponibliza-os de uma forma mais geral, proporcionando
+assim que uma grande variedade de diferentes meios tenham acesso ao motor do jogo, e difundido o mesmo para novos ambientes externos.
 
+O servidor pode ser iniciado através do predicado \textit{server/0} e fica "sentado" à espera de uma ligação.
 
-...
-\end{verbatimtab}
-\caption{Fazem parte deste módulo predicados tais como:}
-\end{code}
+Através do predicado \textit{server\_input(+Pergunta, -Resposta)}, o servidor consegue responder às perguntas que sejam colocadas no socket.
+
+\lstset{ caption={Perguntas e respostas do \textit{Módulo de Interacção}.}}
+\begin{lstlisting}
+% Initialize board
+initialize(Side):
+			Sucesso: ok(Board)
+			Erro	 : invalid
+
+% Execute Move	
+execute(Board, Ox-Oy, Dx-Dy):
+			Sucesso: ok(NewBoard)
+			Erro	 : invalid
+
+% Calculate next Move
+calculate(Board, Player):
+			Sucesso: ok(Ox-Oy, Dx-Dy, NewBoard)
+			Erro	 : invalid
+
+	
+% Check Winner
+game_end(Board):
+			Sucesso:  ok(Winner)
+			Erro	 : invalid
+ 
+% Exit
+bye:
+			ok
+
+% End of file
+end_of_file:
+			ok
+
+% Anything else
+			invalid
+\end{lstlisting}
 
 
 %************************************************************************************************
@@ -411,51 +500,8 @@ Pudemos constatar que a linguagem Prolog é eficiente, compacta e fornece vantag
 \appendix
 \section{Código Prolog}
 
-\lstset{ %
-language=Prolog,                % choose the language of the code
-basicstyle=\footnotesize,       % the size of the fonts that are used for the code
-numbers=left,                   % where to put the line-numbers
-numberstyle=\footnotesize,      % the size of the fonts that are used for the line-numbers
-stepnumber=1,                   % the step between two line-numbers. If it is 1 each line will be numbered
-numbersep=5pt,                  % how far the line-numbers are from the code
-backgroundcolor=\color{white},  % choose the background color. You must add \usepackage{color}
-commentstyle=\color{blue},
-showspaces=false,               % show spaces adding particular underscores
-showstringspaces=false,         % underline spaces within strings
-showtabs=false,                 % show tabs within strings adding particular underscores
-frame=single,   		% adds a frame around the code
-tabsize=2,  		% sets default tabsize to 2 spaces
-captionpos=b,   		% sets the caption-position to bottom
-breaklines=true,    	% sets automatic line breaking
-breakatwhitespace=false,    % sets if automatic breaks should only happen at whitespace
-escapeinside={\$}{)},          % if you want to add a comment within your code
-caption={Descriptive Caption Text}
-}
 
-
-\lstset{literate=%
-{á}{{\'a}}1
-{Á}{{\'A}}1
-{é}{{\'e}}1
-{É}{{\'E}}1
-{í}{{\'i}}1
-{Í}{{\'I}}1
-{ó}{{\'o}}1
-{Ó}{{\'O}}1
-{ú}{{\'u}}1
-{Ú}{{\'U}}1
-{ç}{{\c{c}}}1
-{Ç}{{\c{C}}}1
-{ã}{{a}}1
-{Ã}{{A}}1
-{à}{{\`a}}1
-{À}{{\`A}}1
-{ê}{{\^e}}1
-{Ê}{{\^E}}1
-{õ}{{o}}1
-{Õ}{{O}}1
-}
-
+\lstset{ caption={Código ProLog}}
 \begin{lstlisting}
 
 % ****************************************************************
