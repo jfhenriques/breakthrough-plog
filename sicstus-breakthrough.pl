@@ -696,7 +696,7 @@ checkCorrectPlayer(Pawn, Pawn).
 
 % ****************************************************************
 % ****************************************************************
-
+	
 verificaVencedor(Board, _, _, _) :-
 		isWinner(Board, Player),
 		nl,nl,
@@ -718,6 +718,7 @@ transitPlay(BoardIn, Side, GameMode, Player, Ox, Oy, Dx, Dy) :-
 		write(Dx), write(','), write(Dy), write(']'), nl, nl,
 		printBoard(Board),
 		switchPlayer(Player, NextPlayer),
+		!,
 		verificaVencedor(Board, Side, GameMode,NextPlayer).
 
 transitPlay(Board, Side, GameMode, 1, _, _, _, _) :- !,
@@ -728,9 +729,11 @@ transitPlay(Board, Side, GameMode, 1, _, _, _, _) :- !,
 % ****************************************************************
 % ****************************************************************
 
-play(Board, Side, 2, 2) :- !,
-		pickNextMove(Board, Side, 2, Ox, Oy, Dx, Dy ),
-		transitPlay(Board, Side, 2, 2, Ox, Oy, Dx, Dy ).
+play(Board, Side, GameMode, Player) :-
+		( (GameMode = 2, Player = 2) ; GameMode = 3 ),
+		!,
+		pickNextMove(Board, Side, Player, Ox, Oy, Dx, Dy ),
+		transitPlay(Board, Side, GameMode, Player, Ox, Oy, Dx, Dy ).
 
 play(Board, Side, GameMode, Player) :- !,
 		repeat,
@@ -763,9 +766,10 @@ init :-
 		write('Modo de jogo:'), nl,
 		write('1 - Humano/Humano'), nl,
 		write('2 - Humano/Computador'), nl,
+		write('3 - Computador/Computador'), nl,
 		readIntegerAbort('> ', Mode), nl,
 		Mode > 0,
-		Mode < 3,
+		Mode < 4,
 		printBoard(Board),
 		printPlayer(1),
 		play(Board, Side, Mode).
