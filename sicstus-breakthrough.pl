@@ -54,14 +54,15 @@ server_input(_, invalid) :- !.
 
 
 
-
-
-
-
-
 % **********************************************************************
 % **********************************************************************
 % Jogo
+% **********************************************************************
+% **********************************************************************
+
+:-use_module(library(random)).
+
+
 % **********************************************************************
 % **********************************************************************
 
@@ -398,6 +399,9 @@ movePawn(Tab, Ox, Oy, Dx, Dy, TabOut) :-
 
 %movePawn(Tab, _, _, _, _, Tab).
 
+
+
+
 % **********************************************************************
 % Inicializa dinamicamente do o tabuleiro
 % initDynBoard(+Side, -Board)
@@ -486,37 +490,39 @@ getPossiblePlays(Board, Side, X, Y, Plays) :-
 		getPossiblePlays(Board, Side, Pawn, X, Y, _, Plays).
 		
 
-        
 % **********************************************************************
 % **********************************************************************
 
-getFirstMaxPriorityMove([], _, Pri, Ox, Oy, Dx, Dy, Max) :-
-		Pri > 0,
-		Max = Pri-Ox-Oy-Dx-Dy.
-		
-getFirstMaxPriorityMove([P|Tail], Inc, PriIn, Ox, Oy, Dx, Dy, Max) :-
+getMoves([], _, _, _, _, Moves, Moves).
+
+getMoves([P|Tail], Inc,  Ox,Oy, Dy,  MovesIn, MovesOut) :-
+		P > 0,
 		Inc2 is Inc + 1,
-		( ( P > 0, P > PriIn) ->
-			( X is Ox + Inc - 1,
-			  Pri is P ) ;
-			( X is Dx,
-			  Pri is PriIn )
-		),
-		getFirstMaxPriorityMove(Tail, Inc2, Pri, Ox, Oy, X, Dy, Max).	
+		NewX is Ox + Inc - 1,
+		getMoves(Tail, Inc2, Ox,Oy, Dy, [P-Ox-Oy-NewX-Dy|MovesIn], MovesOut).			
+
+getMoves([_|Tail], Inc, Ox,Oy, Dy, MovesIn, MovesOut) :-
+		Inc2 is Inc + 1,
+		getMoves(Tail, Inc2, Ox,Oy, Dy, MovesIn, MovesOut).
 		
 		
-addMove(Board, Side, Player, Player, X, Y, MovesIn, MovesOut) :-
+% **********************************************************************
+% **********************************************************************
+	
+addMoves(Board, Side, Player, Player, X, Y, MovesIn, MovesOut) :-
 		getPossiblePlays(Board, Side, Player, X, Y, Y2, Plays),
-		getFirstMaxPriorityMove(Plays, 0, 0, X, Y, 0, Y2, Move),
-		append(MovesIn, [Move], MovesOut).
+		getMoves(Plays, 0, X, Y, Y2, MovesIn, MovesOut).
 
-addMove(_, _, _, _, _, _, Moves, Moves).		
+addMoves(_, _, _, _, _, _, Moves, Moves).		
 
+
+% **********************************************************************
+% **********************************************************************
 
 checkNextMoves_line([], _, _, _, _, _, Moves, Moves).
 checkNextMoves_line([Cell|LineTail], Board, Side, X, Y, Player, MovesIn, MovesOut) :-
 		X1 is X + 1,
-		addMove(Board, Side, Cell, Player, X, Y, MovesIn, MovesOutTemp),
+		addMoves(Board, Side, Cell, Player, X, Y, MovesIn, MovesOutTemp),
 		checkNextMoves_line(LineTail, Board, Side, X1, Y, Player, MovesOutTemp, MovesOut).
 	
 
@@ -535,18 +541,69 @@ checkNextMoves(Board, Side, Player, MovesOut) :-
 % **********************************************************************
 % **********************************************************************
 
-pickNextMove([Pri-Ox-Oy-Dx-Dy|MovesTail], PriIn-_-_-_-_, OxOut, OyOut, DxOut, DyOut ) :-
-		Pri > PriIn,
-		pickNextMove(MovesTail, Pri-Ox-Oy-Dx-Dy, OxOut, OyOut, DxOut, DyOut ).
+% getMaxPriority/3
 
-pickNextMove([_|MovesTail], PriIn-OxIn-OyIn-DxIn-DyIn, OxOut, OyOut, DxOut, DyOut ) :-
-		pickNextMove(MovesTail, PriIn-OxIn-OyIn-DxIn-DyIn, OxOut, OyOut, DxOut, DyOut ).
+getMaxPriority([], Priority, Priority).
+
+getMaxPriority([Prior-_-_-_-_|Tail], PriorIn, PriorOut) :-
+		Prior > PriorIn,
+		getMaxPriority(Tail, Prior, PriorOut).
+
+getMaxPriority([_|Tail], PriorIn, PriorOut) :-
+		getMaxPriority(Tail, PriorIn, PriorOut).
+
 		
-pickNextMove([], _-Ox-Oy-Dx-Dy, Ox, Oy, Dx, Dy ) :- !.
+% getMaxPriority/2
+getMaxPriority(List, Priority) :-
+		getMaxPriority(List, 0, Priority).
 		
+
+% **********************************************************************
+% **********************************************************************
+
+% buildMaxPriorityList/6
+
+buildMaxPriorityList([], _, Total, Total, List, List).
+
+buildMaxPriorityList([Pri-Ox-Oy-Dx-Dy|MovesTail], Priority, TotalIn, TotalOut, ListIn, ListOut) :-
+		Pri = Priority,
+		TotalIn2 is TotalIn + 1,
+		buildMaxPriorityList(MovesTail, Priority, TotalIn2, TotalOut, [Ox-Oy-Dx-Dy|ListIn], ListOut).
+
+buildMaxPriorityList([_|MovesTail], Priority, TotalIn, TotalOut, ListIn, ListOut) :-
+		buildMaxPriorityList(MovesTail, Priority, TotalIn, TotalOut, ListIn, ListOut).
+
+% buildMaxPriorityList/4
+buildMaxPriorityList(Moves, Priority, Total, ListOut) :-
+		buildMaxPriorityList(Moves, Priority, 0, Total, [], ListOut).
+
+
+% **********************************************************************
+% **********************************************************************
+
+% getMoveNumber/7
+
+getMoveNumber([Ox-Oy-Dx-Dy|_], PickNumber, PickNumber, Ox, Oy, Dx, Dy).
+
+getMoveNumber([_|MovesTail], N, PickNumber, Ox, Oy, Dx, Dy) :-
+		N < PickNumber,
+		N2 is N + 1,
+		getMoveNumber(MovesTail, N2, PickNumber, Ox, Oy, Dx, Dy).
+
+% getMoveNumber/6
+getMoveNumber(List, PickNumber, Ox, Oy, Dx, Dy) :-
+		getMoveNumber(List, 0, PickNumber, Ox, Oy, Dx, Dy).
+
+
+% **********************************************************************
+% **********************************************************************
+
 pickNextMove(Board, Side, Player, Ox, Oy, Dx, Dy ) :-
 		checkNextMoves(Board, Side, Player, Moves),
-		pickNextMove(Moves, 0-0-0-0-0, Ox, Oy, Dx, Dy ).
+		getMaxPriority(Moves, Priority),
+		buildMaxPriorityList(Moves, Priority, Total, List),
+		random(0, Total, Random),
+		getMoveNumber(List, Random, Ox, Oy, Dx, Dy).
 		
 		
 % **********************************************************************
@@ -589,9 +646,10 @@ checkCorrectPlayer(Pawn, Pawn).
 
 verificaVencedor(Board, _, _, _) :-
 		isWinner(Board, Player),
-		write('Jogo terminado! Venceu o jogador ['),
+		nl,nl,
+		write('Jogo terminado! Jogador ['),
 		write(Player),
-		write(']'), nl.
+		write('] venceu o jogo'), nl.
 	
 verificaVencedor(Board, Side, GameMode, Player) :-
 		printPlayer(Player),
