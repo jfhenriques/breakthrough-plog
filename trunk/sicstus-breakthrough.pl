@@ -438,15 +438,14 @@ initDynBoard(Side, Board) :-
 % **********************************************************************
 % **********************************************************************        
 
+checkPoss_prior(X, X, _, _, _, _, 0):- !.
 checkPoss_prior(_, _, 1, _, 2, 0, 3):- !.
-checkPoss_prior(_, _, S, S, 1, 0, 3):- !.
 checkPoss_prior(_, _, 1, _, 2, 1, 4):- !.
+checkPoss_prior(_, _, S, S, 1, 0, 3):- !.
 checkPoss_prior(_, _, S, S, 1, 2, 4):- !.
-checkPoss_prior(_, _, _, _, _, 0, 1):- !.
-checkPoss_prior(X, X, _, _, 1, 2, 0):- !.
-checkPoss_prior(X, X, _, _, 2, 1, 0):- !.
 checkPoss_prior(_, _, _, _, 1, 2, 2):- !.
 checkPoss_prior(_, _, _, _, 2, 1, 2):- !.
+checkPoss_prior(_, _, _, _, _, 0, 1):- !.
 checkPoss_prior(_, _, _, _, _, _, 0):- !.
 
 
