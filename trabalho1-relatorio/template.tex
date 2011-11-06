@@ -341,10 +341,22 @@ Predicado usado para retornar o valor da casa (X,Y) - 0, 1 ou 2.
 
 %************************************************************************************************
 
+\newpage
+
 \subsection{Final do Jogo}
 % \textit{fim\_jogo(+Tabuleiro, -Vencedor).}
+\textit{isWinner(+Tabuleiro, -Jogador)}
 
+Predicado que verifica se há um vencedor, avaliando se algum jogador chegou à base oposta ou se ficou
+sem peças.
 
+\textit{checkForInvasion(+Tabuleiro, -Jogador)}
+
+Verifica se \textit{Jogador} chegou à base oposta.
+
+\textit{hasPieces(+Tabuleiro, -Jogador)}
+
+Retorna verdade se \textit{Jogador} não tiver pelo menos 1 peça.
 
 %************************************************************************************************
 
