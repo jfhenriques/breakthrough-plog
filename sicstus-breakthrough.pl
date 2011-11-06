@@ -84,18 +84,18 @@ writePlayer(0) :-
 % **********************************************************************
 
 printSpaceNumberL(N) :-
-                write(N),
-                (N < 10 ->
-                        write(' ') ;
-                        write('')
-                ).
+		N < 10,
+		write(N), write(' ').
+		
+printSpaceNumberL(N) :-
+        write(N).
+                
 printSpaceNumberR(N) :-
-                (N < 10 ->
-                        write(' ') ;
-                        write('')
-                ),
-                write(N).
+        N < 10,
+        write(' '), write(N).
 
+printSpaceNumberR(N) :-
+        write(N).
 
 % **********************************************************************
 % printRow(+[H|T])
@@ -231,7 +231,7 @@ getPawn(InTab, X, Y, Player) :-
 
 % Obtem o valor de determinada posição N numa Lista.
 getl(Lista,N,Valor) :-
-                getl(Lista,N,1,Valor).
+        getl(Lista,N,1,Valor).
 
 getl([H|_],N,N,H) :- !.
 
@@ -256,7 +256,7 @@ getll(Linha,Coluna,Tabuleiro,Valor) :-
 % **********************************************************************
 
 substl(Lista,N,Valor,Resultado):-
-                substl(Lista,N,1,Valor,[],Resultado).
+        substl(Lista,N,1,Valor,[],Resultado).
 
 substl([],_,_,_,NovaLista,NovaLista).
 
@@ -382,20 +382,20 @@ switchPlayer(1,2).
 switchPlayer(2,1).
 
 movePawn(Tab, Ox, Oy, Dx, Dy, TabOut) :-
-                getPawn(Tab, Ox, Oy, Me),
-                checkMove(Tab, Ox, Oy, Dx, Dy, Me),
-                getPawn(Tab, Dx, Dy, Opponent),
-                Opponent = 0,
-                substll(Tab, Dy, Dx, Me, TabTmpOut),
-                substll(TabTmpOut, Oy, Ox, 0, TabOut).
+		getPawn(Tab, Ox, Oy, Me),
+		checkMove(Tab, Ox, Oy, Dx, Dy, Me),
+		getPawn(Tab, Dx, Dy, Opponent),
+		Opponent = 0,
+		substll(Tab, Dy, Dx, Me, TabTmpOut),
+		substll(TabTmpOut, Oy, Ox, 0, TabOut).
 
 movePawn(Tab, Ox, Oy, Dx, Dy, TabOut) :-
-                getPawn(Tab, Ox, Oy, Me),
-                checkMove(Tab, Ox, Oy, Dx, Dy, Me),
-                getPawn(Tab, Dx, Dy, Opponent),
-                Opponent \= 0,
-                substll(Tab, Dy, Dx, Me, TabTmpOut),
-                substll(TabTmpOut, Oy, Ox, 0, TabOut).
+		getPawn(Tab, Ox, Oy, Me),
+		checkMove(Tab, Ox, Oy, Dx, Dy, Me),
+		getPawn(Tab, Dx, Dy, Opponent),
+		Opponent \= 0,
+		substll(Tab, Dy, Dx, Me, TabTmpOut),
+		substll(TabTmpOut, Oy, Ox, 0, TabOut).
 
 %movePawn(Tab, _, _, _, _, Tab).
 
@@ -408,7 +408,6 @@ movePawn(Tab, Ox, Oy, Dx, Dy, TabOut) :-
 % **********************************************************************
 
 initDynBoard_line(BaseNumber, BaseNumber, _, Line, Line).
-%append(LineIn, [], LineOut).
 
 initDynBoard_line(BaseNumber, Side, V, LineIn, LineOut) :-
 		N is BaseNumber + 1,
@@ -416,7 +415,6 @@ initDynBoard_line(BaseNumber, Side, V, LineIn, LineOut) :-
 		
                 
 initDynBoard_col(BaseNumber, BaseNumber, Board, Board).
-%append(BoardIn, [], BoardOut).
 
 initDynBoard_col(BaseNumber, Side, BoardIn, BoardOut) :-
 		L is BaseNumber + 1,
@@ -448,19 +446,22 @@ checkPoss_prior(_, _, 1, 2, 2):- !.
 checkPoss_prior(_, _, 2, 1, 2):- !.
 checkPoss_prior(_, _, _, _, 0):- !.
 
+
 checkPoss(Board, Side, Player, Ox, X, Y, ListIn, ListOut) :-
-		( ( X > 0,
-			X =< Side,
-			Y > 0,
-			Y =< Side,
-			getPawn(Board, X, Y, Pawn)
-		  )
-		  -> checkPoss_prior(Ox, X, Player, Pawn, Prior)
-		   ; Prior is 0
-		),
+		X > 0,
+		X =< Side,
+		Y > 0,
+		Y =< Side,
+		getPawn(Board, X, Y, Pawn),
+		checkPoss_prior(Ox, X, Player, Pawn, Prior),
 		append( ListIn, [Prior], ListOut ).
 		
+checkPoss(_, _, _, _, _, _, ListIn, ListOut) :-
+		append( ListIn, [0], ListOut ).
+		
 
+% **********************************************************************
+% **********************************************************************    
 		
 getPossiblePlays_int(Board, Side, Player, X, Y, Plays) :-
 		X1 is X-1,
