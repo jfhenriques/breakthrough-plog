@@ -153,7 +153,68 @@ No entanto a captura não é obrigatória nem encadeada como nas damas.
 \newpage
 
 \section{Arquitectura do Sistema}
-Descrever em linhas gerais o sistema e os módulos que o constituem. Deve ser abordada a comunicação com o visualizador, que mesmo que ainda não esteja implementada, já deverá estar pensada. Assim, deve ser incluída a sintaxe das mensagens a trocar com o visualizador.
+% Descrever em linhas gerais o sistema e os módulos que o constituem. Deve ser abordada 
+% a comunicação com o visualizador, que mesmo que ainda não esteja implementada, já
+% deverá estar pensada. Assim, deve ser incluída a sintaxe das mensagens a trocar com o visualizador.
+
+O jogo do Breakthrough foi constitúido tendo em base três módulos elementares. Estados todos eles interligados, seja directa, ou indirectamente, através de um intermediário. Estes módulos estão listados do menos geral para o menos específico, uma vez que consoante aparecem na seguinte lista, o módulo numéricamente acima, consome o módulo numéricamente abaixo.
+
+\begin{enumerate}
+\item Módulo de Lógica.
+\item Módulo de Interacção.
+\item Módulo de Comunicação.
+\end{enumerate}
+
+
+
+%************************************************************************************************
+
+\subsection{Módulo de Lógica}
+
+Este é módulo mais importante de todo este trabalho, porque é aquele que trata da lógica toda associada ao mesmo, fazendo mover o "motor" do jogo e tratando das
+operações mais básicas que definem as regras do mesmo.
+
+É aqui que são definidos os predicados que são utilizados pelos predicados mais gerias para a validação das jogadas, inicialização do tabuleuro, verificação de um vencedor - seja por ter conseguido chegar a linha de partida do adversario, ou por ter adquirido todas as pessas do seu oponente. Também fazem parte deste módulo, os predicados da inteligência artificial do módo Humano/Computador.
+
+
+%************************************************************************************************
+
+\subsection{Módulo de Interacção}
+
+Este módulo, consome o \textit{Módulo de Lógica}, e serve de interface para o utilizador e/ou para o módulo de comunicação.
+
+Aqui sao definidos os predicados que facilitam a interacção com o jogo, e dada a sua generalidade, podem ser utilizadas pra diferentes fins, como anteriormente referido.
+
+\begin{code}[H]
+	\begin{verbatimtab} % verbatimtab para codigo com tabs
+
+
+initDynBoard(+Side, -Board).
+isWinner(+Board, +/-Player).
+checkMove(+Board, +Ox, +Oy, +Dx, +Dy, +Player).
+movePawn(+Board, +Ox, +Oy, +Dx, +Dy, -NewBoard).
+pickNextMove(+Board, +Side, +Player, -Ox, -Oy, -Dx, -Dy).
+\end{verbatimtab}
+\caption{Fazem parte deste módulo predicados tais como:}
+\end{code}
+
+%************************************************************************************************
+
+\subsection{Módulo de Comunicação}
+
+Este é módulo que serve como servidor do jogo, que possibilita a comunicação com qualquer programa externo e possibilta por sua vez a
+comunicação com um visualisador a ser implementado posteriormente.
+Este módulo consome os serviços que o \textit{Módulo de Interacção} tem para oferecer, e disponibliza-os de uma forma ainda mais geral que anteriormente, possibilitando
+assim uma vasta utilização do motor do jogo, bem como a sua difusão para meios diferentes e externos ao mesmo.
+
+\begin{code}[H]
+	\begin{verbatimtab} % verbatimtab para codigo com tabs
+
+
+...
+\end{verbatimtab}
+\caption{Fazem parte deste módulo predicados tais como:}
+\end{code}
 
 
 %************************************************************************************************
@@ -161,35 +222,73 @@ Descrever em linhas gerais o sistema e os módulos que o constituem. Deve ser ab
 \newpage
 
 \section{Módulo de Lógica do Jogo}
-Descrever o projecto e implementação do módulo Prolog, incluindo a forma de representação do estado do tabuleiro,  verificação do cumprimento das regras do jogo, determinação do final do jogo e cálculo das jogadas a realizar pelo computador  utilizando diversos níveis de jogo.
+% Descrever o projecto e implementação do módulo Prolog, incluindo a forma de
+% representação do estado do tabuleiro,  verificação do cumprimento das regras do
+% jogo, determinação do final do jogo e cálculo das jogadas a realizar pelo computador
+% utilizando diversos níveis de jogo.
+
+
 
 %************************************************************************************************
 
-\subsection{Representação do Estado do Jogo} \textit{estado(?Tabuleiro).}
+\subsection{Representação do Estado do Jogo}
+% \textit{estado(?Tabuleiro).}
+
+
 
 %************************************************************************************************
-\subsection{Visualização do Estado do Jogo} \textit{visualiza\_estado(+Tabuleiro).}
+
+\subsection{Visualização do Estado do Jogo}
+% \textit{visualiza\_estado(+Tabuleiro).}
+
+
 
 %************************************************************************************************
-\subsection{Validação de Jogadas} \textit{movimento\_valido(?Jogada, +Tabuleiro).}
+
+\subsection{Validação de Jogadas}
+% \textit{movimento\_valido(?Jogada, +Tabuleiro).}
+
 
 %************************************************************************************************
-\subsection{Execução de Jogadas}\textit{executa\_movimento(+Jogada, + Tabuleiro, -NovoTabuleiro).}
+
+\subsection{Execução de Jogadas}
+% \textit{executa\_movimento(+Jogada, + Tabuleiro, -NovoTabuleiro).}
+
+
 
 %************************************************************************************************
-\subsection{Lista de Jogadas Válidas}\textit{lista\_jogadas(+Tabuleiro, -ListaJogadas).}
+
+\subsection{Lista de Jogadas Válidas}
+% \textit{lista\_jogadas(+Tabuleiro, -ListaJogadas).}
+
+
 
 %************************************************************************************************
-\subsection{Avaliação do Tabuleiro}\textit{avalia\_tabuleiro(+Tabuleiro, -Valor).}
+
+\subsection{Avaliação do Tabuleiro}
+% \textit{avalia\_tabuleiro(+Tabuleiro, -Valor).}
+
+
 
 %************************************************************************************************
-\subsection{Final do Jogo} \textit{fim\_jogo(+Tabuleiro, -Vencedor).}
+
+\subsection{Final do Jogo}
+% \textit{fim\_jogo(+Tabuleiro, -Vencedor).}
+
+
 
 %************************************************************************************************
-\subsection{Cálculo da Jogada do Computador}\textit{calcula\_jogada(+Nível, +Tabuleiro, -Jogada).}
+
+\subsection{Cálculo da Jogada do Computador}
+% \textit{calcula\_jogada(+Nível, +Tabuleiro, -Jogada).}
+
+
 
 %************************************************************************************************
-\subsection{Recepção de mensagem do visualizador}\textit{recebe\_mensagem(+ Mensagem, - Resposta).}
+
+\subsection{Recepção de mensagem do visualizador}
+% \textit{recebe\_mensagem(+ Mensagem, - Resposta).}
+
 
 
 %************************************************************************************************
