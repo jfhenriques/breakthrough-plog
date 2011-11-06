@@ -1,0 +1,96 @@
+\documentclass[15pt,a4paper]{article}
+
+%use the english line for english reports
+%usepackage[english]{babel}
+\usepackage[portuguese]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{indentfirst}
+\usepackage{graphicx}
+\usepackage{verbatim}
+
+
+\begin{document}
+
+\setlength{\textwidth}{16cm}
+\setlength{\textheight}{22cm}
+
+\title{\Huge\textbf{Título do Trabalho}\linebreak\linebreak\linebreak
+\Large\textbf{Relatório Final}\linebreak\linebreak
+\includegraphics[height=6cm, width=7cm]{feup.pdf}\linebreak \linebreak
+\Large{Mestrado Integrado em Engenharia Informática e Computação} \linebreak \linebreak
+\Large{Programação em Lógica}\linebreak
+}
+
+\author{\textbf{Grupo xx:}\\ Nome 1 - Número 1 \\ Nome 2 - Número 2 \\\linebreak\linebreak \\
+ \\ Faculdade de Engenharia da Universidade do Porto \\ Rua Roberto Frias, s\/n, 4200-465 Porto, Portugal \linebreak\linebreak\linebreak
+\linebreak\linebreak\vspace{1cm}}
+%\date{Junho de 2007}
+\maketitle
+\thispagestyle{empty}
+
+%************************************************************************************************
+%************************************************************************************************
+
+\newpage
+
+\section*{Resumo}
+Descrever muito sumariamente o trabalho. Deve ser suficiente para o leitor decidir se lê ou não o resto do relatório.
+
+Não deve incluir nenhuma referência ao facto de ser feito no âmbito de uma cadeira.
+
+\newpage
+
+\tableofcontents
+
+%************************************************************************************************
+%************************************************************************************************
+
+%*************************************************************************************************
+%************************************************************************************************
+
+\newpage
+
+\section{Introdução}
+Descrever os objectivos e motivação do trabalho, e estrutura do mesmo (Último parágrafo deve indicar a estrutura do relatório). Não deve incluir nenhuma referência ao facto de ser feito no âmbito de uma cadeira.
+
+Todas as referências da bibliografia devem ser referidas no relatório \cite{CodigoSite, CodigoLivro}. Devem ser incluídas referências bibliográficas correctas e completas (consultar os docentes em caso de dúvida). Páginas da wikipedia não são consideradas referências válidas.
+
+Todas as figuras devem ser referidas no texto. 
+
+\section{Descrição do Problema}
+Descrever sucintamente o jogo, a sua  história e,  principalmente, as suas regras (pode ser idêntico ao texto do relatório intercalar).
+
+\section{Arqutectura do Sistema}
+Descrever em linhas gerais o sistema e os módulos que o constituem. Deve ser abordada a comunicação com o visualizador, que mesmo que ainda não esteja implementada, já deverá estar pensada. Assim, deve ser incluída a sintaxe das mensagens a trocar com o visualizador.
+
+\section{Módulo de Lógica do Jogo}
+Descrever o projecto e implementação do módulo Prolog, incluindo a forma de representação do estado do tabuleiro,  verificação do cumprimento das regras do jogo, determinação do final do jogo e cálculo das jogadas a realizar pelo computador  utilizando diversos níveis de jogo.
+
+\subsection{Representação do Estado do Jogo} \textit{estado(?Tabuleiro).}
+\subsection{Visualização do Estado do Jogo} \textit{visualiza\_estado(+Tabuleiro).}
+\subsection{Validação de Jogadas} \textit{movimento\_valido(?Jogada, +Tabuleiro).}
+\subsection{Execução de Jogadas}\textit{executa\_movimento(+Jogada, + Tabuleiro, -NovoTabuleiro).}
+\subsection{Lista de Jogadas Válidas}\textit{lista\_jogadas(+Tabuleiro, -ListaJogadas).}
+\subsection{Avaliação do Tabuleiro}\textit{avalia\_tabuleiro(+Tabuleiro, -Valor).}
+\subsection{Final do Jogo} \textit{fim\_jogo(+Tabuleiro, -Vencedor).}
+\subsection{Cálculo da Jogada do Computador}\textit{calcula\_jogada(+Nível, +Tabuleiro, -Jogada).}
+\subsection{Recepção de mensagem do visualizador}\textit{recebe\_mensagem(+ Mensagem, - Resposta).}
+
+\section{Interface com o Utilizador}
+Descrever  resumidamente o módulo de interface com o utilizador (visualizador) desenvolvido (caso exista).
+
+\section{Conclusões e Perspectivas de Desenvolvimento}
+Que conclusões  retira deste projecto? Como poderia melhorar o trabalho desenvolvido?
+
+\clearpage
+\addcontentsline{toc}{section}{Bibliografia}
+\renewcommand\refname{Bibliografia}
+\bibliographystyle{plain}
+\bibliography{myrefs}
+
+\newpage
+\appendix
+\section{Nome do Anexo A}
+Código Prolog implementado devidamente comentado e outros elementos úteis que não sejam essenciais ao relatório.
+
+\end{document}
