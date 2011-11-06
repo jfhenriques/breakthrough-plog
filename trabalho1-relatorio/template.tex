@@ -239,8 +239,8 @@ assim uma vasta utilização do motor do jogo, bem como a sua difusão para meio
 % \textit{estado(?Tabuleiro).}
 
 A representação do tabuleiro é feita em Prolog por uma lista de listas.
-
 O tabuleiro é quadrado - número de linhas igual ao número de colunas - e dinâmico, podendo assumir valores compreendidos entre 5 e 19, inclusivé.
+
 Cada item do tabuleiro é representado no formato ``Jogador", em que este pode ser:
 \begin{itemize}
 \item 1 - jogador de peças brancas (Norte)
@@ -273,15 +273,42 @@ B = [
 %************************************************************************************************
 
 \subsection{Visualização do Estado do Jogo}
-% \textit{visualiza\_estado(+Tabuleiro).}
 
+\textit{printBoard(+Tabuleiro).}
 
+Esta função apresenta as células do tabuleiro representadas pelo número do jogador correspondente, ou em branco, caso a mesma se encontre vazia.
+Apresenta também as linhas e colunas à volta do tabuleiro, numeradas do número 1 até ao número da ordem de colunas ou linhas.
+\begin{code}[H]
+	\begin{verbatimtab}
+initDynBoard(8, Board),
+printBoard(Board).
+\end{verbatimtab}
+\caption{Predicado para gerar e imprimir um tabuleiro de 8x8}
+\end{code}
+
+% Figura do tabuleiro
+\begin{figure}[h!]
+\begin{center}
+\includegraphics[scale=1]{fig_tab.png}
+\caption{Tabuleiro impresso com ``printBoard', mostrando o estado inicial de um jogo'.}
+\label{fig:3}
+\end{center}
+\end{figure}
+
+\newpage
 
 %************************************************************************************************
 
 \subsection{Validação de Jogadas}
-% \textit{movimento\_valido(?Jogada, +Tabuleiro).}
+ \textit{checkCorrectPlayer(+Jogador, +Peão)}
 
+Predicado que valida a escolha de um peão.
+
+Se o jogador \textit{X} escolher um peão correspondente ao jogador \textit{Y} ou a uma casa vazia, é exibido o erro \textit{"Casa inválida, tente novamente"}, e o predicado retorna \textit{False}.
+
+\textit{ checkMove(+Tabuleiro, +Origem x, +Origem y, +Destino x, +Destino y, +Jogador) }
+
+Predicado que valida uma jogada, segue as regras de jogo descritas em cima.
 
 %************************************************************************************************
 
