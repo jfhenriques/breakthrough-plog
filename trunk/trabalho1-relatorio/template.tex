@@ -308,14 +308,22 @@ Se o jogador \textit{X} escolher um peão correspondente ao jogador \textit{Y} o
 
 \textit{ checkMove(+Tabuleiro, +Origem x, +Origem y, +Destino x, +Destino y, +Jogador) }
 
-Predicado que valida uma jogada, segue as regras de jogo descritas em cima.
+Predicado que valida uma jogada, de acordo com as regras de jogo descritas na secção 2.2 .
 
 %************************************************************************************************
 
 \subsection{Execução de Jogadas}
 % \textit{executa\_movimento(+Jogada, + Tabuleiro, -NovoTabuleiro).}
 
+\textit{movePawn(+Tabuleiro entrada, +Origem x, +Origem y, +Destino x, +Destino y, +Tabuleiro saída)}
 
+Este predicado encapsula \textit{checkMove()} e \textit{getPawn()}.
+Se a jogada for válida, o valor da casa (\textit{Destino x}, \textit{Destino y)} é substituido pelo
+peão que se encontra na casa (\textit{Origem x}, \textit{Origem y}) e devolvido em \textit{NovoTabuleiro}.
+
+\textit{getPawn(+Tabuleiro, +X, +Y, -Valor)}
+
+Predicado usado para retornar o valor da casa (X,Y) - 0, 1 ou 2.
 
 %************************************************************************************************
 
