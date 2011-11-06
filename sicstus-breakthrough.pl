@@ -1,6 +1,8 @@
 
 % ****************************************************************
+% ****************************************************************
 % Inicialização do servidor.
+% ****************************************************************
 % ****************************************************************
 
 
@@ -64,9 +66,10 @@ server_input(_, invalid) :- !.
 
 
 % ****************************************************************
+% Imprime a peça do jogador correspondente no tabuleiro.
+%	writePlayer(+P).
 % ****************************************************************
 
-% Imprime a peça do jogador correspondente.
 writePlayer(1) :-
 		write(1).
 writePlayer(2) :-
@@ -79,8 +82,8 @@ writePlayer(0) :-
 % Imprime o número da coluna ou da linha, com um espaço à esqueda
 % ou à direita, de forma ao tabuleiro ser disposto correctamente
 % com linhas ou colounas de número superior a 9.
-% printSpaceNumberL(+N)
-% printSpaceNumberR(+N)
+%	printSpaceNumberL(+N)
+%	printSpaceNumberR(+N)
 % ****************************************************************
 
 printSpaceNumberL(N) :-
@@ -98,17 +101,16 @@ printSpaceNumberR(N) :-
 		write(N).
 
 % ****************************************************************
-% printRow(+[H|T])
-% ****************************************************************
-
-% Critério de paragem.
-% Imprime também a borda direita da última célula de cada linha.
-printRow([]).
-
 % Imprime a borda esquerda da célula, e a respectivo
 % peça do jogador (cabeça da lista).
 % Por fim chama recursivamente a mesma função com
 % a cauda da lista, até encontrar o critério de paragem.
+%	printRow(+[H|T])
+% ****************************************************************
+
+% Critério de paragem.
+printRow([]).
+
 printRow([H|T]) :-
 		write('| '),
 		writePlayer(H),
@@ -117,6 +119,8 @@ printRow([H|T]) :-
 
 
 % ****************************************************************
+% Imprime o número da coluna e o separador horizontal.
+%	printColNumbers(+Line).
 % ****************************************************************
 
 % Imprime a linha de separação horizontal.
@@ -126,7 +130,6 @@ printHorizSepp(S, N) :-
 		N1 is N+1,
 		printHorizSepp(S, N1),
 		write('--- ').
-
 
 printHorizSep(S)   :-
 		write('    '),
@@ -151,12 +154,6 @@ printColNumbers([H|T]) :-
 
 
 % ****************************************************************
-% ****************************************************************
-
-% Critério de paragem.
-printFullRow([], _, _).
-
-
 % Imprime o número da linha no ínicio e no fim de cada iteração,
 % bem como o separador horizontal. Chama também o predicado que irá
 % imprimir todas as células de cada linha, com a respectiva peça.
@@ -164,6 +161,12 @@ printFullRow([], _, _).
 % lista (contendo as restantes células da linha correspondente),
 % e o número actual da linha, até atingir o critério de paragem,
 % ou seja, quando a a cauda for uma lista vazia.
+%	printFullRow(+Line, +N, +S).
+% ****************************************************************
+
+% Critério de paragem.
+printFullRow([], _, _).
+
 printFullRow([H|T], N, S) :-
 		N1 is N+1,
 		printHorizSep(S),
@@ -178,15 +181,16 @@ printFullRow([H|T], N, S) :-
 
 
 % ****************************************************************
+% Imprime o tabuleiro, chamando o predicado que imprime o número
+% das colunas (no início e no fim do tabuleiro),
+% e de seguida o predicado que imprime cada linha individual.
+% É imprimido também o separador horizontal do tabuleiro.
+%	printBoard(+Board).
 % ****************************************************************
 
 % Regra a ser usada quando é passado um tabuleiro vazio.
 printBoard([]).
 
-% Imprime o tabuleiro, chamando o predicado que imprime o número
-% das colunas (no início e no fim do tabuleiro),
-% e de seguida o predicado que imprime cada linha individual.
-% É imprimido também o separador horizontal do tabuleiro.
 printBoard([H|T]) :-
 		length([H|T], S),
 		printColNumbers([H|T]),
@@ -198,9 +202,9 @@ printBoard([H|T]) :-
 
 
 % ****************************************************************
-% getPawn(+Tabuleiro, +X, +Y, -Jogador)
 % Retorna o número do jogador na posição (X,Y) do Tabuleiro.
 % Recorre a getPawnPos() para percorrer o tabuleiro.
+%	getPawn(+Tabuleiro, +X, +Y, -Jogador)
 % ****************************************************************
 
 % Condição de paragem, encontrou a casa.
@@ -225,8 +229,8 @@ getPawn(InTab, X, Y, Player) :-
 
         
 % ****************************************************************
-% getll(Linha,Coluna,Tabuleiro,Valor)
-% Obter o valor da casa
+% Obtem o valor de determinada posição (Linha,Coluna) num Tabuleiro
+%	getll(+Linha, +Coluna, +Tabuleiro, -Valor).
 % ****************************************************************
 
 % Obtem o valor de determinada posição N numa Lista.
@@ -239,20 +243,16 @@ getl([_|R],N,Nactual,Valor) :-
 		NR is Nactual+1,
 		getl(R,N,NR,Valor).
 
-% ****************************************************************
-% Obtem o valor de determinada posição (Linha,Coluna) num Tabuleiro
-% ****************************************************************
 getll(Linha,Coluna,Tabuleiro,Valor) :-
 		% Obtemos primeiro uma Linha completa
 		getl(Tabuleiro,Linha,Lista),
 		% Obtemos o valor da coluna na Linha obtida
 		getl(Lista,Coluna,Valor).
-
                  
                  
 % ****************************************************************
-% substll(Tabuleiro,Linha, Coluna, Valor, Resultado)
-% Substitui a peça de uma Casa por outra
+% Substitui a peça de uma casa por outra
+%	substll(+Tabuleiro, +Linha, +Coluna, +Valor, -Resultado).
 % ****************************************************************
 
 substl(Lista,N,Valor,Resultado) :-
@@ -277,6 +277,10 @@ substll(Tabuleiro,Linha, Coluna, Valor, Resultado) :-
 
 % ****************************************************************
 % Verificação de um vencedor
+% O jogador é vencedor se 1 de 2 casos acontecer:
+% 1. tiver chegado à base adversária
+% 2. o adversário não tiver peças.
+%	isWinner(+Tabuleiro, -Player).
 % ****************************************************************
 
 checkForInvasion([]).
@@ -311,11 +315,7 @@ hasPieces([H|T], P) :-
 		\+(member(P, H)),
 		hasPieces(T, P).
 
-
 % Predicado principal
-% O jogador é vencedor se 1 de 2 casos acontecer:
-% 1. tiver chegado à base adversária
-% 2. o adversário não tiver peças.
 isWinner(Tab, 1) :-
 		checkForInvasion(Tab, 1);
 		hasPieces(Tab, 2).
@@ -324,12 +324,11 @@ isWinner(Tab, 2) :-
 		checkForInvasion(Tab, 2);
 		hasPieces(Tab, 1).
 
+		
 % ****************************************************************
 % Validação de uma jogada
+%	checkMove(+Tabuleiro, +Ox, +Oy, +Dx, +Dy, +Player).
 % ****************************************************************
-
-% checkMove(+Tab, +Ox, +Oy, +Dx, +Dy, +P)
-% Valida movimentos exclusivamente verticais
 
 % JOGADOR 1
 % Movimento vertical
@@ -375,7 +374,9 @@ checkMove(Tab, Ox, Oy, Dx, Dy, 2) :-
 
 
 % ****************************************************************
-% Move player
+% Move o jogador para uma nova posição, retornando um novo
+% tabuleiro com o resultado do movimento.
+%	movePawn(+Tabuleiro, +Ox, +Oy, +Dx, +Dy, -TabuleiroOut).
 % ****************************************************************
 
 switchPlayer(1,2).
@@ -384,27 +385,14 @@ switchPlayer(2,1).
 movePawn(Tab, Ox, Oy, Dx, Dy, TabOut) :-
 		getPawn(Tab, Ox, Oy, Me),
 		checkMove(Tab, Ox, Oy, Dx, Dy, Me),
-		getPawn(Tab, Dx, Dy, Opponent),
-		Opponent = 0,
 		substll(Tab, Dy, Dx, Me, TabTmpOut),
 		substll(TabTmpOut, Oy, Ox, 0, TabOut).
-
-movePawn(Tab, Ox, Oy, Dx, Dy, TabOut) :-
-		getPawn(Tab, Ox, Oy, Me),
-		checkMove(Tab, Ox, Oy, Dx, Dy, Me),
-		getPawn(Tab, Dx, Dy, Opponent),
-		Opponent \= 0,
-		substll(Tab, Dy, Dx, Me, TabTmpOut),
-		substll(TabTmpOut, Oy, Ox, 0, TabOut).
-
-%movePawn(Tab, _, _, _, _, Tab).
-
-
-
+	
 
 % ****************************************************************
-% Inicializa dinamicamente do o tabuleiro
-% initDynBoard(+Side, -Board)
+% Inicializa dinamicamente o tabuleiro, com o valor das linhas
+% e colunas fornecidas.
+%	initDynBoard(+Side, -Board)
 % ****************************************************************
 
 initDynBoard_line(BaseNumber, BaseNumber, _, Line, Line).
@@ -436,6 +424,10 @@ initDynBoard(Side, Board) :-
         
         
 % ****************************************************************
+% Regras de atribuição das prioridades tendo em conta a peça na
+% casa de origem e destino, a posição no tabuleiro, seja a primeira
+% ou última linha, ou o meio do tabuleiro.
+%	checkPoss_prior(+Ox, +Dx, +Dy, +Side, +Player, +Pawn, -Prior).
 % ****************************************************************      
 
 checkPoss_prior(X, X, _, _, _, _, 0):- !.
@@ -448,6 +440,12 @@ checkPoss_prior(_, _, _, _, 2, 1, 2):- !.
 checkPoss_prior(_, _, _, _, _, 0, 1):- !.
 checkPoss_prior(_, _, _, _, _, _, 0):- !.
 
+
+% ****************************************************************
+% Acrescenta a Listin, a prioridade da peça no Dx, Dy actual com
+% base nas regras definidas em checkPoss_prior( ... ).
+%	checkPoss(+Board, +Side, +Player, +Ox, +Dx, +Dy, +ListIn, -ListOut).
+% ****************************************************************      
 
 checkPoss(Board, Side, Player, Ox, Dx, Dy, ListIn, ListOut) :-
 		Dx > 0,
@@ -463,6 +461,10 @@ checkPoss(_, _, _, _, _, _, ListIn, ListOut) :-
 		
 
 % ****************************************************************
+% Verifica e retorna uma lista com três elementos, contendo as
+% prioridades que a peça pode mover nas posições [X-1, X, X+1]
+% no Y de destino.
+%	getPossiblePlays(+Board, +Side, +X, +Y, -Plays).
 % ****************************************************************   
 		
 getPossiblePlays_int(Board, Side, Player, Ox, Dy, Plays) :-
@@ -494,6 +496,11 @@ getPossiblePlays(Board, Side, X, Y, Plays) :-
 		
 
 % ****************************************************************
+% Cria uma lista com elementos no formato P-Ox-Oy-Dx-Dy
+% Com cada elemento consegue-se retirar a prioridade e as posições
+% de origem e de destino. O predicado exclui as prioridades 0,
+% já que estas não se traduzem em nenhum movimento.
+%	getMoves(+Lista, +Inc, +Ox, +Oy, +Dy, +MovesIn, -MovesOut).
 % ****************************************************************
 
 getMoves([], _, _, _, _, Moves, Moves).
@@ -510,6 +517,11 @@ getMoves([_|Tail], Inc, Ox,Oy, Dy, MovesIn, MovesOut) :-
 		
 		
 % ****************************************************************
+% Se Player for igual a Pawn, busca os movimentos que essa peça
+% consegue fazer, com base nas coordenadas actuais, e acrescenta-os
+% a uma lista. Se o Pawn não for igual a Player, a lista de entrada
+% transita para a saída sem qualquer manipulação.
+%	addMoves(+Board, +Side, +Pawn, +Player, +X, +Y, +MovesIn, -MovesOut).
 % ****************************************************************
 	
 addMoves(Board, Side, Player, Player, X, Y, MovesIn, MovesOut) :-
@@ -520,6 +532,9 @@ addMoves(_, _, _, _, _, _, Moves, Moves).
 
 
 % ****************************************************************
+% Obtem uma lista com todos os movimentos possíveis de um jogador
+% no estado actual do tabuleiro.
+%	checkNextMoves(+Board, +Side, +Player, -MovesOut).
 % ****************************************************************
 
 checkNextMoves_line([], _, _, _, _, _, Moves, Moves).
@@ -542,6 +557,9 @@ checkNextMoves(Board, Side, Player, MovesOut) :-
 
 
 % ****************************************************************
+% Procura na lista retornado por checkNextMoves( ... ) a prioridade
+% máxima presente na mesma.
+% getMaxPriority(+List, -Priority).
 % ****************************************************************
 
 % getMaxPriority/3
@@ -562,6 +580,14 @@ getMaxPriority(List, Priority) :-
 		
 
 % ****************************************************************
+% Filtra os movimentos obtidos por checkNextMoves( ... ), e
+% retorna exclusivamente aqueles que que têm a prioridade igual
+% à prioridade de entrada. Retorna também o número de elementos
+% na lista.
+% A lista de saída passa a conter os elementos no formato 
+% Ox-Oy-Dx-Dy já que a prioridade é a mesma em todos os seus
+% elementos.
+%	buildMaxPriorityList(+Moves, +Priority, -Total, -ListOut).
 % ****************************************************************
 
 % buildMaxPriorityList/6
@@ -582,6 +608,10 @@ buildMaxPriorityList(Moves, Priority, Total, ListOut) :-
 
 
 % ****************************************************************
+% Retorna o movimento que está na posição PickNumber (começa a
+% contar na posição zero) da lista obtida por
+% buildMaxPriorityList( ... ).
+%	getMoveNumber(+List, +PickNumber, -Ox, -Oy, -Dx, -Dy).
 % ****************************************************************
 
 % getMoveNumber/7
@@ -599,6 +629,11 @@ getMoveNumber(List, PickNumber, Ox, Oy, Dx, Dy) :-
 
 
 % ****************************************************************
+% Verifica os movimentos possíveis de um jogador no tabuleiro,
+% e constrói uma lista com esses movimentos. De seguida verifica
+% a prioridade máxima presente nesta lista, e escolhe aleatóriamente
+% um dos movimentos com esta prioridade, em caso de empate.
+%	pickNextMove(+Board, +Side, +Player, -Ox, -Oy, -Dx, -Dy ).
 % ****************************************************************
 
 pickNextMove(Board, Side, Player, Ox, Oy, Dx, Dy ) :-
@@ -609,7 +644,17 @@ pickNextMove(Board, Side, Player, Ox, Oy, Dx, Dy ) :-
 		getMoveNumber(List, Random, Ox, Oy, Dx, Dy).
 		
 		
+		
+		
 % ****************************************************************
+% ****************************************************************
+% Exemplo de implementação de uma forma possível de jogar o jogo
+% em prolog.
+% ****************************************************************
+% ****************************************************************
+
+% ****************************************************************
+% Predicados variados de ajuda.
 % ****************************************************************
 
 checkAbort('sair') :-
@@ -637,9 +682,9 @@ printPlayer(Player) :-
 		write(Player),
 		write(']'), nl.
 
-checkCorrectPlayer(Player, 0) :- !,
+checkCorrectPlayer(_, 0) :- !,
 		write('Casa inválida, tente novamente!'), nl,
-		Pawn \= 0.
+		1 = 0.
 		
 checkCorrectPlayer(Player, Pawn) :-
 		Player \= Pawn,
@@ -704,6 +749,8 @@ play(Board, Side, GameMode) :-
 
 
 % ****************************************************************
+% Predicado para iniciar o jogo em prolog, perguntado o lado do
+% tabuleiro e o modo de jogo. De seguida dá início ao mesmo.
 % ****************************************************************
 	
 init :-
