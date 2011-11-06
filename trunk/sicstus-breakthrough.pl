@@ -9,25 +9,25 @@
 port(60001).
 
 server:-
-	port(Port),
-	socket_server_open(Port,Socket),
-	write('Breakthrough server started on port ['), write(Port), write(']'), nl,
-	write('Waiting for connection...'), nl,
-	socket_server_accept(Socket, _Client, Stream, [type(text)]),
-	write('Connection received'), nl,
-	server_loop(Stream),
-	socket_server_close(Socket),
-	write('Server Exit'),nl.
+		port(Port),
+		socket_server_open(Port,Socket),
+		write('Breakthrough server started on port ['), write(Port), write(']'), nl,
+		write('Waiting for connection...'), nl,
+		socket_server_accept(Socket, _Client, Stream, [type(text)]),
+		write('Connection received'), nl,
+		server_loop(Stream),
+		socket_server_close(Socket),
+		write('Server Exit'),nl.
 
 server_loop(Stream) :-
-	repeat,
-		read(Stream, ClientRequest),
-		write('Received: '), write(ClientRequest), nl, 
-		server_input(ClientRequest, ServerReply),
-		format(Stream, '~q.~n', [ServerReply]),
-		write('Send: '), write(ServerReply), nl, 
-		flush_output(Stream),
-	(ClientRequest == bye; ClientRequest == end_of_file), !.
+		repeat,
+			read(Stream, ClientRequest),
+			write('Received: '), write(ClientRequest), nl, 
+			server_input(ClientRequest, ServerReply),
+			format(Stream, '~q.~n', [ServerReply]),
+			write('Send: '), write(ServerReply), nl, 
+			flush_output(Stream),
+		(ClientRequest == bye; ClientRequest == end_of_file), !.
 
 % Initialize board
 server_input(initialize(Side), ok(Board)):- 
@@ -68,11 +68,11 @@ server_input(_, invalid) :- !.
 
 % Imprime a peça do jogador correspondente.
 writePlayer(1) :-
-        write(1).
+		write(1).
 writePlayer(2) :-
-        write('2').
+		write('2').
 writePlayer(0) :-
-        write(' ').
+		write(' ').
 
 
 % **********************************************************************
@@ -88,14 +88,14 @@ printSpaceNumberL(N) :-
 		write(N), write(' ').
 		
 printSpaceNumberL(N) :-
-        write(N).
+		write(N).
                 
 printSpaceNumberR(N) :-
-        N < 10,
-        write(' '), write(N).
+		N < 10,
+		write(' '), write(N).
 
 printSpaceNumberR(N) :-
-        write(N).
+		write(N).
 
 % **********************************************************************
 % printRow(+[H|T])
@@ -110,10 +110,10 @@ printRow([]).
 % Por fim chama recursivamente a mesma função com
 % a cauda da lista, até encontrar o critério de paragem.
 printRow([H|T]) :-
-        write('| '),
-        writePlayer(H),
-        write(' '),
-        printRow(T).
+		write('| '),
+		writePlayer(H),
+		write(' '),
+		printRow(T).
 
 
 % **********************************************************************
@@ -123,31 +123,31 @@ printRow([H|T]) :-
 printHorizSepp(S,S) :- !.
 
 printHorizSepp(S, N) :-
-                N1 is N+1,
-                printHorizSepp(S, N1),
-                write('--- ').
+		N1 is N+1,
+		printHorizSepp(S, N1),
+		write('--- ').
 
 
 printHorizSep(S)   :-
-                write('    '),
-                printHorizSepp(S, 0).
+		write('    '),
+		printHorizSepp(S, 0).
 
 % Imprime os números das colunas.
 %printColNumbers([], _).
 
 printColNumbers([_], N) :-
-                printSpaceNumberR(N),
-                !.
+		printSpaceNumberR(N),
+		!.
 
 printColNumbers([_|T], N) :-
-                N1 is N+1,
-                printSpaceNumberR(N),
-                write('  '),
-                printColNumbers(T, N1).
+		N1 is N+1,
+		printSpaceNumberR(N),
+		write('  '),
+		printColNumbers(T, N1).
 
 printColNumbers([H|T]) :-
-                write('    '),
-                printColNumbers([H|T], 1).
+		write('    '),
+		printColNumbers([H|T], 1).
 
 
 % **********************************************************************
@@ -165,16 +165,16 @@ printFullRow([], _, _).
 % e o número actual da linha, até atingir o critério de paragem,
 % ou seja, quando a a cauda for uma lista vazia.
 printFullRow([H|T], N, S) :-
-        N1 is N+1,
-        printHorizSep(S),
-        nl,
-        printSpaceNumberR(N),
-        write(' '),
-        printRow(H),
-        write('| '),
-        printSpaceNumberL(N),
-        nl,
-        printFullRow(T, N1, S).
+		N1 is N+1,
+		printHorizSep(S),
+		nl,
+		printSpaceNumberR(N),
+		write(' '),
+		printRow(H),
+		write('| '),
+		printSpaceNumberL(N),
+		nl,
+		printFullRow(T, N1, S).
 
 
 % **********************************************************************
@@ -188,13 +188,13 @@ printBoard([]).
 % e de seguida o predicado que imprime cada linha individual.
 % É imprimido também o separador horizontal do tabuleiro.
 printBoard([H|T]) :-
-        length([H|T], S),
-        printColNumbers([H|T]),
-        nl,
-        printFullRow([H|T], 1, S),
-        printHorizSep(S),
-        nl,
-        printColNumbers([H|T]).
+		length([H|T], S),
+		printColNumbers([H|T]),
+		nl,
+		printFullRow([H|T], 1, S),
+		printHorizSep(S),
+		nl,
+		printColNumbers([H|T]).
 
 
 % **********************************************************************
@@ -209,19 +209,19 @@ getPawnPos([Player|_], Dest, Dest, Player) :- !.
 
 % Percorre o tabuleiro
 getPawnPos([_|InTabT], Dest, BaseIncrement, Value) :-
-                Increment is BaseIncrement + 1,
-                getPawnPos(InTabT, Dest, Increment, Value).
+		Increment is BaseIncrement + 1,
+		getPawnPos(InTabT, Dest, Increment, Value).
 
 % Verifica se X e Y estão dentro dos valores permitidos
 % Recorre a getPawnPos para percorrer o tabuleiro e encontra o jogador
 getPawn(InTab, X, Y, Player) :-
-                X > 0,
-                Y > 0,
-				length(InTab, Len),
-                X =< Len,
-                Y =< Len,
-                getPawnPos(InTab, Y, 1, L),
-                getPawnPos(L, X, 1, Player).
+		X > 0,
+		Y > 0,
+		length(InTab, Len),
+		X =< Len,
+		Y =< Len,
+		getPawnPos(InTab, Y, 1, L),
+		getPawnPos(L, X, 1, Player).
 
         
 % **********************************************************************
@@ -231,22 +231,22 @@ getPawn(InTab, X, Y, Player) :-
 
 % Obtem o valor de determinada posição N numa Lista.
 getl(Lista,N,Valor) :-
-        getl(Lista,N,1,Valor).
+		getl(Lista,N,1,Valor).
 
 getl([H|_],N,N,H) :- !.
 
 getl([_|R],N,Nactual,Valor) :-
-        NR is Nactual+1,
-        getl(R,N,NR,Valor).
+		NR is Nactual+1,
+		getl(R,N,NR,Valor).
 
 % **********************************************************************
 % Obtem o valor de determinada posição (Linha,Coluna) num Tabuleiro
 % **********************************************************************
 getll(Linha,Coluna,Tabuleiro,Valor) :-
-        % Obtemos primeiro uma Linha completa
-        getl(Tabuleiro,Linha,Lista),
-        % Obtemos o valor da coluna na Linha obtida
-        getl(Lista,Coluna,Valor).
+		% Obtemos primeiro uma Linha completa
+		getl(Tabuleiro,Linha,Lista),
+		% Obtemos o valor da coluna na Linha obtida
+		getl(Lista,Coluna,Valor).
 
                  
                  
@@ -255,25 +255,25 @@ getll(Linha,Coluna,Tabuleiro,Valor) :-
 % Substitui a peça de uma Casa por outra
 % **********************************************************************
 
-substl(Lista,N,Valor,Resultado):-
+substl(Lista,N,Valor,Resultado) :-
         substl(Lista,N,1,Valor,[],Resultado).
 
 substl([],_,_,_,NovaLista,NovaLista).
 
-substl([_|R],N,N,Valor,NovaLista,Resultado):- !,
-        append(NovaLista,[Valor],NovaNovaLista),
-        NR is N+1,
-        substl(R,N,NR,Valor,NovaNovaLista,Resultado).
+substl([_|R],N,N,Valor,NovaLista,Resultado) :- !,
+		append(NovaLista,[Valor],NovaNovaLista),
+		NR is N+1,
+		substl(R,N,NR,Valor,NovaNovaLista,Resultado).
 
-substl([H|R],N,Nactual,Valor,NovaLista,Resultado):-
-        append(NovaLista,[H],NovaNovaLista),
-        NR is Nactual+1,
-        substl(R,N,NR,Valor,NovaNovaLista,Resultado).
+substl([H|R],N,Nactual,Valor,NovaLista,Resultado) :-
+		append(NovaLista,[H],NovaNovaLista),
+		NR is Nactual+1,
+		substl(R,N,NR,Valor,NovaNovaLista,Resultado).
 
-substll(Tabuleiro,Linha, Coluna, Valor, Resultado):-
-        getl(Tabuleiro,Linha,Lista),
-        substl(Lista,Coluna,Valor,NovaLista),
-        substl(Tabuleiro,Linha,NovaLista,Resultado).
+substll(Tabuleiro,Linha, Coluna, Valor, Resultado) :-
+		getl(Tabuleiro,Linha,Lista),
+		substl(Lista,Coluna,Valor,NovaLista),
+		substl(Tabuleiro,Linha,NovaLista,Resultado).
 
 % **********************************************************************
 % Verificação de um vencedor
@@ -284,32 +284,32 @@ checkForInvasionOfP1([]).
 
 % Verificar se há peças do jogador 1 na última linha
 % (Último predicado a ser executado)
-checkForInvasionOfP1([InTabT], Player):-
-        member(1, InTabT),
-        Player is 1,
-        !.
+checkForInvasionOfP1([InTabT], Player) :-
+		member(1, InTabT),
+		Player is 1,
+		!.
 
 % Corrre resto do tabuleiro recursivamente.
-checkForInvasionOfP1([_|InTabT], Player):-
-        checkForInvasionOfP1(InTabT, Player).
+checkForInvasionOfP1([_|InTabT], Player) :-
+		checkForInvasionOfP1(InTabT, Player).
 
 % Verificar se há peças do jogador 2 na primeira linha
 % (Primeiro predicado a ser executado).
-checkForInvasion([InTabH|_], Player):-
-        member(2, InTabH),
-        Player is 2,
-        !.
+checkForInvasion([InTabH|_], Player) :-
+		member(2, InTabH),
+		Player is 2,
+		!.
 
 % Se não encontrar peças do jogador 2, corre
 % recursivamente o resto do tabuleiro até chegar à ultima linha.
-checkForInvasion([_|InTabT], Player):-
-        checkForInvasionOfP1(InTabT, Player).
+checkForInvasion([_|InTabT], Player) :-
+		checkForInvasionOfP1(InTabT, Player).
 
 % Verifica se existe pelo menos 1 peça do jogador P
 hasPieces([], _).
 hasPieces([H|T], P) :-
-        \+(member(P, H)),
-        hasPieces(T, P).
+		\+(member(P, H)),
+		hasPieces(T, P).
 
 
 % Predicado principal
@@ -317,12 +317,12 @@ hasPieces([H|T], P) :-
 % 1. tiver chegado à base adversária
 % 2. o adversário não tiver peças.
 isWinner(Tab, 1) :-
-        checkForInvasion(Tab, 1);
-        hasPieces(Tab, 2).
+		checkForInvasion(Tab, 1);
+		hasPieces(Tab, 2).
 
 isWinner(Tab, 2) :-
-        checkForInvasion(Tab, 2);
-        hasPieces(Tab, 1).
+		checkForInvasion(Tab, 2);
+		hasPieces(Tab, 1).
 
 % **********************************************************************
 % Validação de uma jogada
