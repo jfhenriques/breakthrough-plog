@@ -430,14 +430,35 @@ initDynBoard(Side, Board) :-
 %	checkPoss_prior(+Ox, +Dx, +Dy, +Side, +Player, +Pawn, -Prior).
 % ****************************************************************      
 
+% Independetemente do jogador, se Ox = Dx, o peão não se
+% pode deslocar para esta casa, logo o movimento é inválido.
 checkPoss_prior(X, X, _, _, _, _, 0):- !.
+
+% Se o jogador número 2 tem Dy = 1, significa que tem
+% a possibilidade de ganhar.
 checkPoss_prior(_, _, 1, _, 2, 0, 3):- !.
+
+% O mesmo que anteriormente, só que capturando uma
+% peça adversária, logo a prioridade é mais elevada.
 checkPoss_prior(_, _, 1, _, 2, 1, 4):- !.
+
+% Se o jogador é o número 2, e Dy = Side, significa que
+% tem a possibilidade de ganhar.
 checkPoss_prior(_, _, S, S, 1, 0, 3):- !.
+
+% O mesmo que anteriormente, só que capturando uma
+% peça adversária, logo a prioridade é mais elevada.
 checkPoss_prior(_, _, S, S, 1, 2, 4):- !.
+
+% Captura de um peão adversário em nenhuma das
+% condições anteriores.
 checkPoss_prior(_, _, _, _, 1, 2, 2):- !.
 checkPoss_prior(_, _, _, _, 2, 1, 2):- !.
+
+% Movimento para uma casa livre.
 checkPoss_prior(_, _, _, _, _, 0, 1):- !.
+
+% Qualquer outra possibilidade.
 checkPoss_prior(_, _, _, _, _, _, 0):- !.
 
 
@@ -633,7 +654,7 @@ getMoveNumber(List, PickNumber, Ox, Oy, Dx, Dy) :-
 % e constrói uma lista com esses movimentos. De seguida verifica
 % a prioridade máxima presente nesta lista, e escolhe aleatóriamente
 % um dos movimentos com esta prioridade, em caso de empate.
-%	pickNextMove(+Board, +Side, +Player, -Ox, -Oy, -Dx, -Dy ).
+%	pickNextMove(+Board, +Side, +Player, -Ox, -Oy, -Dx, -Dy).
 % ****************************************************************
 
 pickNextMove(Board, Side, Player, Ox, Oy, Dx, Dy ) :-
