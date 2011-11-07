@@ -271,26 +271,25 @@ Este módulo consome os serviços do \textit{Módulo de Lógica} e disponibiliza
 
 O servidor pode ser iniciado através do predicado \textit{server/0}, resultando numa chamada bloqueante que aguarda uma ligação de um cliente.
 
-Através do predicado \textit{server\_input(+Pergunta, -Resposta)}, o servidor consegue responder às perguntas que sejam colocadas no socket.
+Através do predicado \textit{server\_input(+Mensagem, -Resposta)}, o servidor consegue responder às mensagens que sejam colocadas no socket.
 
 \lstset{ caption={Perguntas e respostas do \textit{Módulo de Interacção}.}}
 \begin{lstlisting}
-% Initialize board
+% Initialize board width Side
 initialize(Side):
 			Sucesso: ok(Board)
 			Erro	 : invalid
 
-% Execute Move	
+% Execute Move
 execute(Board, Ox-Oy, Dx-Dy):
 			Sucesso: ok(NewBoard)
 			Erro	 : invalid
 
-% Calculate next Move
+% Calculate Next Move
 calculate(Board, Player):
 			Sucesso: ok(Ox-Oy, Dx-Dy, NewBoard)
 			Erro	 : invalid
 
-	
 % Check Winner
 game_end(Board):
 			Sucesso:  ok(Winner)
@@ -336,27 +335,23 @@ Cada item do tabuleiro é representado no formato ``Jogador", em que este pode s
 \item 0 - casa vazia
 \end{itemize}
 
-\begin{code}[H]
-	\begin{verbatimtab}
+\lstset{ caption={Inicializa tabuleiro dinâmicamente.}}
+\begin{lstlisting}
 initDynBoard(Side, Board)
-\end{verbatimtab}
-\caption{Inicializa tabuleiro dinâmico}
-\end{code}
+\end{lstlisting}
 
 Este predicado inicializa o tabuleiro \textit{Board} com nº de linhas/colunas \textit{Side}.
 
-\begin{code}[H]
-	\begin{verbatimtab}
+\lstset{ caption={Ex. de chamada a \textit{initDynBoard(5, B)}.}}
+\begin{lstlisting}
 B = [
-	[1,1,1,1,1],
-	[1,1,1,1,1],
-	[0,0,0,0,0],
-	[2,2,2,2,2],
-	[2,2,2,2,2]
-	]
-\end{verbatimtab}
-\caption{Ex. de chamada a \textit{initDynBoard(5, B)}}
-\end{code}
+			[1,1,1,1,1],
+			[1,1,1,1,1],
+			[0,0,0,0,0],
+			[2,2,2,2,2],
+			[2,2,2,2,2]
+    ].
+\end{lstlisting}
 
 %************************************************************************************************
 
@@ -366,13 +361,12 @@ B = [
 
 Esta função apresenta as células do tabuleiro representadas pelo número do jogador correspondente, ou em branco, caso a mesma se encontre vazia.
 Apresenta também as linhas e colunas à volta do tabuleiro, numeradas do número 1 até ao número da ordem de colunas ou linhas.
-\begin{code}[H]
-	\begin{verbatimtab}
+
+\lstset{ caption={Predicado para gerar e imprimir um tabuleiro de 8x8}}
+\begin{lstlisting}
 initDynBoard(8, Board),
 printBoard(Board).
-\end{verbatimtab}
-\caption{Predicado para gerar e imprimir um tabuleiro de 8x8}
-\end{code}
+\end{lstlisting}
 
 % Figura do tabuleiro
 \begin{figure}[h!]
@@ -388,7 +382,7 @@ printBoard(Board).
 %************************************************************************************************
 
 \subsection{Validação de Jogadas}
- \textit{checkCorrectPlayer(+Jogador, +Peão)}
+ \textit{checkCorrectPlayer(+Jogador, +Peão).}
 
 Predicado que valida a escolha de um peão.
 
@@ -403,7 +397,7 @@ Predicado que valida uma jogada, de acordo com as regras de jogo descritas na se
 \subsection{Execução de Jogadas}
 % \textit{executa\_movimento(+Jogada, + Tabuleiro, -NovoTabuleiro).}
 
-\textit{movePawn(+Tabuleiro entrada, +Origem x, +Origem y, +Destino x, +Destino y, +Tabuleiro saída)}
+\textit{movePawn(+Tabuleiro entrada, +Origem x, +Origem y, +Destino x, +Destino y, +Tabuleiro saída).}
 
 Este predicado encapsula \textit{checkMove()} e \textit{getPawn()}.
 Se a jogada for válida, o valor da casa (\textit{Destino x}, \textit{Destino y)} é substituido pelo
@@ -418,18 +412,60 @@ Predicado usado para retornar o valor da casa (X,Y) - 0, 1 ou 2.
 \subsection{Lista de Jogadas Válidas}
 % \textit{lista\_jogadas(+Tabuleiro, -ListaJogadas).}
 
+\textit{checkNextMoves(+Board, +Side, +Player, -MovesOut).}
+
+Retorna uma lista com os elementos no formato \textit{Prioridade-Ox-Oy-Dx-Dy}.
+Com isto consegue-se obter todos os movimentos possíves, de um dado jogador no estado actual do tabuleiro, e a sua prioridade correspondente.
+
+Estas prioridades estão definidas com os seguintes predicados no formato
+\textit{checkPoss\_prior(+Ox, +Dx, +Dy, +Side, +Player, +Pawn, -Prior)}:
+
+\newpage
+
+\lstset{ caption={Prioridades.}}
+\begin{lstlisting}
+% Independetemente do jogador, se Ox = Dx, o peão não se
+% pode deslocar para esta casa, logo o movimento é inválido.
+checkPoss_prior(X, X, _, _, _, _, 0):- !.
+
+% Se o jogador número 2 tem Dy = 1, significa que tem
+% a possibilidade de ganhar.
+checkPoss_prior(_, _, 1, _, 2, 0, 3):- !.
+
+% O mesmo que anteriormente, só que capturando uma
+% peça adversária, logo a prioridade é mais elevada.
+checkPoss_prior(_, _, 1, _, 2, 1, 4):- !.
+
+% Se o jogador é o número 2, e Dy = Side, significa que
+% tem a possibilidade de ganhar.
+checkPoss_prior(_, _, S, S, 1, 0, 3):- !.
+
+% O mesmo que anteriormente, só que capturando uma
+% peça adversária, logo a prioridade é mais elevada.
+checkPoss_prior(_, _, S, S, 1, 2, 4):- !.
+
+% Captura de um peão adversário em nenhuma das
+% condições anteriores.
+checkPoss_prior(_, _, _, _, 1, 2, 2):- !.
+checkPoss_prior(_, _, _, _, 2, 1, 2):- !.
+
+% Movimento para uma casa livre.
+checkPoss_prior(_, _, _, _, _, 0, 1):- !.
+
+% Qualquer outra possibilidade.
+checkPoss_prior(_, _, _, _, _, _, 0):- !.
+\end{lstlisting}
+
 
 
 %************************************************************************************************
 
-\subsection{Avaliação do Tabuleiro}
+%\subsection{Avaliação do Tabuleiro}
 % \textit{avalia\_tabuleiro(+Tabuleiro, -Valor).}
 
 
 
 %************************************************************************************************
-
-\newpage
 
 \subsection{Final do Jogo}
 % \textit{fim\_jogo(+Tabuleiro, -Vencedor).}
@@ -451,6 +487,21 @@ Retorna \textit{True} se \textit{Jogador} não tiver pelo menos 1 peça.
 \subsection{Cálculo da Jogada do Computador}
 % \textit{calcula\_jogada(+Nível, +Tabuleiro, -Jogada).}
 
+\textit{pickNextMove(+Board, +Side, +Player, -Ox, -Oy, -Dx, -Dy).}
+
+Este predicado, com a ajuda das seguintes funções:
+\lstset{ caption={}}
+\begin{lstlisting}
+checkNextMoves(+Board, +Side, +Player, -Moves).
+getMaxPriority(+Moves, -Priority).
+buildMaxPriorityList(+Moves, +Priority, -Total, -List).
+random(+Min, +Total, -Random).
+getMoveNumber(+List, +PickNumber, -Ox, -Oy, -Dx, -Dy).
+\end{lstlisting}
+
+Pede a lista com os movimentos todos disponíveis de um jogador no estado actual do tabuleiro, e percorre-a à procura da prioridade máxima. De seguida filtra a lista inicial, de forma
+a obter uma nova lista só com os movimentos com prioridade igual à prioridade máxima. Como forma de desempate, caso existam mais do que um movimento possivel,
+é escolhido um número aleatório, e retorna o elemento que se encontre nessa posição.
 
 
 %************************************************************************************************
@@ -458,6 +509,11 @@ Retorna \textit{True} se \textit{Jogador} não tiver pelo menos 1 peça.
 \subsection{Recepção de mensagem do visualizador}
 % \textit{recebe\_mensagem(+ Mensagem, - Resposta).}
 
+\textit{server\_input(+Mensagem, -Resposta).}
+
+Este predicado avalia as mensagens enviadas por qualquer programa externo e responde-as com base nas mesmas.
+
+Estes pares Mensagem/Resposta podem ser consultados no ponto 3.3 do presente relatório.
 
 
 %************************************************************************************************
@@ -502,6 +558,7 @@ Pudemos constatar que a linguagem Prolog é eficiente, compacta e fornece vantag
 
 \lstset{ caption={Código ProLog}}
 \begin{lstlisting}
+
 
 % ****************************************************************
 % ****************************************************************
@@ -934,14 +991,35 @@ initDynBoard(Side, Board) :-
 %	checkPoss_prior(+Ox, +Dx, +Dy, +Side, +Player, +Pawn, -Prior).
 % ****************************************************************      
 
+% Independetemente do jogador, se Ox = Dx, o peão não se
+% pode deslocar para esta casa, logo o movimento é inválido.
 checkPoss_prior(X, X, _, _, _, _, 0):- !.
+
+% Se o jogador número 2 tem Dy = 1, significa que tem
+% a possibilidade de ganhar.
 checkPoss_prior(_, _, 1, _, 2, 0, 3):- !.
+
+% O mesmo que anteriormente, só que capturando uma
+% peça adversária, logo a prioridade é mais elevada.
 checkPoss_prior(_, _, 1, _, 2, 1, 4):- !.
+
+% Se o jogador é o número 2, e Dy = Side, significa que
+% tem a possibilidade de ganhar.
 checkPoss_prior(_, _, S, S, 1, 0, 3):- !.
+
+% O mesmo que anteriormente, só que capturando uma
+% peça adversária, logo a prioridade é mais elevada.
 checkPoss_prior(_, _, S, S, 1, 2, 4):- !.
+
+% Captura de um peão adversário em nenhuma das
+% condições anteriores.
 checkPoss_prior(_, _, _, _, 1, 2, 2):- !.
 checkPoss_prior(_, _, _, _, 2, 1, 2):- !.
+
+% Movimento para uma casa livre.
 checkPoss_prior(_, _, _, _, _, 0, 1):- !.
+
+% Qualquer outra possibilidade.
 checkPoss_prior(_, _, _, _, _, _, 0):- !.
 
 
@@ -1137,7 +1215,7 @@ getMoveNumber(List, PickNumber, Ox, Oy, Dx, Dy) :-
 % e constrói uma lista com esses movimentos. De seguida verifica
 % a prioridade máxima presente nesta lista, e escolhe aleatóriamente
 % um dos movimentos com esta prioridade, em caso de empate.
-%	pickNextMove(+Board, +Side, +Player, -Ox, -Oy, -Dx, -Dy ).
+%	pickNextMove(+Board, +Side, +Player, -Ox, -Oy, -Dx, -Dy).
 % ****************************************************************
 
 pickNextMove(Board, Side, Player, Ox, Oy, Dx, Dy ) :-
@@ -1200,7 +1278,7 @@ checkCorrectPlayer(Pawn, Pawn).
 
 % ****************************************************************
 % ****************************************************************
-
+	
 verificaVencedor(Board, _, _, _) :-
 		isWinner(Board, Player),
 		nl,nl,
@@ -1222,6 +1300,7 @@ transitPlay(BoardIn, Side, GameMode, Player, Ox, Oy, Dx, Dy) :-
 		write(Dx), write(','), write(Dy), write(']'), nl, nl,
 		printBoard(Board),
 		switchPlayer(Player, NextPlayer),
+		!,
 		verificaVencedor(Board, Side, GameMode,NextPlayer).
 
 transitPlay(Board, Side, GameMode, 1, _, _, _, _) :- !,
@@ -1232,9 +1311,11 @@ transitPlay(Board, Side, GameMode, 1, _, _, _, _) :- !,
 % ****************************************************************
 % ****************************************************************
 
-play(Board, Side, 2, 2) :- !,
-		pickNextMove(Board, Side, 2, Ox, Oy, Dx, Dy ),
-		transitPlay(Board, Side, 2, 2, Ox, Oy, Dx, Dy ).
+play(Board, Side, GameMode, Player) :-
+		( (GameMode = 2, Player = 2) ; GameMode = 3 ),
+		!,
+		pickNextMove(Board, Side, Player, Ox, Oy, Dx, Dy ),
+		transitPlay(Board, Side, GameMode, Player, Ox, Oy, Dx, Dy ).
 
 play(Board, Side, GameMode, Player) :- !,
 		repeat,
@@ -1267,9 +1348,10 @@ init :-
 		write('Modo de jogo:'), nl,
 		write('1 - Humano/Humano'), nl,
 		write('2 - Humano/Computador'), nl,
+		write('3 - Computador/Computador'), nl,
 		readIntegerAbort('> ', Mode), nl,
 		Mode > 0,
-		Mode < 3,
+		Mode < 4,
 		printBoard(Board),
 		printPlayer(1),
 		play(Board, Side, Mode).
