@@ -430,9 +430,11 @@ initDynBoard(Side, Board) :-
 %	checkPoss_prior(+Ox, +Dx, +Dy, +Side, +Player, +Pawn, -Prior).
 % ****************************************************************      
 
-% Independetemente do jogador, se Ox = Dx, o peão não se
-% pode deslocar para esta casa, logo o movimento é inválido.
-checkPoss_prior(X, X, _, _, _, _, 0):- !.
+% Independentemente se o jogador é o mesmo ou é igual ao adversário
+% na casa de destino, se Ox = Dx, o peão não se pode deslocar para
+% esta casa, logo o movimento é inválido.
+checkPoss_prior(X, X, _, _, _, 1, 0):- !.
+checkPoss_prior(X, X, _, _, _, 2, 0):- !.
 
 % Se o jogador número 2 tem Dy = 1, significa que tem
 % a possibilidade de ganhar.
