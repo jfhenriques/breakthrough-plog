@@ -1,0 +1,1 @@
+Estou a usar o TeXworks em Mac, mas também há para Windows, se calhar é boa ideia sacares também, aqui vai o link: http://www.tug.org/texworks/
